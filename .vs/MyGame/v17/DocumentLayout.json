@@ -1,0 +1,126 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:game1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\collisionobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\collisionobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\maps\\testmap.csv||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:maps\\testmap.csv||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\globals.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:globals.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\misc\\methods.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:misc\\methods.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CollisionObject.cs",
+              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\CollisionObject.cs",
+              "RelativeDocumentMoniker": "GameObjects\\CollisionObject.cs",
+              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\CollisionObject.cs",
+              "RelativeToolTip": "GameObjects\\CollisionObject.cs",
+              "ViewState": "AgIAAKsAAAAAAAAAAAAAALsAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-05T11:56:28.807Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Player.cs",
+              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\Player.cs",
+              "RelativeDocumentMoniker": "GameObjects\\Player.cs",
+              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\Player.cs",
+              "RelativeToolTip": "GameObjects\\Player.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAwwKMAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-18T13:02:01.355Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Globals.cs",
+              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\Globals.cs",
+              "RelativeDocumentMoniker": "Globals.cs",
+              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\Globals.cs",
+              "RelativeToolTip": "Globals.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-02T14:29:55.305Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Game1.cs",
+              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\Game1.cs",
+              "RelativeDocumentMoniker": "Game1.cs",
+              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\Game1.cs",
+              "RelativeToolTip": "Game1.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAcwBcAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-18T07:09:59.476Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Methods.cs",
+              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\Misc\\Methods.cs",
+              "RelativeDocumentMoniker": "Misc\\Methods.cs",
+              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\Misc\\Methods.cs",
+              "RelativeToolTip": "Misc\\Methods.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAuwA0AAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-27T17:38:24.625Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TestMap.csv",
+              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\Maps\\TestMap.csv",
+              "RelativeDocumentMoniker": "Maps\\TestMap.csv",
+              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\Maps\\TestMap.csv",
+              "RelativeToolTip": "Maps\\TestMap.csv",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002120|",
+              "WhenOpened": "2024-10-26T15:22:12.558Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
