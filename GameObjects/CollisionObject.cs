@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using static MyGame.Globals;
+using static MyGame.Misc.Methods;
 
 namespace MyGame.GameObjects
 {
@@ -15,7 +16,8 @@ namespace MyGame.GameObjects
         protected Vector2 acc = new();
 
         protected RectangleF collisionBox; //TODO refactor 4 to ZOOM
-        protected Dictionary<Vector2Int, int> tilemapCollisions;
+        //protected Dictionary<Vector2Int, TileType> tilemapCollisions;
+        protected TileType[,] tilemapCollisions;
         private List<Vector2Int> tilemapIntersections = new();
         private Vector2 contactNormal;
         private Vector2 contactPoint;
@@ -38,7 +40,7 @@ namespace MyGame.GameObjects
         {
             (a, b) = (b, a);
         }
-
+        
 
         //raycast interserct recangle
         private bool rayVsRect(Vector2 rayOrigin, Vector2 rayDir, RectangleF targetRect, out Vector2 contactPoint, out Vector2 contactNormal, out float timeHitNear)
@@ -164,11 +166,11 @@ namespace MyGame.GameObjects
 
             //check collisions and update velocity
             //sort collisions based on contactTime
-            List<(RectangleF TileRect, float TimeHitNear, int TileType)> collisionsSorted = new();
+            List<(RectangleF TileRect, float TimeHitNear, TileType TileType)> collisionsSorted = new();
 
             foreach (Vector2Int collision in collisions) //TODO: colissions -> tiles
             {
-                if (tilemapCollisions.TryGetValue(collision, out int tileType) && tileType != 0) //0 = air
+                if (tilemapCollisions.tryGetValue(collision, out TileType tileType) && tileType != TileType.None) //0 = air
                 {
                     //raycast
                     RectangleF tileRect = new(collision.X * TileSize, collision.Y * TileSize, TileSize, TileSize);
@@ -181,7 +183,7 @@ namespace MyGame.GameObjects
 
             collisionsSorted = collisionsSorted.OrderBy(c => c.TimeHitNear).ThenBy(c => (getMiddleOfRect(c.TileRect) - getMiddleOfRect(currentCollisionBox)).Length()).ToList();
            
-            foreach ((RectangleF TileRect, float TimeHitNear, int TileType) collision in collisionsSorted)
+            foreach ((RectangleF TileRect, float TimeHitNear, TileType TileType) collision in collisionsSorted)
             {
                 if (dynamicRectVsRect(currentCollisionBox, vel, collision.TileRect, out contactPoint, out contactNormal, out timeHitNear))
                 {
@@ -189,19 +191,19 @@ namespace MyGame.GameObjects
                     //resolve collisions
                     switch (collision.TileType)
                     {
-                        case 1: //normal  //TODO: add enum
+                        case TileType.Solid:
                             vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1f - timeHitNear);
                             acc -= acc * contactNormal;
                             //TODO: put these 2 in a method?
                             break;
-                        case 2: //2 = semi solid
+                        case TileType.SemiUp:
                             if (contactNormal == new Vector2(0, -1) && currentCollisionBox.Bottom <= collision.TileRect.Top) //check if player is above (normal vector)
                             {
                                 vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
                                 acc -= acc * contactNormal;
                             }
                             break;
-                        case 3:
+                        case TileType.SemiRight:
                             if (contactNormal == new Vector2(1, 0) && currentCollisionBox.Left >= collision.TileRect.Right) //check if player is above (normal vector)
                             {
                                 vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);

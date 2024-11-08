@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Color = Microsoft.Xna.Framework.Color;
 using static MyGame.Globals;
+using MyGame.Scenes;
 
 namespace MyGame
 {
@@ -18,41 +19,11 @@ namespace MyGame
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Texture2D _playerTexture;
+        private Texture2D playerTexture;
         private Player player;
 
-        private Dictionary<Vector2Int, int> tilemap;
-        //private Dictionary<Vector2Int, int> tilemapCollisions;
-        private List<Rectangle> textureStore;
-        private Texture2D textureAtlas;
-        
-        private Dictionary<Vector2Int, int> loadMap(string filePath)
-        {
-            Dictionary<Vector2Int, int> map = new();
-
-            StreamReader reader = new(filePath);
-
-            int y = 0;
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                string[] items = line.Split(',');
-
-                for (int x = 0; x < items.Length; x++)
-                {
-                    if (int.TryParse(items[x], out int value)) {
-                        if (value > 0)
-                        {
-                            map[new Vector2Int(x, y)] = value;
-                        }
-                    }
-                }
-                y++;
-            }
-
-            reader.Close();
-            return map;
-        }
+        private Scene scene;
+        private SceneManager sceneManager = new();
 
         public Game1()
         {
@@ -60,20 +31,13 @@ namespace MyGame
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            _graphics.IsFullScreen = true;
+            //_graphics.IsFullScreen = true;
             _graphics.PreferredBackBufferWidth = 1920;
             _graphics.PreferredBackBufferHeight = 1080;
             this.IsFixedTimeStep = true; //60fps
             this.TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d);
 
-            //load testmap
-            tilemap = loadMap("../../../Maps/TestMap.csv");
-            textureStore = new() //TODO: make this automatic
-            {
-                new Rectangle(0,0,16,16), //texture 0 //TODO: 16 -> OriginalTileSize ??
-                new Rectangle(16,0,16,16),
-                new Rectangle(32,0,16,16)
-            };
+            scene = new Scene("TestMap");
         }
 
         protected override void Initialize()
@@ -87,15 +51,16 @@ namespace MyGame
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _playerTexture = Content.Load<Texture2D>("catSpriteSheetFixed"); //TODO: naming conventions!!
-            textureAtlas = Content.Load<Texture2D>("TilesTest");
+            playerTexture = Content.Load<Texture2D>("catSpriteSheetFixed"); //TODO: naming conventions!!
+            scene.textureAtlas = Content.Load<Texture2D>("TilesTest"); //use scene
 
             InitializeGameObjects();
         }
 
         private void InitializeGameObjects()
         {
-            player = new Player(new Vector2(0,0), _playerTexture, new KeyboardReader(), tilemap); //change input in settings
+            //TODO: factory for entities (so don't have to give playerTexture, keyboardReader, tilemapCollisions)
+            player = new Player(new Vector2(0,0), playerTexture, new KeyboardReader(), scene.tilemapCollisions); //change input in settings
                                                                                       //currently collisions and tilemap are the same
         }
 
@@ -116,13 +81,8 @@ namespace MyGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            foreach (var item in tilemap)
-            {
-                Rectangle dest = new(item.Key.X * TileSize, item.Key.Y * TileSize, TileSize, TileSize); //refactor 64 
-                Rectangle src = textureStore[item.Value - 1]; //try catch, so game doesn't crash if invalid number in map
-                _spriteBatch.Draw(textureAtlas, dest, src, Color.White);
-            }
-            player.Draw(_spriteBatch);
+            scene.Draw(_spriteBatch);
+            player.Draw(_spriteBatch); //will be in scene when player is in entities list
             //_spriteBatch.Draw(textureAtlas, new Rectangle((int)player.currentCollisionBox.X, (int)player.currentCollisionBox.Y, (int)player.currentCollisionBox.Width, (int)player.currentCollisionBox.Height), textureStore[0], Color.Red);
             _spriteBatch.End();
 

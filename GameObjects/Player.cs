@@ -38,7 +38,7 @@ namespace MyGame.GameObjects
         private bool isJumping = false;
         private bool isGrounded = false; //TODO: have no value at start, get calculated instantly
         
-        public Player(Vector2 pos, Texture2D texture, IInputReader inputReader, Dictionary<Vector2Int, int> tilemapCollisions)
+        public Player(Vector2 pos, Texture2D texture, IInputReader inputReader, TileType[,] tilemapCollisions)
         {
             this.inputReader = inputReader;
 
@@ -112,7 +112,7 @@ namespace MyGame.GameObjects
             {
                 foreach (Vector2Int collision in ground)
                 {
-                    if(tilemapCollisions.TryGetValue(collision, out int tileType) && tileType == 1 || tileType == 2)
+                    if(tilemapCollisions.tryGetValue(collision, out TileType tileType) && tileType == TileType.Solid || tileType == TileType.SemiUp)
                     {
                         isGrounded = true;
                     }
