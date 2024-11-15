@@ -15,6 +15,8 @@ namespace MyGame.Scenes
             return new Scene();
         }*/
 
+        //currentScene
+
         
     }
 }

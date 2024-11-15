@@ -11,6 +11,7 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Color = Microsoft.Xna.Framework.Color;
 using static MyGame.Globals;
 using MyGame.Scenes;
+using System.Diagnostics;
 
 namespace MyGame
 {
@@ -37,7 +38,7 @@ namespace MyGame
             this.IsFixedTimeStep = true; //60fps
             this.TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d);
 
-            scene = new Scene("TestMap");
+            scene = new Scene("TestLevel1");
         }
 
         protected override void Initialize()
@@ -52,15 +53,18 @@ namespace MyGame
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             playerTexture = Content.Load<Texture2D>("catSpriteSheetFixed"); //TODO: naming conventions!!
-            scene.textureAtlas = Content.Load<Texture2D>("TilesTest"); //use scene
-
+            for (int i = 0; i < scene.tilemapsDecoration.Length; i++) //load tileset images from tileset names
+            {
+                scene.tilemapsDecoration[i].tileset = Content.Load<Texture2D>(scene.tilemapsDecoration[i].tilesetName);
+            }
+            
             InitializeGameObjects();
         }
 
         private void InitializeGameObjects()
         {
             //TODO: factory for entities (so don't have to give playerTexture, keyboardReader, tilemapCollisions)
-            player = new Player(new Vector2(0,0), playerTexture, new KeyboardReader(), scene.tilemapCollisions); //change input in settings
+            player = new Player(new Vector2(0,0), playerTexture, new KeyboardReader(), scene.tilemapCollisions.AsTileTypeMap()); //change input in settings
                                                                                       //currently collisions and tilemap are the same
         }
 

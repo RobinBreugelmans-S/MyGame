@@ -25,7 +25,7 @@
 /processorParam:TextureFormat=Color
 /build:CatSpriteSheetFixed.png
 
-#begin TilesetTest.png
+#begin TilesetNature.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -35,7 +35,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:TilesetTest.png
+/build:TilesetNature.png
 
 #begin TilesTest.png
 /importer:TextureImporter

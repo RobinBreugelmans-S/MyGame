@@ -36,8 +36,9 @@ namespace MyGame.GameObjects
 
         private Vector2Int input = new();
         private bool isJumping = false;
-        private bool isGrounded = false; //TODO: have no value at start, get calculated instantly
+        //private bool isGrounded = false; //TODO: have no value at start, get calculated instantly
         
+        //TODO: change to factory method to get player 
         public Player(Vector2 pos, Texture2D texture, IInputReader inputReader, TileType[,] tilemapCollisions)
         {
             this.inputReader = inputReader;
@@ -106,9 +107,9 @@ namespace MyGame.GameObjects
             }
 
             //check if is grounded //TODO: fix jumping against wall, problem is in CollisionObject.cs line 139
-            List<Vector2Int> ground = getCollisions(pos + new Vector2(0, 2)); //half pixel on screen
+            /*List<Vector2Int> ground = getCollisions(pos + new Vector2(0, 2)); //half pixel on screen
             isGrounded = false;
-            if (pos.Y % TileSize == 0f)
+            if (vel.Y >= 0)
             {
                 foreach (Vector2Int collision in ground)
                 {
@@ -117,7 +118,7 @@ namespace MyGame.GameObjects
                         isGrounded = true;
                     }
                 }
-            }
+            }*/
             
             //TODO: add looking up IdleUp?
             //gravity

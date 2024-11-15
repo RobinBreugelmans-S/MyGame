@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MyGame.Misc;
+using MyGame.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -18,20 +19,16 @@ namespace MyGame.GameObjects
         protected RectangleF collisionBox; //TODO refactor 4 to ZOOM
         //protected Dictionary<Vector2Int, TileType> tilemapCollisions;
         protected TileType[,] tilemapCollisions;
+        //protected List<Entity> entities; //TODO make entity class, IGameObject with pos vel acc, collision rectangle, and stuff
+        //TODO: gravity in globals
         private List<Vector2Int> tilemapIntersections = new();
         private Vector2 contactNormal;
         private Vector2 contactPoint;
         private float timeHitNear;
 
-        /*private Dictionary<int, Action<Vector2>> collisionMethods;
-        
-        public CollisionHandler(Vector2 pos, RectangleF collisionBox, Dictionary<Vector2Int, int> tilemapCollisions, Dictionary<int, Action<Vector2>> collisionMethods)
-        {
-            this.collisionBox = collisionBox;
-            this.tilemapCollisions = tilemapCollisions;
-            this.collisionMethods = collisionMethods;
-        }
-        */
+        //TODO: REMOVE
+        protected bool isGrounded;
+
         protected Vector2 getMiddleOfRect(RectangleF rect)
         {
             return new Vector2(rect.X + rect.Width / 2, rect.Y + rect.Height / 2);
@@ -157,6 +154,7 @@ namespace MyGame.GameObjects
 
         protected void handleCollisions()
         {
+            isGrounded = false;
             contactNormal = new Vector2(0, 0);
 
             RectangleF currentCollisionBox = collisionBox.At(pos);
@@ -194,6 +192,10 @@ namespace MyGame.GameObjects
                         case TileType.Solid:
                             vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1f - timeHitNear);
                             acc -= acc * contactNormal;
+                            if(contactNormal == new Vector2(0, -1))
+                            {
+                                isGrounded = true;
+                            }
                             //TODO: put these 2 in a method?
                             break;
                         case TileType.SemiUp:
@@ -201,10 +203,25 @@ namespace MyGame.GameObjects
                             {
                                 vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
                                 acc -= acc * contactNormal;
+                                isGrounded = true;
                             }
                             break;
                         case TileType.SemiRight:
                             if (contactNormal == new Vector2(1, 0) && currentCollisionBox.Left >= collision.TileRect.Right) //check if player is above (normal vector)
+                            {
+                                vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
+                                acc -= acc * contactNormal;
+                            }
+                            break;
+                        case TileType.SemiDown:
+                            if (contactNormal == new Vector2(0, 1) && currentCollisionBox.Top >= collision.TileRect.Bottom) //check if player is above (normal vector)
+                            {
+                                vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
+                                acc -= acc * contactNormal;
+                            }
+                            break;
+                        case TileType.SemiLeft:
+                            if (contactNormal == new Vector2(-1, 0) && currentCollisionBox.Right <= collision.TileRect.Left) //check if player is above (normal vector)
                             {
                                 vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
                                 acc -= acc * contactNormal;

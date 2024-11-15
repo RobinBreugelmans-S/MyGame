@@ -11,3 +11,5 @@ build_property.RootNamespace = MyGame
 build_property.ProjectDir = C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.EffectiveAnalysisLevelStyle = 6.0
+build_property.EnableCodeStyleSeverity = 
