@@ -21,21 +21,17 @@ namespace MyGame.Scenes
         //TODO: 
         //factory ? to return Scene object which has all of these loaded, methods go into SceneManager
         
-        //public TileType[,] tilemapCollisions { get; private set; } //TODO: naming conventions!
-        public TileMap tilemapCollisions { get; private set; } //TODO: tileMapCol..
-        public TileMap[] tilemapsDecoration { get; private set; } //array of 2d arrays //TODO: naming conventions!
+        //public TileType[,] tileMapCollisions { get; private set; } //TODO: naming conventions!
+        public TileMap tileMapCollisions { get; private set; } //TODO: tileMapCol..
+        public TileMap[] tileMapsDecoration { get; private set; } //array of 2d arrays //TODO: naming conventions!
         //public Texture2D[] tilesets { get; private set; }
         //public string[] tilesetNames { get; private set; }
         public List<IGameObject> entities { get; private set; } = new(); //TODO: public or private?
         private Texture2D background; //Background class with pos, paralax, Texture2D, Draw()
-        //public List<Rectangle> textureStore { get; private set; }
-        //public Texture2D textureAtlas { get; set; }
-
+        
         public Scene(string level)
         {
-            //mapObject = loadMap($".././../../Maps/{level}.json")
-            loadScene($".././../../Maps/{level}.json");//($".././../../Maps/{level}.csv"); //
-
+            loadScene($".././../../Maps/{level}.json");
         }
 
         private void loadScene(string filePath)
@@ -46,21 +42,22 @@ namespace MyGame.Scenes
 
             LevelJson levelJson = JsonSerializer.Deserialize<LevelJson>(jsonData);
 
-            //refacotr with tilemap class
-            tilemapCollisions = new TileMap(levelJson.layers[0]);         //TODO: make it so tilemapsDeco doesn't get entity, than make list withb entity layers
-            tilemapsDecoration = new TileMap[levelJson.layers.Count - 2]; //-2: first layer is collisios, last is entities //TODO: add checks for if there are not enough layers
+            //refacotr with tileMap class
+            tileMapCollisions = new TileMap(levelJson.layers[0]);         //TODO: make it so tileMapsDeco doesn't get entity, than make list withb entity layers
+            tileMapsDecoration = new TileMap[levelJson.layers.Count - 2]; //-2: first layer is collisios, last is entities //TODO: add checks for if there are not enough layers
             for (int i = 0; i < levelJson.layers.Count - 2; i++)
             {
-                tilemapsDecoration[i] = new TileMap(levelJson.layers[i + 1]); // i+1 cause layer 0 is collisions
+                tileMapsDecoration[i] = new TileMap(levelJson.layers[i + 1]); // i+1 cause layer 0 is collisions
             }
+            //load entities
         }
 
         
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //tilemapCollisions.Draw(spriteBatch);
-            foreach(TileMap tileMap in tilemapsDecoration)
+            //tileMapCollisions.Draw(spriteBatch);
+            foreach(TileMap tileMap in tileMapsDecoration)
             {
                 tileMap.Draw(spriteBatch);
             }

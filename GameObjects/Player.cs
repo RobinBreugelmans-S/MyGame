@@ -9,84 +9,44 @@ using MyGame.Interfaces;
 using MyGame.Animation;
 using MyGame.Misc;
 using static MyGame.Globals;
+using System.Diagnostics;
 
 
 namespace MyGame.GameObjects
 {
     enum State {Idling, Walking, Jumping, Crouching, MidAir}
 
-    internal class Player : CollisionObject, IGameObject //TODO: inherit from class only with collisions, pos, vel acc
+    internal class Player : MoveableObject //TODO: inherit from class only with collisions, pos, vel acc
     {
         private float runAcc = 2f;
         private float runSpeed = 8f;
         private float jumpPower = 22f;
         private float gravityWhenJumping = 1f;
-        private float gravityWhenFalling = 2f;
-        private float maxVerticalSpeed = 26f;
-
-        private Dictionary<State, AnimationState> animationStates = new();
-        private State state;
-        private Texture2D texture;
-        private Rectangle partRectangle;
-        private Vector2Int spriteSize = new Vector2Int(16,16);
-        private SpriteEffects horizontalFlip = SpriteEffects.None;
-        private int animationTimer = 0;
 
         private IInputReader inputReader;
 
         private Vector2Int input = new();
         private bool isJumping = false;
-        //private bool isGrounded = false; //TODO: have no value at start, get calculated instantly
-        
+
+        public int coinsCollected = 0;
+
         //TODO: change to factory method to get player 
-        public Player(Vector2 pos, Texture2D texture, IInputReader inputReader, TileType[,] tilemapCollisions)
+        public Player(Vector2 pos, Texture2D spriteSheet, IInputReader inputReader, TileType[,] tileMapCollisions)
+            : base(pos, new Vector2(), new Vector2(), 0f, new AnimationHandler(spriteSheet, new Vector2Int(16, 16)), new CollisionHandler(tileMapCollisions), null)
         {
             this.inputReader = inputReader;
 
-            collisionBox = new(3f * Zoom, 10f * Zoom, 10f * Zoom, 6f * Zoom);
+            CollisionBox = new(3f * Zoom, 10f * Zoom, 10f * Zoom, 6f * Zoom);
 
-            this.texture = texture;
-            partRectangle = new Rectangle(0, 0, spriteSize.X, spriteSize.Y);
+            gravityWhenFalling = 2f;
+            maxVerticalSpeed = 26f;
 
-            animationStates.Add(State.Idling, new AnimationState(0, 4, 16));
-            animationStates.Add(State.Walking, new AnimationState(1, 4, 4));
-            animationStates.Add(State.Crouching, new AnimationState(7, 4, 24));
-            animationStates.Add(State.MidAir, new AnimationState(11, 1, 1));
+        //animationHandler = new AnimationHandler(spriteSheet, new Vector2Int(16,16));
 
-            //TODO:
-            //method will be executed when player hits a certain tile type
-            /*Dictionary<int, Action<Vector2>> collisionMethods = new();
-            collisionMethods.Add(1, contactNormal =>
-            {
-                if (contactNormal == new Vector2(0, -1))
-                {
-                    isGrounded = true;
-                    acc.Y = 0f;
-                }
-            });
-            collisionMethods.Add(2, contactNormal =>
-            { //no need to check contactNormal since it will always be 0, -1 on this semi-solid
-                isGrounded = true;
-                acc.Y = 0f;
-            });*/
-
-            this.pos = pos;
-            this.tilemapCollisions = tilemapCollisions;
-        }
-
-        public void Draw(SpriteBatch spriteBatch) // TODO: refactor 4 to Zoom
-        {
-            //TODO: put in seperate function
-            //first rect = destination, second rect = source in image
-            spriteBatch.Draw(texture, new Rectangle((int)(Math.Round(pos.X / Zoom) * Zoom),
-                (int)(Math.Round(pos.Y / Zoom) * Zoom), partRectangle.Width * Zoom, partRectangle.Height * Zoom),
-                partRectangle, Color.White, 0, new Vector2(0,0), horizontalFlip, 0f);
-        }
-        
-        private void changeState(State state)
-        {
-            this.state = state;
-            partRectangle.Y = animationStates[state].Location * spriteSize.Y;
+            animationHandler.AnimationStates.Add(State.Idling, new AnimationState(0, 4, 16));
+            animationHandler.AnimationStates.Add(State.Walking, new AnimationState(1, 4, 4));
+            animationHandler.AnimationStates.Add(State.Crouching, new AnimationState(7, 4, 24));
+            animationHandler.AnimationStates.Add(State.MidAir, new AnimationState(11, 1, 1));
         }
 
         public void Update()
@@ -99,46 +59,22 @@ namespace MyGame.GameObjects
 
             if (input.X == 1)
             {
-                horizontalFlip = SpriteEffects.None;
+                animationHandler.HorizontalFlip = SpriteEffects.None;
             }
             else if (input.X == -1)
             {
-                horizontalFlip = SpriteEffects.FlipHorizontally;
+                animationHandler.HorizontalFlip = SpriteEffects.FlipHorizontally;
             }
 
-            //check if is grounded //TODO: fix jumping against wall, problem is in CollisionObject.cs line 139
-            /*List<Vector2Int> ground = getCollisions(pos + new Vector2(0, 2)); //half pixel on screen
-            isGrounded = false;
-            if (vel.Y >= 0)
+            if (vel.Y > 0)//refactor, move to collision detection
             {
-                foreach (Vector2Int collision in ground)
-                {
-                    if(tilemapCollisions.tryGetValue(collision, out TileType tileType) && tileType == TileType.Solid || tileType == TileType.SemiUp)
-                    {
-                        isGrounded = true;
-                    }
-                }
-            }*/
-            
-            //TODO: add looking up IdleUp?
-            //gravity
-            /*if (isGrounded) //TODO: uncomment annd fix
-            {
-                acc.Y = 0;
+                acc.Y = gravityWhenFalling;
             }
-            else //TODO: instead of setting isGrounded during calculating collisions
-            {*/
-                if (!isJumping && vel.Y > 0)//refactor, move to collision detection
-                {
-                    acc.Y = gravityWhenFalling;
-                }
-                else
-                {
-                    acc.Y = gravityWhenJumping;
-                }
-            //}
-            //calculate acceleration
-            //figure out wtf this does
+            else
+            {
+                acc.Y = gravityWhenJumping;
+            }
+            
             if (input.X == 0 || (input.Y == 1 && isGrounded))
             {
                 acc.X = Math.Sign(vel.X) * -1; //friction
@@ -149,7 +85,7 @@ namespace MyGame.GameObjects
             }
 
             //jump
-            if (isJumping && isGrounded) //TODO: && on ground
+            if (isJumping && isGrounded)
             {
                 vel.Y = -jumpPower;
             }
@@ -161,7 +97,7 @@ namespace MyGame.GameObjects
             #endregion
 
             //collissions
-            handleCollisions();
+            (pos, vel, acc, isGrounded) = collisionHandler.HandleCollisions(pos, vel, acc);
             
             //update position
             pos += vel;
@@ -170,30 +106,30 @@ namespace MyGame.GameObjects
             if (input.X != 0)
             {
                 //also changes y pos of partRect
-                changeState(State.Walking);
+                animationHandler.ChangeState(State.Walking);
             }
             else
             {
-                changeState(State.Idling);
+                animationHandler.ChangeState(State.Idling);
             }
 
             if (input.Y == 1)
             {
-                changeState(State.Crouching);
+                animationHandler.ChangeState(State.Crouching);
             }
 
-            if(!isGrounded) //TODO: change to is in air!
+            if(!isGrounded) //TODO: change to is in air! (if water is added)
             {
-                changeState(State.MidAir);
+                animationHandler.ChangeState(State.MidAir);
             }
             #endregion
 
             //animation
-            animationTimer = (animationTimer + 1) % animationStates[state].Time;
-            if (animationTimer == 0)
-            {
-                partRectangle.X = (partRectangle.X + spriteSize.X) % (spriteSize.X * animationStates[state].Length);
-            }
+            animationHandler.UpdatePartRectangle();
+        }
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            animationHandler.Draw(spriteBatch, pos);
         }
     }
 }

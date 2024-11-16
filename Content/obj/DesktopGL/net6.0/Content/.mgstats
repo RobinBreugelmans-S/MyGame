@@ -1,3 +1,4 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/ErikSpriteSheet.png","C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/bin/DesktopGL/Content/ErikSpriteSheet.xnb","TextureProcessor","Texture2DContent",22132,11861,0.077544
 "C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/TilesetNature.png","C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/bin/DesktopGL/Content/TilesetNature.xnb","TextureProcessor","Texture2DContent",5013,262229,0.1657812
 "C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/TilesTest.png","C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/bin/DesktopGL/Content/TilesTest.xnb","TextureProcessor","Texture2DContent",300,60293,0.2198816

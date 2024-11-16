@@ -18,11 +18,11 @@ namespace MyGame.Misc
             return new RectangleF(a.X + b.X, a.Y + b.Y, a.Width, a.Height);
         }
 
-        public static bool tryGetValue(this TileType[,] tilemap, Vector2Int coords, out TileType tileType)
+        public static bool tryGetValue(this TileType[,] tileMap, Vector2Int coords, out TileType tileType)
         {
             try
             {
-                tileType = tilemap[coords.X, coords.Y];
+                tileType = tileMap[coords.X, coords.Y];
                 return true;
             }
             catch

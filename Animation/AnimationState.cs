@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyGame.Animation
 {
-    internal class AnimationState
+    internal struct AnimationState
     {
         public int Length;
         public int Location;

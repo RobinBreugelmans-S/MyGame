@@ -29,3 +29,4 @@ C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\test.xnb
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\obj\Debug\net6.0\MyGame.sourcelink.json
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\TilesetNature.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\ErikSpriteSheet.xnb

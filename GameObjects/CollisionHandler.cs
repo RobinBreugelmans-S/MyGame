@@ -3,6 +3,7 @@ using MyGame.Misc;
 using MyGame.Scenes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using static MyGame.Globals;
@@ -10,24 +11,22 @@ using static MyGame.Misc.Methods;
 
 namespace MyGame.GameObjects
 {
-    internal abstract class CollisionObject
+    internal class CollisionHandler//TODO: erf over van iets met public pos enz.
     {
-        protected Vector2 pos;
-        protected Vector2 vel = new();
-        protected Vector2 acc = new();
-
-        protected RectangleF collisionBox; //TODO refactor 4 to ZOOM
-        //protected Dictionary<Vector2Int, TileType> tilemapCollisions;
-        protected TileType[,] tilemapCollisions;
+        public RectangleF CollisionBox;
+        public TileType[,] TileMapCollisions;
         //protected List<Entity> entities; //TODO make entity class, IGameObject with pos vel acc, collision rectangle, and stuff
         //TODO: gravity in globals
-        private List<Vector2Int> tilemapIntersections = new();
         private Vector2 contactNormal;
         private Vector2 contactPoint;
         private float timeHitNear;
 
-        //TODO: REMOVE
-        protected bool isGrounded;
+       // protected bool isGrounded;
+
+        public CollisionHandler(TileType[,] TileMapCollisions)
+        {
+            this.TileMapCollisions = TileMapCollisions;
+        }
 
         protected Vector2 getMiddleOfRect(RectangleF rect)
         {
@@ -37,7 +36,6 @@ namespace MyGame.GameObjects
         {
             (a, b) = (b, a);
         }
-        
 
         //raycast interserct recangle
         private bool rayVsRect(Vector2 rayOrigin, Vector2 rayDir, RectangleF targetRect, out Vector2 contactPoint, out Vector2 contactNormal, out float timeHitNear)
@@ -77,7 +75,7 @@ namespace MyGame.GameObjects
             //calculate normal
             if (near.X > near.Y)
             {
-                if (rayDir.X < 0)
+                if (rayDir.X <= 0)
                 {
                     contactNormal = new Vector2(1, 0);
                 }
@@ -125,19 +123,19 @@ namespace MyGame.GameObjects
             return false;
         }
         
-        protected List<Vector2Int> getCollisions(Vector2 position)
+        public List<Vector2Int> GetCollisions(Vector2 position)
         {
             //TODO: check for more
-            //RectangleF currentCollisionBox = collisionBox.At(pos);
-            RectangleF projectedCollisionBox = collisionBox.At(position);
+            //RectangleF currentCollisionBox = CollisionBox.At(pos);
+            RectangleF projectedCollisionBox = CollisionBox.At(position);
             //calculate amount of tiles to check for
             Vector2Int tilesToCheck = new(
                 (int)(Math.Ceiling(projectedCollisionBox.Right / TileSize) - Math.Floor(projectedCollisionBox.Left / TileSize)),
                 (int)(Math.Ceiling(projectedCollisionBox.Bottom / TileSize) - Math.Floor(projectedCollisionBox.Top / TileSize))
             );
-            
+
             //get a list of tiles the player intersects
-            List<Vector2Int> collisions = new(); //then check tiletype (int) in tilemap dictionary
+            List<Vector2Int> collisions = new(); //then check tiletype (int) in tileMap dictionary
             for (int x = 0; x < tilesToCheck.X; x++)
             {
                 for (int y = 0; y < tilesToCheck.Y; y++)
@@ -149,26 +147,29 @@ namespace MyGame.GameObjects
                 }
             }
 
+            //filter out tiles that are outside of the map area (else it will cause lag)
+            collisions = collisions.Where(c => c.X >= 0 && c.Y >= 0 && c.X < TileMapCollisions.GetLength(0) && c.Y < TileMapCollisions.GetLength(1)).ToList();
+
             return collisions;
         }
 
-        protected void handleCollisions()
+        public (Vector2 pos, Vector2 vel, Vector2 acc, bool isGrounded) HandleCollisions(Vector2 pos, Vector2 vel, Vector2 acc)
         {
-            isGrounded = false;
+            bool isGrounded = false;
             contactNormal = new Vector2(0, 0);
 
-            RectangleF currentCollisionBox = collisionBox.At(pos);
-            RectangleF projectedCollisionBox = collisionBox.At(pos + vel);
+            RectangleF currentCollisionBox = CollisionBox.At(pos);
+            RectangleF projectedCollisionBox = CollisionBox.At(pos + vel);
 
-            List<Vector2Int> collisions = getCollisions(pos + vel);
+            List<Vector2Int> collisions = GetCollisions(pos + vel);
 
-            //check collisions and update velocity
             //sort collisions based on contactTime
             List<(RectangleF TileRect, float TimeHitNear, TileType TileType)> collisionsSorted = new();
-
+            
+            //check collisions and update velocity
             foreach (Vector2Int collision in collisions) //TODO: colissions -> tiles
             {
-                if (tilemapCollisions.tryGetValue(collision, out TileType tileType) && tileType != TileType.None) //0 = air
+                if (TileMapCollisions.tryGetValue(collision, out TileType tileType) && tileType != TileType.None) //0 = air
                 {
                     //raycast
                     RectangleF tileRect = new(collision.X * TileSize, collision.Y * TileSize, TileSize, TileSize);
@@ -230,6 +231,8 @@ namespace MyGame.GameObjects
                     }
                 }
             }
+
+            return (pos,  vel,  acc, isGrounded);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MyGame.Misc;
-using MyGame.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -40,17 +39,17 @@ namespace MyGame.Scenes
         
         public TileType[,] AsTileTypeMap() //for collisions
         {
-            TileType[,] tilemap = new TileType[width, height];
+            TileType[,] tileMap = new TileType[width, height];
 
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    tilemap[x, y] = (TileType)map[x,y];
+                    tileMap[x, y] = (TileType)map[x,y];
                 }
             }
 
-            return tilemap;
+            return tileMap;
         }
         public Rectangle getTextureRect(int id)
         {
