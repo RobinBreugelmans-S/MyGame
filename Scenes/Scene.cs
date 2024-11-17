@@ -30,7 +30,7 @@ namespace MyGame.Scenes
         //public Texture2D[] tilesets { get; private set; }
         //public string[] tilesetNames { get; private set; }
         //public List<IGameObject> entities { get; private set; } = new(); //TODO: public or private?
-        public List<StationaryObject> entities { get; private set; } = new();
+        public List<StationaryObject> entities { get; private set; } = new(); //TODO naming convetions
         private Texture2D background; //Background class with pos, paralax, Texture2D, Draw()
         
         public Scene(string level, ContentManager content)
@@ -41,7 +41,7 @@ namespace MyGame.Scenes
 
         public void LoadScene()
         {
-            ObjectFactory objectFactory = new(content);
+            ObjectFactory objectFactory = new(content, new Action<StationaryObject>(entity => entities.Remove(entity)));
 
             //parse ogmo json            
             StreamReader reader = new(filePath);
@@ -61,6 +61,7 @@ namespace MyGame.Scenes
             entities.Add(objectFactory.CreateCoin(5, 12));
             entities.Add(objectFactory.CreateCoin(7, 12));
             entities.Add(objectFactory.CreateCoin(9, 12));
+            entities.Add(objectFactory.CreateRedCoin(8, 16));
         }
 
         public void Update()

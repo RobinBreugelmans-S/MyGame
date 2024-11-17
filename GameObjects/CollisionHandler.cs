@@ -13,6 +13,8 @@ namespace MyGame.GameObjects
 {
     internal class CollisionHandler//TODO: erf over van iets met public pos enz.
     {
+        public MoveableObject Parent;
+
         public RectangleF CollisionBox;
         public TileType[,] TileMapCollisions; //TODO: change to CollisionTileMap !!
         public List<StationaryObject> CollidableEntities; 
@@ -24,8 +26,9 @@ namespace MyGame.GameObjects
 
        // protected bool isGrounded;
 
-        public CollisionHandler(RectangleF collisionBox , TileType[,] tileMapCollisions, List<StationaryObject> collidableEntities)
+        public CollisionHandler(/*MoveableObject parent, */RectangleF collisionBox , TileType[,] tileMapCollisions, List<StationaryObject> collidableEntities)
         {
+            //this.parent = parent;
             CollisionBox = collisionBox;
             TileMapCollisions = tileMapCollisions;
             CollidableEntities = collidableEntities;
@@ -38,6 +41,15 @@ namespace MyGame.GameObjects
         private void swap<T>(ref T a, ref T b)
         {
             (a, b) = (b, a);
+        }
+        private RectangleF getBoundingBox(params RectangleF[] rects)
+        {
+            float xMin = rects.Min(s => s.X);
+            float yMin = rects.Min(s => s.Y);
+            float xMax = rects.Max(s => s.X + s.Width);
+            float yMax = rects.Max(s => s.Y + s.Height);
+            RectangleF boundingRect = new(xMin, yMin, xMax - xMin, yMax - yMin);
+            return boundingRect;
         }
 
         //raycast interserct recangle
@@ -126,16 +138,15 @@ namespace MyGame.GameObjects
             return false;
         }
         
-        public List<Vector2Int> GetCollisions(Vector2 position)
+        public List<Vector2Int> GetTileMapCollisions(Vector2 pos)
         {
-            //TODO: check for more
-            //RectangleF currentCollisionBox = CollisionBox.At(pos);
-            RectangleF projectedCollisionBox = CollisionBox.At(position);
-            #region tilemap collisions
+            //TODO: use rectangleF BoundingRectangle
+            RectangleF rectangle = CollisionBox.At(pos);
+
             //calculate amount of tiles to check for
             Vector2Int tilesToCheck = new(
-                (int)(Math.Ceiling(projectedCollisionBox.Right / TileSize) - Math.Floor(projectedCollisionBox.Left / TileSize)),
-                (int)(Math.Ceiling(projectedCollisionBox.Bottom / TileSize) - Math.Floor(projectedCollisionBox.Top / TileSize))
+                (int)(Math.Ceiling(rectangle.Right / TileSize) - Math.Floor(rectangle.Left / TileSize)),
+                (int)(Math.Ceiling(rectangle.Bottom / TileSize) - Math.Floor(rectangle.Top / TileSize))
             );
 
             //get a list of tiles the player intersects
@@ -145,25 +156,31 @@ namespace MyGame.GameObjects
                 for (int y = 0; y < tilesToCheck.Y; y++)
                 {
                     collisions.Add(new Vector2Int( //tilespace not worldspace
-                        (int)((projectedCollisionBox.Left + x * TileSize) / TileSize),
-                        (int)((projectedCollisionBox.Top + y * TileSize) / TileSize)
+                        (int)((rectangle.Left + x * TileSize) / TileSize),
+                        (int)((rectangle.Top + y * TileSize) / TileSize)
                     ));
                 }
             }
 
             //filter out tiles that are outside of the map area (else it will cause lag)
             collisions = collisions.Where(c => c.X >= 0 && c.Y >= 0 && c.X < TileMapCollisions.GetLength(0) && c.Y < TileMapCollisions.GetLength(1)).ToList();
-            #endregion
-
-            #region entity collisions
-            Vector2Int chunksToCheck = new(
-                (int)(Math.Ceiling(projectedCollisionBox.Right / ChunkSize) - Math.Floor(projectedCollisionBox.Left / ChunkSize)),
-                (int)(Math.Ceiling(projectedCollisionBox.Bottom / ChunkSize) - Math.Floor(projectedCollisionBox.Top / ChunkSize))
-            );
-
             
-            #endregion
             return collisions;
+        }
+
+        public List<StationaryObject> GetEntityCollisions(RectangleF rectangle)
+        {
+            List<StationaryObject> entities = new();
+
+            foreach (StationaryObject entity in CollidableEntities)
+            {
+                if (rectangle.IntersectsWith(entity.CollisionBox.At(entity.pos)))
+                {
+                    entities.Add(entity);
+                }
+            }
+            
+            return entities;
         }
 
         public (Vector2 vel, Vector2 acc, bool isGrounded) HandleCollisions(Vector2 pos, Vector2 vel, Vector2 acc)
@@ -173,78 +190,103 @@ namespace MyGame.GameObjects
 
             RectangleF currentCollisionBox = CollisionBox.At(pos);
             RectangleF projectedCollisionBox = CollisionBox.At(pos + vel);
+            RectangleF boundingBox = getBoundingBox(currentCollisionBox, projectedCollisionBox);
 
-            List<Vector2Int> collisions = GetCollisions(pos + vel);
+            List<Vector2Int> tileMapCollisions = GetTileMapCollisions(pos + vel);
+
+            //TODO: change tileRect to Collidable, make new Collidbale for the tiles, and ofr entities just add
+            List<StationaryObject> entityCollisions = GetEntityCollisions(boundingBox);
 
             //sort collisions based on contactTime
-            List<(RectangleF TileRect, float TimeHitNear, TileType TileType)> collisionsSorted = new();
+            List<(Collidable collider, float TimeHitNear, TileType TileType)> collisionsSorted = new();
             
-            //check collisions and update velocity
-            foreach (Vector2Int collision in collisions) //TODO: colissions -> tiles
+            //check tilemap collisions
+            foreach (Vector2Int collision in tileMapCollisions) //TODO: colissions -> tiles
             {
                 if (TileMapCollisions.tryGetValue(collision, out TileType tileType) && tileType != TileType.None) //0 = air
                 {
                     //raycast
                     RectangleF tileRect = new(collision.X * TileSize, collision.Y * TileSize, TileSize, TileSize);
-                    if (dynamicRectVsRect(currentCollisionBox, vel, tileRect, out contactPoint, out contactNormal, out timeHitNear))
+
+                    Collidable tile = new(tileRect);
+                    if (dynamicRectVsRect(currentCollisionBox, vel, tile.CurrentCollisionBox, out contactPoint, out contactNormal, out timeHitNear))
                     {
-                        collisionsSorted.Add((tileRect, timeHitNear, tileType));
+                        collisionsSorted.Add((tile, timeHitNear, tileType));
                     }
                 }
             }
 
             //check entity collisions
-
-
-            collisionsSorted = collisionsSorted.OrderBy(c => c.TimeHitNear).ThenBy(c => (getMiddleOfRect(c.TileRect) - getMiddleOfRect(currentCollisionBox)).Length()).ToList();
-           
-            foreach ((RectangleF TileRect, float TimeHitNear, TileType TileType) collision in collisionsSorted)
+            foreach(StationaryObject entity in entityCollisions)
             {
-                if (dynamicRectVsRect(currentCollisionBox, vel, collision.TileRect, out contactPoint, out contactNormal, out timeHitNear))
+                if (dynamicRectVsRect(currentCollisionBox, vel, entity.CurrentCollisionBox, out contactPoint, out contactNormal, out timeHitNear))
+                {
+                    collisionsSorted.Add((entity, timeHitNear, TileType.None));
+                }
+            }
+
+            collisionsSorted = collisionsSorted.OrderBy(c => c.TimeHitNear).ThenBy(c => (getMiddleOfRect(c.collider.CurrentCollisionBox) - getMiddleOfRect(currentCollisionBox)).Length()).ToList();
+           //TODO: give Collibdable instaed of TileRect
+            foreach ((Collidable collider, float TimeHitNear, TileType TileType) collision in collisionsSorted)
+            {
+                if (dynamicRectVsRect(currentCollisionBox, vel, collision.collider.CurrentCollisionBox, out contactPoint, out contactNormal, out timeHitNear))
                 {
                     //Action<Vector2> collisionMethod; TODO
                     //resolve collisions
-                    switch (collision.TileType)
+
+                    //first check if the collidable is tile or entity
+                    if(collision.collider is StationaryObject)
                     {
-                        case TileType.Solid:
-                            vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1f - timeHitNear);
-                            acc -= acc * contactNormal;
-                            if(contactNormal == new Vector2(0, -1))
-                            {
-                                isGrounded = true;
-                            }
-                            //TODO: put these 2 in a method?
-                            break;
-                        case TileType.SemiUp:
-                            if (contactNormal == new Vector2(0, -1) && currentCollisionBox.Bottom <= collision.TileRect.Top) //check if player is above (normal vector)
-                            {
-                                vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
-                                acc -= acc * contactNormal;
-                                isGrounded = true;
-                            }
-                            break;
-                        case TileType.SemiRight:
-                            if (contactNormal == new Vector2(1, 0) && currentCollisionBox.Left >= collision.TileRect.Right) //check if player is above (normal vector)
-                            {
-                                vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
-                                acc -= acc * contactNormal;
-                            }
-                            break;
-                        case TileType.SemiDown:
-                            if (contactNormal == new Vector2(0, 1) && currentCollisionBox.Top >= collision.TileRect.Bottom) //check if player is above (normal vector)
-                            {
-                                vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
-                                acc -= acc * contactNormal;
-                            }
-                            break;
-                        case TileType.SemiLeft:
-                            if (contactNormal == new Vector2(-1, 0) && currentCollisionBox.Right <= collision.TileRect.Left) //check if player is above (normal vector)
-                            {
-                                vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
-                                acc -= acc * contactNormal;
-                            }
-                            break;
+                        StationaryObject entity = collision.collider as StationaryObject;
+
+                        entity.Touched.Invoke(Parent, contactNormal);
                     }
+                    else
+                    {
+                        switch (collision.TileType)
+                        {
+                            case TileType.Solid:
+                                vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1f - timeHitNear);
+                                acc -= acc * contactNormal;
+                                if(contactNormal == new Vector2(0, -1))
+                                {
+                                    isGrounded = true;
+                                }
+                                //TODO: put these 2 in a method?
+                                break;
+                            case TileType.SemiUp:
+                                if (contactNormal == new Vector2(0, -1) && currentCollisionBox.Bottom <= collision.collider.CurrentCollisionBox.Top) //check if player is above (normal vector)
+                                {
+                                    vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
+                                    acc -= acc * contactNormal;
+                                    isGrounded = true;
+                                }
+                                break;
+                            case TileType.SemiRight:
+                                if (contactNormal == new Vector2(1, 0) && currentCollisionBox.Left >= collision.collider.CurrentCollisionBox.Right) //check if player is above (normal vector)
+                                {
+                                    vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
+                                    acc -= acc * contactNormal;
+                                }
+                                break;
+                            case TileType.SemiDown:
+                                if (contactNormal == new Vector2(0, 1) && currentCollisionBox.Top >= collision.collider.CurrentCollisionBox.Bottom) //check if player is above (normal vector)
+                                {
+                                    vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
+                                    acc -= acc * contactNormal;
+                                }
+                                break;
+                            case TileType.SemiLeft:
+                                if (contactNormal == new Vector2(-1, 0) && currentCollisionBox.Right <= collision.collider.CurrentCollisionBox.Left) //check if player is above (normal vector)
+                                {
+                                    vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
+                                    acc -= acc * contactNormal;
+                                }
+                                break;
+                        }
+                    }
+
+
                 }
             }
 

@@ -15,7 +15,6 @@ using System.Net.Mime;
 
 namespace MyGame.GameObjects
 {
-    enum State {Idling, Walking, Jumping, Crouching, MidAir}
 
     internal class Player : MoveableObject //TODO: inherit from class only with collisions, pos, vel acc
     {
@@ -29,7 +28,7 @@ namespace MyGame.GameObjects
         private Vector2Int input = new();
         private bool isJumping = false;
 
-        public int coinsCollected = 0;
+        public int Score = 0;
 
         //TODO: change to factory method to get player 
         public Player(Vector2 pos, Texture2D spriteSheet, IInputReader inputReader, TileType[,] tileMapCollisions, List<StationaryObject> collidableEntities)
@@ -37,7 +36,7 @@ namespace MyGame.GameObjects
         {
             this.inputReader = inputReader;
 
-            //CollisionBox = new(3f * Zoom, 10f * Zoom, 10f * Zoom, 6f * Zoom);
+            collisionHandler.Parent = this; //can't put this in the constructor :(
 
             gravityWhenFalling = 2f;
             maxVerticalSpeed = 26f;
@@ -103,7 +102,7 @@ namespace MyGame.GameObjects
             //update position
             pos += vel;
 
-            UpdateChunks();
+            //UpdateChunks();
 
             #region states
             if (input.X != 0)

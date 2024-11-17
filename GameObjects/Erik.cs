@@ -80,7 +80,7 @@ namespace MyGame.GameObjects
             //jump if wall is infront
             if (isGrounded)
             {
-                List<Vector2Int> horizontalCollisions = collisionHandler.GetCollisions(pos + new Vector2(vel.X, 0));
+                List<Vector2Int> horizontalCollisions = collisionHandler.GetTileMapCollisions(pos + new Vector2(vel.X, 0));
                 foreach (Vector2Int collision in horizontalCollisions) //TODO: colissions -> tiles
                 {
                     if (collisionHandler.TileMapCollisions.tryGetValue(collision, out TileType tileType) && (tileType == TileType.Solid)) //0 = air //|| tileType == TileType.SemiRight
@@ -96,7 +96,7 @@ namespace MyGame.GameObjects
 
             pos += vel;
 
-            UpdateChunks();
+            //UpdateChunks();
 
             #region animation states
             /*if (isAttacking)
