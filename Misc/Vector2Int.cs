@@ -19,10 +19,18 @@ namespace MyGame.Misc
             X = x;
             Y = y;
         }
-        /* TODO
-        public static Vector2Int Parse(Vector2 v)
+        
+        public static Vector2Int operator *(Vector2Int vector, int num)
         {
-            return new Vector2Int((int)v.X, (int)v.Y);
-        }*/
+            vector.X *= num;
+            vector.Y *= num;
+            return vector;
+        }
+        public static Vector2Int operator +(Vector2Int v1, Vector2Int v2)
+        {
+            v1.X += v2.X;
+            v1.Y += v2.Y;
+            return v1;
+        }
     }
 }

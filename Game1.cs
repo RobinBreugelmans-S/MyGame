@@ -11,7 +11,7 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Color = Microsoft.Xna.Framework.Color;
 using static MyGame.Globals;
 using MyGame.Scenes;
-using System.Diagnostics;
+
 
 namespace MyGame
 {
@@ -26,7 +26,6 @@ namespace MyGame
         private Texture2D erikTexture;
 
         private Scene scene;
-        private SceneManager sceneManager = new();
 
         public Game1()
         {
@@ -39,14 +38,13 @@ namespace MyGame
             _graphics.PreferredBackBufferHeight = 1080;
             IsFixedTimeStep = true; //60fps
             TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d);
-
-            scene = new Scene("TestLevel1");
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            
+            scene = new Scene("TestLevel1", Content); //TODO: refactor with scene factory
+
             base.Initialize();
         }
 
@@ -56,20 +54,25 @@ namespace MyGame
 
             playerTexture = Content.Load<Texture2D>("catSpriteSheetFixed"); //TODO: naming conventions!!
             erikTexture = Content.Load<Texture2D>("ErikSpriteSheet");
+            scene.LoadScene();
             for (int i = 0; i < scene.tileMapsDecoration.Length; i++) //load tileset images from tileset names
             {
                 scene.tileMapsDecoration[i].tileset = Content.Load<Texture2D>(scene.tileMapsDecoration[i].tilesetName);
             }
-            
+
+            //TODO: remove?
+            DebugImage = Content.Load<Texture2D>("DebugImage");
+
             InitializeGameObjects();
         }
 
         private void InitializeGameObjects()
         {
             //TODO: factory for entities (so don't have to give playerTexture, keyboardReader, tileMapCollisions)
-            player = new Player(new Vector2(0,0), playerTexture, new KeyboardReader(), scene.tileMapCollisions.AsTileTypeMap()); //change input in settings
+            //TODO: move to scene
+            player = new Player(new Vector2(0,0), playerTexture, new KeyboardReader(), scene.tileMapCollisions.AsTileTypeMap(), scene.entities); //change input in settings
                                                                                                                                  //currently collisions and tileMap are the same
-            erik = new Erik(new Vector2(18 * TileSize,17 * TileSize), erikTexture, player, scene.tileMapCollisions.AsTileTypeMap());
+            erik = new Erik(new Vector2(18 * TileSize,17 * TileSize), erikTexture, player, scene.tileMapCollisions.AsTileTypeMap(), scene.entities);
         }
 
         protected override void Update(GameTime gameTime)
@@ -80,6 +83,8 @@ namespace MyGame
             }
 
             // TODO: Add your update logic here
+            scene.Update();
+            //TODO: move to scene
             player.Update();
             erik.Update();
             base.Update(gameTime);

@@ -5,6 +5,7 @@ using MyGame.Animation;
 using MyGame.Interfaces;
 using MyGame.Misc;
 using System.Diagnostics;
+using System.Drawing;
 using static MyGame.Globals;
 using System.Collections.Generic;
 
@@ -22,11 +23,11 @@ namespace MyGame.GameObjects
         private Vector2Int input;
         private StationaryObject target; //change to Object or sometinhg
         
-        public Erik(Vector2 pos, Texture2D spriteSheet, StationaryObject target, TileType[,] tileMapCollisions) : base(pos, new Vector2(), new Vector2(), 0f, new AnimationHandler(spriteSheet, new Vector2Int(23, 16)), new CollisionHandler(tileMapCollisions), null)
+        public Erik(Vector2 pos, Texture2D spriteSheet, StationaryObject target, TileType[,] tileMapCollisions, List<StationaryObject> collidableEntities) : base(pos, new Vector2(), new Vector2(), 0f, new AnimationHandler(spriteSheet, new Vector2Int(23, 16)), new CollisionHandler(new RectangleF(5f * Zoom, 8f * Zoom, 12f * Zoom, 8f * Zoom), tileMapCollisions, collidableEntities), null)
         {
             this.target = target;
 
-            CollisionBox = new System.Drawing.RectangleF(5f * Zoom, 8f * Zoom, 12f * Zoom, 8f * Zoom); //TODO: is not centered!
+            //CollisionBox = new RectangleF(5f * Zoom, 8f * Zoom, 12f * Zoom, 8f * Zoom); //TODO: is not centered!
 
             gravityWhenFalling = 2f;
             maxVerticalSpeed = 26f;
@@ -91,9 +92,11 @@ namespace MyGame.GameObjects
             }
             #endregion
 
-            (pos, vel, acc, isGrounded) = collisionHandler.HandleCollisions(pos, vel, acc);
+            (vel, acc, isGrounded) = collisionHandler.HandleCollisions(pos, vel, acc);
 
             pos += vel;
+
+            UpdateChunks();
 
             #region animation states
             /*if (isAttacking)

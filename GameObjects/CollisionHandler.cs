@@ -14,7 +14,8 @@ namespace MyGame.GameObjects
     internal class CollisionHandler//TODO: erf over van iets met public pos enz.
     {
         public RectangleF CollisionBox;
-        public TileType[,] TileMapCollisions;
+        public TileType[,] TileMapCollisions; //TODO: change to CollisionTileMap !!
+        public List<StationaryObject> CollidableEntities; 
         //protected List<Entity> entities; //TODO make entity class, IGameObject with pos vel acc, collision rectangle, and stuff
         //TODO: gravity in globals
         private Vector2 contactNormal;
@@ -23,9 +24,11 @@ namespace MyGame.GameObjects
 
        // protected bool isGrounded;
 
-        public CollisionHandler(TileType[,] TileMapCollisions)
+        public CollisionHandler(RectangleF collisionBox , TileType[,] tileMapCollisions, List<StationaryObject> collidableEntities)
         {
-            this.TileMapCollisions = TileMapCollisions;
+            CollisionBox = collisionBox;
+            TileMapCollisions = tileMapCollisions;
+            CollidableEntities = collidableEntities;
         }
 
         protected Vector2 getMiddleOfRect(RectangleF rect)
@@ -128,6 +131,7 @@ namespace MyGame.GameObjects
             //TODO: check for more
             //RectangleF currentCollisionBox = CollisionBox.At(pos);
             RectangleF projectedCollisionBox = CollisionBox.At(position);
+            #region tilemap collisions
             //calculate amount of tiles to check for
             Vector2Int tilesToCheck = new(
                 (int)(Math.Ceiling(projectedCollisionBox.Right / TileSize) - Math.Floor(projectedCollisionBox.Left / TileSize)),
@@ -149,11 +153,20 @@ namespace MyGame.GameObjects
 
             //filter out tiles that are outside of the map area (else it will cause lag)
             collisions = collisions.Where(c => c.X >= 0 && c.Y >= 0 && c.X < TileMapCollisions.GetLength(0) && c.Y < TileMapCollisions.GetLength(1)).ToList();
+            #endregion
 
+            #region entity collisions
+            Vector2Int chunksToCheck = new(
+                (int)(Math.Ceiling(projectedCollisionBox.Right / ChunkSize) - Math.Floor(projectedCollisionBox.Left / ChunkSize)),
+                (int)(Math.Ceiling(projectedCollisionBox.Bottom / ChunkSize) - Math.Floor(projectedCollisionBox.Top / ChunkSize))
+            );
+
+            
+            #endregion
             return collisions;
         }
 
-        public (Vector2 pos, Vector2 vel, Vector2 acc, bool isGrounded) HandleCollisions(Vector2 pos, Vector2 vel, Vector2 acc)
+        public (Vector2 vel, Vector2 acc, bool isGrounded) HandleCollisions(Vector2 pos, Vector2 vel, Vector2 acc)
         {
             bool isGrounded = false;
             contactNormal = new Vector2(0, 0);
@@ -179,6 +192,9 @@ namespace MyGame.GameObjects
                     }
                 }
             }
+
+            //check entity collisions
+
 
             collisionsSorted = collisionsSorted.OrderBy(c => c.TimeHitNear).ThenBy(c => (getMiddleOfRect(c.TileRect) - getMiddleOfRect(currentCollisionBox)).Length()).ToList();
            
@@ -232,7 +248,7 @@ namespace MyGame.GameObjects
                 }
             }
 
-            return (pos,  vel,  acc, isGrounded);
+            return (vel,  acc, isGrounded);
         }
     }
 }

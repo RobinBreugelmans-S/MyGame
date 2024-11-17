@@ -12,12 +12,15 @@ using static System.Net.WebRequestMethods;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using Microsoft.Xna.Framework.Content;
 
 
 namespace MyGame.Scenes
 {
     internal class Scene
     {
+        private string filePath;
+        private ContentManager content;
         //TODO: 
         //factory ? to return Scene object which has all of these loaded, methods go into SceneManager
         
@@ -26,16 +29,20 @@ namespace MyGame.Scenes
         public TileMap[] tileMapsDecoration { get; private set; } //array of 2d arrays //TODO: naming conventions!
         //public Texture2D[] tilesets { get; private set; }
         //public string[] tilesetNames { get; private set; }
-        public List<IGameObject> entities { get; private set; } = new(); //TODO: public or private?
+        //public List<IGameObject> entities { get; private set; } = new(); //TODO: public or private?
+        public List<StationaryObject> entities { get; private set; } = new();
         private Texture2D background; //Background class with pos, paralax, Texture2D, Draw()
         
-        public Scene(string level)
+        public Scene(string level, ContentManager content)
         {
-            loadScene($".././../../Maps/{level}.json");
+            filePath = $".././../../Maps/{level}.json";
+            this.content = content;
         }
 
-        private void loadScene(string filePath)
+        public void LoadScene()
         {
+            ObjectFactory objectFactory = new(content);
+
             //parse ogmo json            
             StreamReader reader = new(filePath);
             string jsonData = reader.ReadToEnd();
@@ -50,9 +57,19 @@ namespace MyGame.Scenes
                 tileMapsDecoration[i] = new TileMap(levelJson.layers[i + 1]); // i+1 cause layer 0 is collisions
             }
             //load entities
+            //foreach over the list, big case switch in seperate method, add into collision entity if the entity is collidable?
+            entities.Add(objectFactory.CreateCoin(5, 12));
+            entities.Add(objectFactory.CreateCoin(7, 12));
+            entities.Add(objectFactory.CreateCoin(9, 12));
         }
 
-        
+        public void Update()
+        {
+            foreach(IGameObject entity in entities)
+            {
+                entity.Update();
+            }
+        }
 
         public void Draw(SpriteBatch spriteBatch)
         {

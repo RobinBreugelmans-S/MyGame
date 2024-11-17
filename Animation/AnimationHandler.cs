@@ -26,12 +26,16 @@ namespace MyGame.Animation
             PartRectangle = new Rectangle(0, 0, spriteSize.X, spriteSize.Y);
         }
 
+        public void AddAnimation(State state, int location, int length, int time)
+        {
+            AnimationStates.Add(state, new AnimationState(location, length, time));
+        }
+        
         public void ChangeState(State state)
         {
             State = state;
             PartRectangle.Y = AnimationStates[state].Location * SpriteSize.Y;
         }
-
         public void UpdatePartRectangle()
         {
             AnimationTimer = (AnimationTimer + 1) % AnimationStates[State].Time;
@@ -40,7 +44,6 @@ namespace MyGame.Animation
                 PartRectangle.X = (PartRectangle.X + SpriteSize.X) % (SpriteSize.X * AnimationStates[State].Length);
             }
         }
-
         public void Draw(SpriteBatch spriteBatch, Vector2 pos)
         {
             //first rect = destination, second rect = source in image

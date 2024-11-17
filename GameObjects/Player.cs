@@ -10,6 +10,7 @@ using MyGame.Animation;
 using MyGame.Misc;
 using static MyGame.Globals;
 using System.Diagnostics;
+using System.Net.Mime;
 
 
 namespace MyGame.GameObjects
@@ -31,25 +32,25 @@ namespace MyGame.GameObjects
         public int coinsCollected = 0;
 
         //TODO: change to factory method to get player 
-        public Player(Vector2 pos, Texture2D spriteSheet, IInputReader inputReader, TileType[,] tileMapCollisions)
-            : base(pos, new Vector2(), new Vector2(), 0f, new AnimationHandler(spriteSheet, new Vector2Int(16, 16)), new CollisionHandler(tileMapCollisions), null)
+        public Player(Vector2 pos, Texture2D spriteSheet, IInputReader inputReader, TileType[,] tileMapCollisions, List<StationaryObject> collidableEntities)
+            : base(pos, new Vector2(), new Vector2(), 0f, new AnimationHandler(spriteSheet, new Vector2Int(16, 16)), new CollisionHandler(new RectangleF(3f * Zoom, 10f * Zoom, 10f * Zoom, 6f * Zoom), tileMapCollisions, collidableEntities), null)
         {
             this.inputReader = inputReader;
 
-            CollisionBox = new(3f * Zoom, 10f * Zoom, 10f * Zoom, 6f * Zoom);
+            //CollisionBox = new(3f * Zoom, 10f * Zoom, 10f * Zoom, 6f * Zoom);
 
             gravityWhenFalling = 2f;
             maxVerticalSpeed = 26f;
 
-        //animationHandler = new AnimationHandler(spriteSheet, new Vector2Int(16,16));
+            //animationHandler = new AnimationHandler(spriteSheet, new Vector2Int(16,16));
 
-            animationHandler.AnimationStates.Add(State.Idling, new AnimationState(0, 4, 16));
-            animationHandler.AnimationStates.Add(State.Walking, new AnimationState(1, 4, 4));
-            animationHandler.AnimationStates.Add(State.Crouching, new AnimationState(7, 4, 24));
-            animationHandler.AnimationStates.Add(State.MidAir, new AnimationState(11, 1, 1));
+            animationHandler.AddAnimation(State.Idling, 0, 4, 16);
+            animationHandler.AddAnimation(State.Walking, 1, 4, 4);
+            animationHandler.AddAnimation(State.Crouching, 7, 4, 24);
+            animationHandler.AddAnimation(State.MidAir, 11, 1, 1);
         }
 
-        public void Update()
+        public new void Update() //TODO: new , fix ? ?
         {
             //TODO: better region names;
             #region input and Acceletaro
@@ -97,10 +98,12 @@ namespace MyGame.GameObjects
             #endregion
 
             //collissions
-            (pos, vel, acc, isGrounded) = collisionHandler.HandleCollisions(pos, vel, acc);
+            (vel, acc, isGrounded) = collisionHandler.HandleCollisions(pos, vel, acc);
             
             //update position
             pos += vel;
+
+            UpdateChunks();
 
             #region states
             if (input.X != 0)
