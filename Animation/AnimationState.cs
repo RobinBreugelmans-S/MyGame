@@ -8,6 +8,7 @@ namespace MyGame.Animation
 {
     internal struct AnimationState
     {
+        //TODO change time to frameTime
         public int Length;
         public int Location;
         public int Time;

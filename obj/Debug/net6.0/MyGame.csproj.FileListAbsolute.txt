@@ -23,7 +23,6 @@ C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\obj\Debug\net6.
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\obj\Debug\net6.0\MyGame.pdb
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\obj\Debug\net6.0\MyGame.genruntimeconfig.cache
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\obj\Debug\net6.0\ref\MyGame.dll
-C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\CatSpriteSheetFixed.xnb
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\TilesetTest.xnb
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\TilesTest.xnb
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\test.xnb
@@ -32,3 +31,7 @@ C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\ErikSpriteSheet.xnb
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\CoinSpriteSheet.xnb
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\DebugImage.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\RedCoinSpriteSheet .xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\RedCoinSpriteSheet.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\PlayerSpriteSheet.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\PixelFont.xnb

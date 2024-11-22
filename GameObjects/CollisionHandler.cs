@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using static MyGame.Globals;
-using static MyGame.Misc.Methods;
 
 namespace MyGame.GameObjects
 {
@@ -17,16 +16,19 @@ namespace MyGame.GameObjects
 
         public RectangleF CollisionBox;
         public TileType[,] TileMapCollisions; //TODO: change to CollisionTileMap !!
-        public List<StationaryObject> CollidableEntities; 
+        public List<StationaryObject> CollidableEntities;
         //protected List<Entity> entities; //TODO make entity class, IGameObject with pos vel acc, collision rectangle, and stuff
         //TODO: gravity in globals
         private Vector2 contactNormal;
         private Vector2 contactPoint;
         private float timeHitNear;
 
-       // protected bool isGrounded;
-
-        public CollisionHandler(/*MoveableObject parent, */RectangleF collisionBox , TileType[,] tileMapCollisions, List<StationaryObject> collidableEntities)
+        //protected bool isGrounded;
+        public CollisionHandler(RectangleF collisionBox)
+        {
+            CollisionBox = collisionBox;
+        }
+        public CollisionHandler(/*MoveableObject parent, */RectangleF collisionBox, TileType[,] tileMapCollisions, List<StationaryObject> collidableEntities)
         {
             //this.parent = parent;
             CollisionBox = collisionBox;
@@ -34,10 +36,7 @@ namespace MyGame.GameObjects
             CollidableEntities = collidableEntities;
         }
 
-        protected Vector2 getMiddleOfRect(RectangleF rect)
-        {
-            return new Vector2(rect.X + rect.Width / 2, rect.Y + rect.Height / 2);
-        }
+        
         private void swap<T>(ref T a, ref T b)
         {
             (a, b) = (b, a);
@@ -127,7 +126,7 @@ namespace MyGame.GameObjects
             RectangleF expandedTargetRect = new(targetRect.X - dynRect.Width / 2, targetRect.Y - dynRect.Height / 2,
                                                 targetRect.Width + dynRect.Width, targetRect.Height + dynRect.Height);
 
-            if (rayVsRect(getMiddleOfRect(dynRect), vel, expandedTargetRect, out contactPoint, out contactNormal, out timeHitNear))
+            if (rayVsRect(GetMiddleOfRect(dynRect), vel, expandedTargetRect, out contactPoint, out contactNormal, out timeHitNear))
             {
                 if (timeHitNear <= 1f)
                 {
@@ -173,11 +172,23 @@ namespace MyGame.GameObjects
             List<StationaryObject> entities = new();
 
             foreach (StationaryObject entity in CollidableEntities)
-            {
-                if (rectangle.IntersectsWith(entity.CollisionBox.At(entity.pos)))
+            {/*
+                //fix so it gets collision box from the collisionhandler
+                if(entity is MoveableObject)
                 {
-                    entities.Add(entity);
+                    MoveableObject moveableEntity = entity as MoveableObject;
+                    if (rectangle.IntersectsWith(moveableEntity.CurrentCollisionBox))//.At(entity.pos)))
+                    {
+                        entities.Add(moveableEntity);
+                    }
                 }
+                else
+                {*/
+                    if (rectangle.IntersectsWith(entity.CurrentCollisionBox))//.At(entity.pos)))
+                    {
+                        entities.Add(entity);
+                    }
+                //}
             }
             
             return entities;
@@ -191,6 +202,8 @@ namespace MyGame.GameObjects
             RectangleF currentCollisionBox = CollisionBox.At(pos);
             RectangleF projectedCollisionBox = CollisionBox.At(pos + vel);
             RectangleF boundingBox = getBoundingBox(currentCollisionBox, projectedCollisionBox);
+            //Debug.WriteLine("----");
+            //Debug.WriteLine($"boundingBox: {boundingBox.Left}, {boundingBox.Top} : {boundingBox.Right}, {boundingBox.Bottom}");
 
             List<Vector2Int> tileMapCollisions = GetTileMapCollisions(pos + vel);
 
@@ -223,22 +236,22 @@ namespace MyGame.GameObjects
                 {
                     collisionsSorted.Add((entity, timeHitNear, TileType.None));
                 }
-            }
-
-            collisionsSorted = collisionsSorted.OrderBy(c => c.TimeHitNear).ThenBy(c => (getMiddleOfRect(c.collider.CurrentCollisionBox) - getMiddleOfRect(currentCollisionBox)).Length()).ToList();
-           //TODO: give Collibdable instaed of TileRect
+            }//TODO: collisionsSorted -> collisions
+            //TODO: still have bugs where you can jump on the wall
+            collisionsSorted = collisionsSorted.OrderBy(c => c.TimeHitNear).ThenBy(c => (GetMiddleOfRect(c.collider.CurrentCollisionBox) - GetMiddleOfRect(currentCollisionBox)).Length()).ToList();
+            //TODO: give Collibdable instaed of TileRect
             foreach ((Collidable collider, float TimeHitNear, TileType TileType) collision in collisionsSorted)
             {
                 if (dynamicRectVsRect(currentCollisionBox, vel, collision.collider.CurrentCollisionBox, out contactPoint, out contactNormal, out timeHitNear))
                 {
                     //Action<Vector2> collisionMethod; TODO
                     //resolve collisions
-
+                    
                     //first check if the collidable is tile or entity
-                    if(collision.collider is StationaryObject)
+                    if (collision.collider is StationaryObject) //TODO chagne so you can stand on some enemies
                     {
+                        //Debug.WriteLine("touched");
                         StationaryObject entity = collision.collider as StationaryObject;
-
                         entity.Touched.Invoke(Parent, contactNormal);
                     }
                     else

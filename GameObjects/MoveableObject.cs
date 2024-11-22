@@ -9,7 +9,7 @@ using static MyGame.Globals;
 
 namespace MyGame.GameObjects
 {
-    internal class MoveableObject : StationaryObject
+    internal class MoveableObject : StationaryObject, IGameObject
     {
         public Vector2 vel;
         public Vector2 acc;
@@ -17,11 +17,12 @@ namespace MyGame.GameObjects
         protected float maxHorizontalSpeed;
         protected float maxVerticalSpeed;
 
-        protected float gravityWhenFalling;
+        public float gravityWhenFalling;
 
-        protected CollisionHandler collisionHandler;
-        public new RectangleF CollisionBox { get { return collisionHandler.CollisionBox; } protected set { collisionHandler.CollisionBox = value; } }
-        protected bool isGrounded;
+        //public CollisionHandler collisionHandler;
+        //public new RectangleF CollisionBox { get { return collisionHandler.CollisionBox; } protected set { collisionHandler.CollisionBox = value; } }
+        //public new RectangleF CurrentCollisionBox { get { return CollisionBox.At(pos); } }
+        public bool isGrounded;
 
         public MoveableObject(Vector2 pos, Vector2 vel, Vector2 acc, float gravity, AnimationHandler animationHandler, CollisionHandler collisionHandler, OnTouch onTouch) : base(pos, animationHandler, onTouch)
         {
@@ -35,7 +36,7 @@ namespace MyGame.GameObjects
             : this(pos, vel, new Vector2(), gravity, animationHandler, collisionHandler, onTouch)
         { }
 
-        public void Update()
+        public new void Update()
         {
             vel.Y += gravityWhenFalling;
 
@@ -49,8 +50,6 @@ namespace MyGame.GameObjects
 
             pos += vel;
 
-            //UpdateChunks();
-            
             base.Update();
         }
     }

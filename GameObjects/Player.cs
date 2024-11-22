@@ -16,7 +16,7 @@ using System.Net.Mime;
 namespace MyGame.GameObjects
 {
 
-    internal class Player : MoveableObject //TODO: inherit from class only with collisions, pos, vel acc
+    internal class Player : MoveableObject, IGameObject //TODO: inherit from class only with collisions, pos, vel acc
     {
         private float runAcc = 2f;
         private float runSpeed = 8f;
@@ -27,8 +27,11 @@ namespace MyGame.GameObjects
 
         private Vector2Int input = new();
         private bool isJumping = false;
+        private bool isImmune { get { return immuneTimer > 0; } }
+        private int immuneTimer = 0;
 
         public int Score = 0;
+        public int HP = 3;
 
         //TODO: change to factory method to get player 
         public Player(Vector2 pos, Texture2D spriteSheet, IInputReader inputReader, TileType[,] tileMapCollisions, List<StationaryObject> collidableEntities)
@@ -49,8 +52,21 @@ namespace MyGame.GameObjects
             animationHandler.AddAnimation(State.MidAir, 11, 1, 1);
         }
 
+        public void DamageIfNotImmune()
+        {
+            if (!isImmune)
+            {
+                HP--;
+                immuneTimer = 48;
+            }
+        }
+
         public new void Update() //TODO: new , fix ? ?
         {
+            if (immuneTimer > 0)
+            {
+                immuneTimer--;
+            }
             //TODO: better region names;
             #region input and Acceletaro
             //TODO: add animator class? to refactor animations and horizontalFlip
@@ -66,7 +82,7 @@ namespace MyGame.GameObjects
                 animationHandler.HorizontalFlip = SpriteEffects.FlipHorizontally;
             }
 
-            if (vel.Y > 0)//refactor, move to collision detection
+            if (vel.Y >= 0)//refactor, move to collision detection
             {
                 acc.Y = gravityWhenFalling;
             }
@@ -129,9 +145,13 @@ namespace MyGame.GameObjects
             //animation
             animationHandler.UpdatePartRectangle();
         }
-        public void Draw(SpriteBatch spriteBatch)
+        public new void Draw(SpriteBatch spriteBatch)
         {
-            animationHandler.Draw(spriteBatch, pos);
+            if (immuneTimer/4 % 2 == 0)
+            {
+                animationHandler.Draw(spriteBatch, pos);
+            }
         }
+
     }
 }

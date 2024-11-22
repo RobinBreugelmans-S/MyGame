@@ -11,13 +11,15 @@ namespace MyGame.Animation
 {
     internal class AnimationHandler
     {
+        //TODO which can be private, or get/set?
         public Dictionary<State, AnimationState> AnimationStates = new();
         public Rectangle PartRectangle;
-        public State State; //TODO: naming convention enums!! States State
+        public State State; //TODO: naming convention enums!! States State //TODO change to currentState
         public Texture2D SpriteSheet;
         public Vector2Int SpriteSize;
         public SpriteEffects HorizontalFlip = SpriteEffects.None;
-        public int AnimationTimer = 0;
+        public int AnimationTimer = 0; //TODO: private?
+        private int alternateAnimationTimer = 0;
 
         public AnimationHandler(Texture2D spriteSheet, Vector2Int spriteSize)
         {
@@ -30,20 +32,36 @@ namespace MyGame.Animation
         {
             AnimationStates.Add(state, new AnimationState(location, length, time));
         }
-        
-        public void ChangeState(State state)
+
+        public void ChangeState(State state) //todo change to 
         {
-            State = state;
-            PartRectangle.Y = AnimationStates[state].Location * SpriteSize.Y;
+            if(alternateAnimationTimer <= 0) //aka animation is not playing
+            {
+                State = state;
+                PartRectangle.Y = AnimationStates[state].Location * SpriteSize.Y;
+            }
         }
+
         public void UpdatePartRectangle()
         {
+            if(alternateAnimationTimer > 0)
+            {
+                alternateAnimationTimer--;
+            }
+
             AnimationTimer = (AnimationTimer + 1) % AnimationStates[State].Time;
             if (AnimationTimer == 0)
             {
                 PartRectangle.X = (PartRectangle.X + SpriteSize.X) % (SpriteSize.X * AnimationStates[State].Length);
             }
         }
+
+        public void PlayAnimation(State state)
+        {
+            ChangeState(state);
+            alternateAnimationTimer = AnimationStates[state].Length * AnimationStates[state].Time;
+        }
+
         public void Draw(SpriteBatch spriteBatch, Vector2 pos)
         {
             //first rect = destination, second rect = source in image

@@ -18,12 +18,12 @@ namespace MyGame.GameObjects
         //public List<Vector2> Chunks = new(); //list of chunks this entity intersects with
 
         //public RectangleF CollisionBox;// { get { return collisionHandler.CollisionBox; } protected set { collisionHandler.CollisionBox = value; } }
-        //public CollisionHandler collisionHandler;
-        public delegate void OnTouch(StationaryObject collisionObject, Vector2 normalVector);
+        public bool isCollidable; //TODO: add to constructors?
+        //public int priority; TODO: use this (sort entity list by this), //lower values will get updated and drawed first
         public OnTouch Touched; // (collisionObject, normalVector) => stuff
 
         protected Texture2D texture;
-        protected AnimationHandler animationHandler;
+        public AnimationHandler animationHandler; //TODO: -> AnimationHandler
 
         public StationaryObject(Vector2 pos, RectangleF collisionBox, AnimationHandler animationHandler) : base(pos, collisionBox)
         {
@@ -42,26 +42,11 @@ namespace MyGame.GameObjects
             this.animationHandler = animationHandler;
             Touched = touched;
         }
-        /*
-        protected void UpdateChunks()
-        {
-            Chunks = new();
-            
-            RectangleF currentCollisionBox = CollisionBox.At(pos);
 
-            Vector2 topLeftChunk = new Vector2((float)Math.Floor(currentCollisionBox.X / ChunkSize) * ChunkSize, (float)Math.Floor(currentCollisionBox.Y / ChunkSize) * ChunkSize);
-            Vector2Int intersectingChunks = new(
-                (int)(Math.Ceiling(currentCollisionBox.Right / ChunkSize) - Math.Floor(currentCollisionBox.Left / ChunkSize)),
-                (int)(Math.Ceiling(currentCollisionBox.Bottom / ChunkSize) - Math.Floor(currentCollisionBox.Top / ChunkSize))
-            );
-            for (int x = 0; x < intersectingChunks.X; x++)
-            {
-                for (int y = 0; y < intersectingChunks.Y; y++)
-                {
-                    Chunks.Add(topLeftChunk + new Vector2(x * ChunkSize, y * ChunkSize));
-                }
-            }
-        }*/
+        public void PlayAnimation(State animationState)
+        {
+            animationHandler.PlayAnimation(animationState);
+        }
 
         public void Update()
         {
