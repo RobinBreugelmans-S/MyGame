@@ -56,10 +56,6 @@ namespace MyGame.GameObjects
 
         public new void Update()
         {
-            //TODO REMOVE
-            //Debug.WriteLine($"collisionbox erik: {CollisionBox.Left}, {CollisionBox.Top} : {CollisionBox.Right}, {CollisionBox.Bottom}");
-            //Debug.WriteLine($"current erik: {CurrentCollisionBox.Left}, {CurrentCollisionBox.Top} : {CurrentCollisionBox.Right}, {CurrentCollisionBox.Bottom}");
-            
             targetDirection = GetMiddleOfRect(target.CurrentCollisionBox) - GetMiddleOfRect(CurrentCollisionBox);
             
             if (input.X == 1)
@@ -79,8 +75,7 @@ namespace MyGame.GameObjects
             {
                 acc.Y = gravityWhenJumping;
             }
-                       
-            //jump if wall is infront and move to player
+            
             doBehaviour();
 
             vel.X = Math.Clamp(vel.X + acc.X, -runSpeed, runSpeed);

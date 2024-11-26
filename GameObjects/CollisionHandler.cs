@@ -35,7 +35,6 @@ namespace MyGame.GameObjects
             TileMapCollisions = tileMapCollisions;
             CollidableEntities = collidableEntities;
         }
-
         
         private void swap<T>(ref T a, ref T b)
         {
@@ -43,10 +42,10 @@ namespace MyGame.GameObjects
         }
         private RectangleF getBoundingBox(params RectangleF[] rects)
         {
-            float xMin = rects.Min(s => s.X);
-            float yMin = rects.Min(s => s.Y);
-            float xMax = rects.Max(s => s.X + s.Width);
-            float yMax = rects.Max(s => s.Y + s.Height);
+            float xMin = rects.Min(s => s.Left);
+            float yMin = rects.Min(s => s.Top);
+            float xMax = rects.Max(s => s.Right);
+            float yMax = rects.Max(s => s.Bottom);
             RectangleF boundingRect = new(xMin, yMin, xMax - xMin, yMax - yMin);
             return boundingRect;
         }
@@ -87,7 +86,7 @@ namespace MyGame.GameObjects
             contactPoint = rayOrigin + timeHitNear * rayDir;
 
             //calculate normal
-            if (near.X > near.Y)
+            if (near.X >= near.Y)
             {
                 if (rayDir.X <= 0)
                 {
@@ -100,7 +99,7 @@ namespace MyGame.GameObjects
             }
             else
             {
-                if (rayDir.Y < 0)
+                if (rayDir.Y <= 0)
                 {
                     contactNormal = new Vector2(0, 1);
                 }
@@ -137,11 +136,8 @@ namespace MyGame.GameObjects
             return false;
         }
         
-        public List<Vector2Int> GetTileMapCollisions(Vector2 pos)
+        public List<Vector2Int> GetTileMapCollisions(RectangleF rectangle)
         {
-            //TODO: use rectangleF BoundingRectangle
-            RectangleF rectangle = CollisionBox.At(pos);
-
             //calculate amount of tiles to check for
             Vector2Int tilesToCheck = new(
                 (int)(Math.Ceiling(rectangle.Right / TileSize) - Math.Floor(rectangle.Left / TileSize)),
@@ -161,7 +157,7 @@ namespace MyGame.GameObjects
                 }
             }
 
-            //filter out tiles that are outside of the map area (else it will cause lag)
+            //filter out tiles that are outside of the map area (else it will cause lag) TODO: may be because of the errors being logged in Debug
             collisions = collisions.Where(c => c.X >= 0 && c.Y >= 0 && c.X < TileMapCollisions.GetLength(0) && c.Y < TileMapCollisions.GetLength(1)).ToList();
             
             return collisions;
@@ -172,23 +168,11 @@ namespace MyGame.GameObjects
             List<StationaryObject> entities = new();
 
             foreach (StationaryObject entity in CollidableEntities)
-            {/*
-                //fix so it gets collision box from the collisionhandler
-                if(entity is MoveableObject)
+            {
+                if (rectangle.IntersectsWith(entity.CurrentCollisionBox))//.At(entity.pos)))
                 {
-                    MoveableObject moveableEntity = entity as MoveableObject;
-                    if (rectangle.IntersectsWith(moveableEntity.CurrentCollisionBox))//.At(entity.pos)))
-                    {
-                        entities.Add(moveableEntity);
-                    }
+                    entities.Add(entity);
                 }
-                else
-                {*/
-                    if (rectangle.IntersectsWith(entity.CurrentCollisionBox))//.At(entity.pos)))
-                    {
-                        entities.Add(entity);
-                    }
-                //}
             }
             
             return entities;
@@ -202,10 +186,8 @@ namespace MyGame.GameObjects
             RectangleF currentCollisionBox = CollisionBox.At(pos);
             RectangleF projectedCollisionBox = CollisionBox.At(pos + vel);
             RectangleF boundingBox = getBoundingBox(currentCollisionBox, projectedCollisionBox);
-            //Debug.WriteLine("----");
-            //Debug.WriteLine($"boundingBox: {boundingBox.Left}, {boundingBox.Top} : {boundingBox.Right}, {boundingBox.Bottom}");
-
-            List<Vector2Int> tileMapCollisions = GetTileMapCollisions(pos + vel);
+            
+            List<Vector2Int> tileMapCollisions = GetTileMapCollisions(boundingBox);
 
             //TODO: change tileRect to Collidable, make new Collidbale for the tiles, and ofr entities just add
             List<StationaryObject> entityCollisions = GetEntityCollisions(boundingBox);

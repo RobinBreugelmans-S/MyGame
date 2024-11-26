@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyGame.Scenes
 {
-    public class Entity
+    public class EntityData
     {
         public string name { get; set; }
         public int id { get; set; }
@@ -31,7 +31,7 @@ namespace MyGame.Scenes
         public List<List<int>> data2D { get; set; }
         public int exportMode { get; set; }
         public int arrayMode { get; set; }
-        public List<Entity> entities { get; set; }
+        public List<EntityData> entities { get; set; }
     }
 
     public class LevelJson

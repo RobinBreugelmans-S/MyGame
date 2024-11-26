@@ -12,6 +12,11 @@ using Color = Microsoft.Xna.Framework.Color;
 using static MyGame.Globals;
 using MyGame.Scenes;
 
+/* TODO:
+ * comments where i used a coding structure thing (factory, command, any more used?)
+ * 
+ * https://anokolisa.itch.io/action
+ */
 
 namespace MyGame
 {
@@ -19,9 +24,6 @@ namespace MyGame
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
-        private Player player; //TODO remove
-        private Texture2D playerTexture;
 
         private Scene scene;
 
@@ -41,7 +43,7 @@ namespace MyGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            scene = new Scene("TestLevel1", Content); //TODO: refactor with scene factory
+            scene = new Scene("TestLevel1", Content); //TODO: refactor with scene factory/manager
 
             base.Initialize();
         }
@@ -50,31 +52,22 @@ namespace MyGame
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            playerTexture = Content.Load<Texture2D>("PlayerSpriteSheet"); //TODO: naming conventions!!
-            
-
             //TODO: remove?
-            DebugImage = Content.Load<Texture2D>("DebugImage");
+            //DebugImage = Content.Load<Texture2D>("DebugImage");
 
             InitializeGameObjects();
         }
 
         private void InitializeGameObjects()
         {
-            //TODO: factory for entities (so don't have to give playerTexture, keyboardReader, tileMapCollisions)
-            //TODO: move to scene
             scene.LoadScene();
+            //TODO: move to scene
             for (int i = 0; i < scene.tileMapsDecoration.Length; i++) //load tileset images from tileset names
             {
                 scene.tileMapsDecoration[i].tileset = Content.Load<Texture2D>(scene.tileMapsDecoration[i].tilesetName);
             }
-
-            //player = new Player(new Vector2(0,0), playerTexture, new KeyboardReader(), scene.tileMapCollisions.AsTileTypeMap(), scene.entities); //change input in settings
-                                                                                                                                                 //currently collisions and tileMap are the same
+            //currently collisions and tileMap are the same
             //scene.Player = player;
-
-            //erik = new Erik(new Vector2(18 * TileSize,17 * TileSize), erikTexture, player, scene.tileMapCollisions.AsTileTypeMap(), scene.entities);
-            
         }
 
         protected override void Update(GameTime gameTime)
@@ -84,11 +77,7 @@ namespace MyGame
                 Exit();
             }
 
-            // TODO: Add your update logic here
             scene.Update();
-            //TODO: move to scene
-            //player.Update();
-            //erik.Update();
             base.Update(gameTime);
         }
 

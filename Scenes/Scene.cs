@@ -50,20 +50,6 @@ namespace MyGame.Scenes
             this.content = content;
         }
 
-        private void addEntity(StationaryObject entity)
-        {   if(entity is Player)
-            {
-                Player _player = (Player)entity; //add check for adding 2 players
-                objectFactory.player = _player;
-                player = _player;
-            }
-            entities.Add(entity);
-            if (entity.Touched != null) //TODO: Touched -> OnTouch //TODO: use isCollidable
-            {
-                collidableEntities.Add(entity);
-            }
-        }
-
         public void LoadScene()
         {
             //parse ogmo json            
@@ -72,7 +58,7 @@ namespace MyGame.Scenes
 
             LevelJson levelJson = JsonSerializer.Deserialize<LevelJson>(jsonData);
 
-            //refacotr with tileMap class
+            //refactor with tileMap class
             tileMapCollisions = new TileMap(levelJson.layers[0]);         //TODO: make it so tileMapsDeco doesn't get entity, than make list withb entity layers
             tileMapsDecoration = new TileMap[levelJson.layers.Count - 2]; //-2: first layer is collisios, last is entities //TODO: add checks for if there are not enough layers
             for (int i = 0; i < levelJson.layers.Count - 2; i++)
@@ -81,13 +67,31 @@ namespace MyGame.Scenes
             }
             //load entities
             objectFactory = new(player, tileMapCollisions.AsTileTypeMap(), collidableEntities, content, new Action<StationaryObject>(entity => entitiesToBeRemoved.Add(entity)));
-            //foreach over the list, big case switch in seperate method, add into collision entity if the entity is collidable?
-            addEntity(objectFactory.GetPlayer(0, 6));
-            addEntity(objectFactory.GetCoin(5, 12));
-            addEntity(objectFactory.GetCoin(7, 12));
-            addEntity(objectFactory.GetCoin(9, 12));
-            addEntity(objectFactory.GetRedCoin(8, 16));
-            addEntity(objectFactory.GetErik(0,12));
+            
+            Layer entityLayer = levelJson.layers[levelJson.layers.Count - 1];
+            foreach(EntityData entityData in entityLayer.entities)
+            {
+                addEntity(entityData.name, entityData.x, entityData.y);
+            }
+
+            
+        }
+        private void addEntity(string entityName, int tileX, int tileY)
+        {
+            StationaryObject entity = objectFactory.GetEntity(entityName, tileX, tileY);
+
+            if (entity is Player)
+            {
+                Player _player = (Player)entity; //add check for adding 2 players
+                objectFactory.player = _player;
+                player = _player;
+            }
+            entities.Add(entity);
+            if (entity.Touched != null) //TODO: Touched -> OnTouch //TODO: use isCollidable
+                //TODO: also make it so if you can stand on entity
+            {
+                collidableEntities.Add(entity);
+            }
         }
 
         private void  removeEntity(StationaryObject entity)
@@ -128,6 +132,7 @@ namespace MyGame.Scenes
                 Vector2 position = new Vector2(16, 0); //TODO: use viewport
                 spriteBatch.DrawString(font, $"HP: {player.HP}", position, Color.Black, 0, textMiddlePoint, 4f, SpriteEffects.None, 0.5f);
                 
+                //TODO
                 //Death screen
                 if (player.HP <= 0)
                 {
@@ -136,7 +141,6 @@ namespace MyGame.Scenes
 
                 //Score
                 string scoreText = $"Score: {player.Score.ToString("D8")}";
-                //scoreText = "Score: 00001234";
                 spriteBatch.DrawString(font, scoreText, new Vector2(1920 - font.MeasureString(scoreText).X * 2 - 16, 32) , Color.Black, 0, font.MeasureString(scoreText) / 2, 4f, SpriteEffects.None, 0.5f);
 
             }

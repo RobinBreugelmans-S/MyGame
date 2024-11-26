@@ -29,45 +29,51 @@ namespace MyGame.GameObjects
             this.collidableEntities = collidableEntities;
             this.content = content;
             this.remove = remove;
+
+            getEntityMethods.Add("player", new((tileX, tileY) => getPlayer(tileX, tileY)));
+            getEntityMethods.Add("coin", new((tileX, tileY) => getCoin(tileX, tileY)));
+            getEntityMethods.Add("red_coin", new((tileX, tileY) => getRedCoin(tileX, tileY)));
+            getEntityMethods.Add("erik", new((tileX, tileY) => getErik(tileX, tileY)));
         }
 
-        //TODO: make dictionary with texture name and texture2D
-        private Dictionary<string, Texture2D> textureStore = new();
-        private Texture2D redCoinTexture;
-        private Texture2D erikTexture;
-        private Texture2D playerTexture;
-
-        private void getTexture(string textureFileName, out Texture2D texture)
+        private Dictionary<string, Func<int, int, StationaryObject>> getEntityMethods = new(); //TODO: change Object to Entity (statinaryEntity)
+        public StationaryObject GetEntity(string entityName, int tileX, int tileY)
         {
+            return getEntityMethods[entityName](tileX, tileY);
+        }
+
+        private Dictionary<string, Texture2D> textureStore = new();
+        private Texture2D playerTexture; //TODO: is needed?
+
+        private Texture2D getTexture(string textureFileName)
+        {
+            //TODO: refactor to not use try catch
             try
             {
-                texture = textureStore[textureFileName];
+                return textureStore[textureFileName];
             }
             catch
             {
                 textureStore.Add(textureFileName, content.Load<Texture2D>(textureFileName));
-                texture = textureStore[textureFileName];
+                return textureStore[textureFileName];
             }
         }
 
-        public Player GetPlayer(int tileX, int tileY)
+        private Player getPlayer(int tileX, int tileY)
         {
             if (player == null)
             {
                 playerTexture = content.Load<Texture2D>("PlayerSpriteSheet"); //TODO: name + spritesheet?
 
                 player = new Player(new Vector2(tileX * TileSize, tileY * TileSize), playerTexture, new KeyboardReader(), tileMapCollisions, collidableEntities); //TODO: change input in settings
-                Debug.WriteLine("GetPlayer");
-                Debug.WriteLine(player);
                 return player;
             }
             throw new Exception("Cannot have 2 players!"); //TODO: fix ?
         }
 
-        public StationaryObject GetCoin(int tileX, int tileY) //change to GetCoin
+        private StationaryObject getCoin(int tileX, int tileY)
         {
-            Texture2D texture;
-            getTexture("CoinSpriteSheet", out texture);
+            Texture2D texture = getTexture("CoinSpriteSheet");
             
             AnimationHandler animationHandler = new(texture, new Vector2Int(8, 8));
             animationHandler.AddAnimation(State.Idling, 0, 8, 6);
@@ -89,11 +95,10 @@ namespace MyGame.GameObjects
             return coin;
         }
 
-        public StationaryObject GetRedCoin(int tileX, int tileY)
+        private StationaryObject getRedCoin(int tileX, int tileY)
         {
             //TODO make red coin texture!!!
-            Texture2D texture;
-            getTexture("RedCoinSpriteSheet", out texture);
+            Texture2D texture = getTexture("RedCoinSpriteSheet");
 
             AnimationHandler animationHandler = new(texture, new Vector2Int(8, 8));
             animationHandler.AddAnimation(State.Idling, 0, 8, 6);
@@ -112,16 +117,14 @@ namespace MyGame.GameObjects
 
             return coin;
         }
-        
-        public Enemy GetErik(int tileX, int tileY)
-        {
-            return GetErik(tileX, tileY, player);
-        }
 
-        public Enemy GetErik(int tileX, int tileY, StationaryObject target)//, StationaryObject target)
+        private Enemy getErik(int tileX, int tileY)
         {
-            Texture2D texture;
-            getTexture("ErikSpriteSheet", out texture);
+            return getErik(tileX, tileY, player);
+        }
+        private Enemy getErik(int tileX, int tileY, StationaryObject target)
+        {
+            Texture2D texture = getTexture("ErikSpriteSheet");
 
             AnimationHandler animationHandler = new(texture, new Vector2Int(23,16));
             animationHandler.AnimationStates.Add(State.Walking, new AnimationState(0, 4, 4));
@@ -131,24 +134,24 @@ namespace MyGame.GameObjects
             
             CollisionHandler collisionHandler = new(new RectangleF(5f * Zoom, 8f * Zoom, 12f * Zoom, 8f * Zoom), tileMapCollisions, collidableEntities);
 
-            Enemy erik = new(new Vector2(tileX * TileSize, tileY * TileSize), 1f, 6f, 16f, 2f, 1f, animationHandler, collisionHandler, target);//, behaviour, onTouch);
-            
+            Enemy erik = new(new Vector2(tileX * TileSize, tileY * TileSize), .5f, 6f, 16f, 2f, 1f, animationHandler, collisionHandler, target);//, behaviour, onTouch);
+
             erik.doBehaviour = new(() =>
             {
-                //movement    
-                if (erik.input.X == 0)
-                {
-                    erik.acc.X = Math.Sign(erik.vel.X) * -1; //friction
-                }
-                else
-                {
-                    erik.acc.X = erik.input.X * erik.runAcc;
-                }
+            //movement    
+            if (erik.input.X == 0)
+            {
+                erik.acc.X = Math.Sign(erik.vel.X) * -1; //friction
+            }
+            else
+            {
+                erik.acc.X = erik.input.X * erik.runAcc;
+            }
 
-                //jump
-                if (erik.isGrounded)
-                {
-                    List<Vector2Int> horizontalCollisions = erik.collisionHandler.GetTileMapCollisions(erik.pos + new Vector2(erik.input.X * 8, 0));
+            //jump
+            if (erik.isGrounded)
+            {
+                List<Vector2Int> horizontalCollisions = erik.collisionHandler.GetTileMapCollisions(erik.CurrentCollisionBox.At(new(erik.input.X * 8,0)));// erik.pos + new Vector2(erik.input.X * 8, 0));
                     foreach (Vector2Int collision in horizontalCollisions) //TODO: colissions -> tiles
                     {
                         if (erik.collisionHandler.TileMapCollisions.tryGetValue(collision, out TileType tileType) && (tileType == TileType.Solid)) //0 = air //|| tileType == TileType.SemiRight
@@ -183,5 +186,78 @@ namespace MyGame.GameObjects
             
             return erik;
         }
+
+        private Enemy getSnowballer(int tileX, int tileY)
+        {
+            return getSnowballer(tileX, tileY, player);
+        }
+        //TODO: enemy that throws projectiles
+        private Enemy getSnowballer(int tileX, int tileY, StationaryObject target)
+        {
+            Texture2D texture = getTexture("SnowballerSpriteSheet");
+
+            AnimationHandler animationHandler = new(texture, new Vector2Int(23, 16));
+            animationHandler.AnimationStates.Add(State.Walking, new AnimationState(0, 4, 4));
+            animationHandler.ChangeState(State.Walking);
+
+            CollisionHandler collisionHandler = new(new RectangleF(5f * Zoom, 8f * Zoom, 12f * Zoom, 8f * Zoom), tileMapCollisions, collidableEntities);
+
+            Enemy snowballer = new(new Vector2(tileX * TileSize, tileY * TileSize), .5f, 6f, 16f, 2f, 1f, animationHandler, collisionHandler, target);//, behaviour, onTouch);
+
+            snowballer.doBehaviour = new(() =>
+            {
+                //movement    
+                if (snowballer.input.X == 0)
+                {
+                    snowballer.acc.X = Math.Sign(snowballer.vel.X) * -1; //friction
+                }
+                else
+                {
+                    snowballer.acc.X = snowballer.input.X * snowballer.runAcc;
+                }
+                /*
+                //jump
+                if (snowballer.isGrounded)
+                {
+                    List<Vector2Int> horizontalCollisions = snowballer.collisionHandler.GetTileMapCollisions(snowballer.pos + new Vector2(snowballer.input.X * 8, 0));
+                    foreach (Vector2Int collision in horizontalCollisions) //TODO: colissions -> tiles
+                    {
+                        if (snowballer.collisionHandler.TileMapCollisions.tryGetValue(collision, out TileType tileType) && (tileType == TileType.Solid)) //0 = air //|| tileType == TileType.SemiRight
+                        {
+                            snowballer.vel.Y = -snowballer.jumpPower;
+                            break;
+                        }
+                    }
+                }*/
+
+                //animation
+                if (snowballer.isGrounded)
+                {
+                    snowballer.animationHandler.ChangeState(State.Walking);
+                }
+                else
+                {
+                    snowballer.animationHandler.ChangeState(State.Jumping);
+                }
+            });
+
+            snowballer.Touched = new((collisionObject, normalVector) =>
+            {
+                if (collisionObject is Player)
+                {
+                    Player player = collisionObject as Player;
+                    player.DamageIfNotImmune();
+                    animationHandler.PlayAnimation(State.Attacking);
+                }
+            }
+            );
+
+            return snowballer;
+        }
+
+        /* floating enemy:
+         * https://elthen.itch.io/2d-pixel-art-jellyfish-sprites
+         * https://elthen.itch.io/2d-pixel-art-flying-eye-monster
+         */
     }
 }

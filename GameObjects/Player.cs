@@ -22,11 +22,15 @@ namespace MyGame.GameObjects
         private float runSpeed = 8f;
         private float jumpPower = 22f;
         private float gravityWhenJumping = 1f;
+        private new float gravityWhenFalling = 2f;
+        private new float maxVerticalSpeed = 26f;
 
         private IInputReader inputReader;
 
         private Vector2Int input = new();
-        private bool isJumping = false;
+        private bool isJumping;
+        private bool isJumpingPrevious = false;
+
         private bool isImmune { get { return immuneTimer > 0; } }
         private int immuneTimer = 0;
 
@@ -40,9 +44,6 @@ namespace MyGame.GameObjects
             this.inputReader = inputReader;
 
             collisionHandler.Parent = this; //can't put this in the constructor :(
-
-            gravityWhenFalling = 2f;
-            maxVerticalSpeed = 26f;
 
             //animationHandler = new AnimationHandler(spriteSheet, new Vector2Int(16,16));
 
@@ -71,8 +72,10 @@ namespace MyGame.GameObjects
             #region input and Acceletaro
             //TODO: add animator class? to refactor animations and horizontalFlip
             input = inputReader.ReadInput();
+            isJumpingPrevious = isJumping;
+            //add jump timer and coyote time
             isJumping = inputReader.ReadJumpInput();
-
+            
             if (input.X == 1)
             {
                 animationHandler.HorizontalFlip = SpriteEffects.None;
@@ -82,13 +85,18 @@ namespace MyGame.GameObjects
                 animationHandler.HorizontalFlip = SpriteEffects.FlipHorizontally;
             }
 
-            if (vel.Y >= 0)//refactor, move to collision detection
+            if (vel.Y >= 0 || !isJumping)
             {
                 acc.Y = gravityWhenFalling;
             }
             else
             {
                 acc.Y = gravityWhenJumping;
+            }
+
+            if(vel.Y < 0 &&!isJumping && isJumpingPrevious)
+            {
+                vel.Y *= .5f;
             }
             
             if (input.X == 0 || (input.Y == 1 && isGrounded))
