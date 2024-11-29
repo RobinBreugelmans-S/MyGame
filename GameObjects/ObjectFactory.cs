@@ -124,6 +124,7 @@ namespace MyGame.GameObjects
         }
         private Enemy getErik(int tileX, int tileY, StationaryObject target)
         {
+            //TODO: why does it dissappear sometimes when you hit it?
             Texture2D texture = getTexture("ErikSpriteSheet");
 
             AnimationHandler animationHandler = new(texture, new Vector2Int(23,16));

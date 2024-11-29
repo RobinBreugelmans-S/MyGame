@@ -24,6 +24,7 @@ namespace MyGame.Scenes
 
         //TODO: naming conventions
         private Player player;
+        private Camera camera;
         //public Player Player { get { return player; } set { player = value; objectFactory.player = value; } }
         private string filePath;
         private ContentManager content;
@@ -35,7 +36,6 @@ namespace MyGame.Scenes
         public TileMap[] tileMapsDecoration { get; private set; } //array of 2d arrays //TODO: naming conventions!
         //public Texture2D[] tilesets { get; private set; }
         //public string[] tilesetNames { get; private set; }
-        //public List<IGameObject> entities { get; private set; } = new(); //TODO: public or private?
         private ObjectFactory objectFactory;
         public List<StationaryObject> entities = new(); //TODO naming convetions
         public List<StationaryObject> collidableEntities = new();
@@ -44,14 +44,15 @@ namespace MyGame.Scenes
         
         public Scene(string level, ContentManager content)
         {
-            font = content.Load<SpriteFont>("PixelFont");
-
             filePath = $".././../../Maps/{level}.json";
             this.content = content;
         }
 
         public void LoadScene()
         {
+            //TODO refactor
+            font = font = content.Load<SpriteFont>("PixelFont");
+            
             //parse ogmo json            
             StreamReader reader = new(filePath);
             string jsonData = reader.ReadToEnd();
@@ -85,6 +86,7 @@ namespace MyGame.Scenes
                 Player _player = (Player)entity; //add check for adding 2 players
                 objectFactory.player = _player;
                 player = _player;
+                camera = new(player, new(tileMapCollisions.Width, tileMapCollisions.Height));
             }
             entities.Add(entity);
             if (entity.Touched != null) //TODO: Touched -> OnTouch //TODO: use isCollidable
@@ -106,6 +108,7 @@ namespace MyGame.Scenes
             {
                 entity.Update();
             }
+            camera.Update();
             foreach(StationaryObject entity in entitiesToBeRemoved)
             {
                 removeEntity(entity);
@@ -114,18 +117,18 @@ namespace MyGame.Scenes
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            //tileMapCollisions.Draw(spriteBatch);
-            foreach(TileMap tileMap in tileMapsDecoration)
+            Vector2 offset = -camera.Pos;
+            foreach (TileMap tileMap in tileMapsDecoration)
             {
-                tileMap.Draw(spriteBatch);
+                tileMap.Draw(offset, spriteBatch);
             }
             
             foreach (IGameObject entity in entities)
             {
-                entity.Draw(spriteBatch);
+                entity.Draw(offset, spriteBatch);
             }
 
-            if(player != null) //TODO: put in player class or scene?
+            if(player != null) //TODO: put in player class or scene? put in camera!
             {
                 //HP
                 Vector2 textMiddlePoint = Vector2.Zero;
@@ -136,13 +139,12 @@ namespace MyGame.Scenes
                 //Death screen
                 if (player.HP <= 0)
                 {
-                    spriteBatch.DrawString(font, "epic fail", new(1920/2,1080/2), Color.Black, 0, font.MeasureString("epic fail")/2, 12f, SpriteEffects.None, 0.5f);
+                    spriteBatch.DrawString(font, "epic fail", new(BufferSize.X / 2, BufferSize.Y / 2), Color.Black, 0, font.MeasureString("epic fail")/2, 12f, SpriteEffects.None, 0.5f);
                 }
 
                 //Score
                 string scoreText = $"Score: {player.Score.ToString("D8")}";
-                spriteBatch.DrawString(font, scoreText, new Vector2(1920 - font.MeasureString(scoreText).X * 2 - 16, 32) , Color.Black, 0, font.MeasureString(scoreText) / 2, 4f, SpriteEffects.None, 0.5f);
-
+                spriteBatch.DrawString(font, scoreText, new Vector2(BufferSize.X- font.MeasureString(scoreText).X * 2 - 16, 32), Color.Black, 0, font.MeasureString(scoreText) / 2, 4f, SpriteEffects.None, 0.5f);
             }
         }
 

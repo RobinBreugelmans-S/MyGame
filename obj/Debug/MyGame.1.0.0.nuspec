@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>MyGame</id>
+    <version>1.0.0</version>
+    <authors>MyGame</authors>
+    <description>Package Description</description>
+    <repository type="git" commit="b2559fc11fd649d3dd5e7c4b42eb1aa472f39058" />
+    <dependencies>
+      <group targetFramework="net6.0">
+        <dependency id="MonoGame.Content.Builder.Task" version="3.8.1.303" exclude="Build,Analyzers" />
+        <dependency id="MonoGame.Framework.DesktopGL" version="3.8.1.303" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <contentFiles>
+      <files include="any/net6.0/Content/bin/DesktopGL/Content/CoinSpriteSheet.xnb" buildAction="Content" />
+      <files include="any/net6.0/Content/bin/DesktopGL/Content/DebugImage.xnb" buildAction="Content" />
+      <files include="any/net6.0/Content/bin/DesktopGL/Content/ErikSpriteSheet.xnb" buildAction="Content" />
+      <files include="any/net6.0/Content/bin/DesktopGL/Content/PixelFont.xnb" buildAction="Content" />
+      <files include="any/net6.0/Content/bin/DesktopGL/Content/PlayerSpriteSheet.xnb" buildAction="Content" />
+      <files include="any/net6.0/Content/bin/DesktopGL/Content/RedCoinSpriteSheet .xnb" buildAction="Content" />
+      <files include="any/net6.0/Content/bin/DesktopGL/Content/RedCoinSpriteSheet.xnb" buildAction="Content" />
+      <files include="any/net6.0/Content/bin/DesktopGL/Content/test.xnb" buildAction="Content" />
+      <files include="any/net6.0/Content/bin/DesktopGL/Content/TilesetNature.xnb" buildAction="Content" />
+      <files include="any/net6.0/Content/bin/DesktopGL/Content/TilesetTest.xnb" buildAction="Content" />
+      <files include="any/net6.0/Content/bin/DesktopGL/Content/TilesTest.xnb" buildAction="Content" />
+    </contentFiles>
+  </metadata>
+  <files>
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\MyGame.runtimeconfig.json" target="lib\net6.0\MyGame.runtimeconfig.json" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\MyGame.dll" target="lib\net6.0\MyGame.dll" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\CoinSpriteSheet.xnb" target="content\Content\bin\DesktopGL\Content\CoinSpriteSheet.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\CoinSpriteSheet.xnb" target="contentFiles\any\net6.0\Content\bin\DesktopGL\Content\CoinSpriteSheet.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\DebugImage.xnb" target="content\Content\bin\DesktopGL\Content\DebugImage.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\DebugImage.xnb" target="contentFiles\any\net6.0\Content\bin\DesktopGL\Content\DebugImage.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\ErikSpriteSheet.xnb" target="content\Content\bin\DesktopGL\Content\ErikSpriteSheet.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\ErikSpriteSheet.xnb" target="contentFiles\any\net6.0\Content\bin\DesktopGL\Content\ErikSpriteSheet.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\PixelFont.xnb" target="content\Content\bin\DesktopGL\Content\PixelFont.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\PixelFont.xnb" target="contentFiles\any\net6.0\Content\bin\DesktopGL\Content\PixelFont.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\PlayerSpriteSheet.xnb" target="content\Content\bin\DesktopGL\Content\PlayerSpriteSheet.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\PlayerSpriteSheet.xnb" target="contentFiles\any\net6.0\Content\bin\DesktopGL\Content\PlayerSpriteSheet.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\RedCoinSpriteSheet .xnb" target="content\Content\bin\DesktopGL\Content\RedCoinSpriteSheet .xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\RedCoinSpriteSheet .xnb" target="contentFiles\any\net6.0\Content\bin\DesktopGL\Content\RedCoinSpriteSheet .xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\RedCoinSpriteSheet.xnb" target="content\Content\bin\DesktopGL\Content\RedCoinSpriteSheet.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\RedCoinSpriteSheet.xnb" target="contentFiles\any\net6.0\Content\bin\DesktopGL\Content\RedCoinSpriteSheet.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\test.xnb" target="content\Content\bin\DesktopGL\Content\test.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\test.xnb" target="contentFiles\any\net6.0\Content\bin\DesktopGL\Content\test.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\TilesetNature.xnb" target="content\Content\bin\DesktopGL\Content\TilesetNature.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\TilesetNature.xnb" target="contentFiles\any\net6.0\Content\bin\DesktopGL\Content\TilesetNature.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\TilesetTest.xnb" target="content\Content\bin\DesktopGL\Content\TilesetTest.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\TilesetTest.xnb" target="contentFiles\any\net6.0\Content\bin\DesktopGL\Content\TilesetTest.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\TilesTest.xnb" target="content\Content\bin\DesktopGL\Content\TilesTest.xnb" />
+    <file src="C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\Content\bin\DesktopGL\Content\TilesTest.xnb" target="contentFiles\any\net6.0\Content\bin\DesktopGL\Content\TilesTest.xnb" />
+  </files>
+</package>

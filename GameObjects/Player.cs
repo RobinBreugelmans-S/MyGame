@@ -33,7 +33,7 @@ namespace MyGame.GameObjects
 
         private bool isImmune { get { return immuneTimer > 0; } }
         private int immuneTimer = 0;
-
+        
         public int Score = 0;
         public int HP = 3;
 
@@ -153,11 +153,11 @@ namespace MyGame.GameObjects
             //animation
             animationHandler.UpdatePartRectangle();
         }
-        public new void Draw(SpriteBatch spriteBatch)
+        public new void Draw(Vector2 offset,SpriteBatch spriteBatch)
         {
             if (immuneTimer/4 % 2 == 0)
             {
-                animationHandler.Draw(spriteBatch, pos);
+                animationHandler.Draw(spriteBatch, pos + offset);
             }
         }
 

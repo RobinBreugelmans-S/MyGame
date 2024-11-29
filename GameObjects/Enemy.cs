@@ -85,16 +85,7 @@ namespace MyGame.GameObjects
             {
                 (vel, acc, isGrounded) = collisionHandler.HandleCollisions(pos, vel, acc);
             }
-
             pos += vel;
-
-            #region animation states
-            /*if (isAttacking)
-            {
-
-            }*/
-
-            #endregion
 
             animationHandler.UpdatePartRectangle();
         }

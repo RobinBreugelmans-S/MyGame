@@ -232,7 +232,6 @@ namespace MyGame.GameObjects
                     //first check if the collidable is tile or entity
                     if (collision.collider is StationaryObject) //TODO chagne so you can stand on some enemies
                     {
-                        //Debug.WriteLine("touched");
                         StationaryObject entity = collision.collider as StationaryObject;
                         entity.Touched.Invoke(Parent, contactNormal);
                     }

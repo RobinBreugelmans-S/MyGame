@@ -34,8 +34,8 @@ namespace MyGame
             IsMouseVisible = true;
 
             //_graphics.IsFullScreen = true;
-            _graphics.PreferredBackBufferWidth = 1920;
-            _graphics.PreferredBackBufferHeight = 1080;
+            _graphics.PreferredBackBufferWidth = BufferSize.X;
+            _graphics.PreferredBackBufferHeight = BufferSize.Y;
             IsFixedTimeStep = true; //60fps
             TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d);
         }

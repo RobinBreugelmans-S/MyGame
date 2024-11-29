@@ -53,9 +53,9 @@ namespace MyGame.GameObjects
             animationHandler.UpdatePartRectangle();
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(Vector2 offset, SpriteBatch spriteBatch)
         {
-            animationHandler.Draw(spriteBatch, pos);
+            animationHandler.Draw(spriteBatch, pos + offset); //TODO: first offset, then spritebatch
         }
     }
 }
