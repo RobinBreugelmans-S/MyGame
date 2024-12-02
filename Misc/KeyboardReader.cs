@@ -7,9 +7,9 @@ namespace MyGame.Misc
 {
     internal class KeyboardReader : IInputReader
     {
-        Vector2Int IInputReader.ReadInput()
+        public Vector2Int ReadInput()
         {
-            Vector2Int input = new(0,0);
+            Vector2Int input = new(0, 0);
             if (!Keyboard.GetState().IsKeyDown(Keys.Q) && Keyboard.GetState().IsKeyDown(Keys.D)) //TODO: add custom controls
             {
                 input.X = 1;
@@ -37,16 +37,23 @@ namespace MyGame.Misc
             }
             return input;
         }
-        bool IInputReader.ReadJumpInput()
+        public bool ReadJumpInput()
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
+
+        public bool ReadEnterInput()
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                return true;
+            }
+            return false;
+        }
+        
     }
 }

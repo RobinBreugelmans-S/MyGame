@@ -27,11 +27,11 @@ namespace MyGame.GameObjects
 
         public Vector2 targetDirection { get; private set; }
         public Vector2Int input { get { return new Vector2Int(Math.Sign(targetDirection.X), Math.Sign(targetDirection.Y));  } }
-        private StationaryObject target; //change to Object or sometinhg
+        public StationaryObject target; //change to Object or sometinhg
 
         public Action doBehaviour;
         
-        public Enemy(Vector2 pos, float runAcc, float runSpeed, float jumpPower, float gravityWhenFalling, float gravityWhenJumping, AnimationHandler animationHandler, CollisionHandler collisionHandler, StationaryObject target)
+        public Enemy(Vector2 pos, float runAcc, float runSpeed, float jumpPower, float gravityWhenFalling, float gravityWhenJumping, float maxVerticalSpeed, AnimationHandler animationHandler, CollisionHandler collisionHandler, StationaryObject target)
             : base(pos, new Vector2(), new Vector2(), gravityWhenFalling, animationHandler, collisionHandler, null)
         {
             //new Enemy(pos, runAcc, runSpeed, jumpPower, gravityWhenFalling, gravityWhenJumping, animationHandler, collisionHandler, target, null, null);
@@ -43,20 +43,32 @@ namespace MyGame.GameObjects
 
             this.target = target;
 
-            //doBehaviour = behaviour;
-            //ontouc
-
-            maxVerticalSpeed = 26f;
-
+            this.maxVerticalSpeed = maxVerticalSpeed;
         }
+        public Enemy(Vector2 pos, float runAcc, float runSpeed, float jumpPower, float gravityWhenFalling, float gravityWhenJumping, AnimationHandler animationHandler, CollisionHandler collisionHandler, StationaryObject target)
+            : this(pos, runAcc, runSpeed, jumpPower, gravityWhenFalling, gravityWhenJumping, MaxVerticalSpeed, animationHandler, collisionHandler, target)
+        { }
 
-        public Enemy(Vector2 pos, float runAcc, float runSpeed, float jumpPower, float gravityWhenFalling, float gravityWhenJumping, AnimationHandler animationHandler, CollisionHandler collisionHandler, StationaryObject target, Action behaviour, OnTouch onTouch) : base(pos, new Vector2(), new Vector2(), gravityWhenFalling, animationHandler, collisionHandler, onTouch)
-        {   
+        public Enemy(Vector2 pos, float runAcc, float runSpeed, float jumpPower, float gravityWhenFalling, float gravityWhenJumping, AnimationHandler animationHandler, CollisionHandler collisionHandler, StationaryObject target, Action behaviour, OnTouch onTouch)
+            : base(pos, new Vector2(), new Vector2(), gravityWhenFalling, animationHandler, collisionHandler, onTouch)
+        { //TODO: what is this
         }
-
+        public void StopMoving()
+        {
+            acc = new(0f, 0f);
+            vel = new(0f, 0f);
+            target = null;
+        }
         public new void Update()
         {
-            targetDirection = GetMiddleOfRect(target.CurrentCollisionBox) - GetMiddleOfRect(CurrentCollisionBox);
+            if(target != null)
+            {
+                targetDirection = GetMiddleOfRect(target.CurrentCollisionBox) - GetMiddleOfRect(CurrentCollisionBox);
+            }
+            else
+            {
+                targetDirection = new(0f, 0f);
+            }
             
             if (input.X == 1)
             {

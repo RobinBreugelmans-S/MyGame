@@ -14,6 +14,8 @@ namespace MyGame.GameObjects
 {
     internal class StationaryObject : Collidable, IGameObject
     {
+        //public List<object> data; //used to store some data for certain entities 
+
         //public Vector2 pos; //TODO: naming conventions!
         //public List<Vector2> Chunks = new(); //list of chunks this entity intersects with
 
@@ -21,8 +23,10 @@ namespace MyGame.GameObjects
         public bool isCollidable; //TODO: add to constructors?
         //public int priority; TODO: use this (sort entity list by this), //lower values will get updated and drawed first
         public OnTouch Touched; // (collisionObject, normalVector) => stuff
+        public Action Initialize;
 
         protected Texture2D texture;
+        public State State { get { return animationHandler.State; } }
         public AnimationHandler animationHandler; //TODO: -> AnimationHandler
 
         public StationaryObject(Vector2 pos, RectangleF collisionBox, AnimationHandler animationHandler) : base(pos, collisionBox)
@@ -46,6 +50,11 @@ namespace MyGame.GameObjects
         public void PlayAnimation(State animationState)
         {
             animationHandler.PlayAnimation(animationState);
+        }
+
+        public void ChangeState(State state)
+        {
+            animationHandler.ChangeState(state);
         }
 
         public void Update()

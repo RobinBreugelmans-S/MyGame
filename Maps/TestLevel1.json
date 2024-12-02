@@ -166,6 +166,15 @@
           "y": 12,
           "originX": 0,
           "originY": 0
+        },
+        {
+          "name": "jellyfish",
+          "id": 0,
+          "_eid": "65859600",
+          "x": 24,
+          "y": 8,
+          "originX": 0,
+          "originY": 0
         }
       ]
     }

@@ -8,19 +8,18 @@ using System.IO;
 using System.Text.Json.Nodes;
 using static MyGame.Globals;
 using MyGame.Interfaces;
-using static System.Net.WebRequestMethods;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using Microsoft.Xna.Framework.Content;
-using static System.Net.Mime.MediaTypeNames;
+using System.Linq;
 
 
 namespace MyGame.Scenes
 {
-    internal class Scene
+    internal class LevelScene : IScene
     {
-        SpriteFont font;
+        private SpriteFont font;
 
         //TODO: naming conventions
         private Player player;
@@ -37,12 +36,14 @@ namespace MyGame.Scenes
         //public Texture2D[] tilesets { get; private set; }
         //public string[] tilesetNames { get; private set; }
         private ObjectFactory objectFactory;
+        //TODO: has to be public???
         public List<StationaryObject> entities = new(); //TODO naming convetions
         public List<StationaryObject> collidableEntities = new();
         public List<StationaryObject> entitiesToBeRemoved = new();
+        public List<(StationaryObject entity, int timer)> entitiesToBeRemovedTimer = new();
         private Texture2D background; //Background class with pos, paralax, Texture2D, Draw()
         
-        public Scene(string level, ContentManager content)
+        public LevelScene(string level, ContentManager content)
         {
             filePath = $".././../../Maps/{level}.json";
             this.content = content;
@@ -51,7 +52,7 @@ namespace MyGame.Scenes
         public void LoadScene()
         {
             //TODO refactor
-            font = font = content.Load<SpriteFont>("PixelFont");
+            font = content.Load<SpriteFont>("PixelFont");
             
             //parse ogmo json            
             StreamReader reader = new(filePath);
@@ -66,16 +67,21 @@ namespace MyGame.Scenes
             {
                 tileMapsDecoration[i] = new TileMap(levelJson.layers[i + 1]); // i+1 cause layer 0 is collisions
             }
+            for (int i = 0; i < tileMapsDecoration.Length; i++) //load tileset images from tileset names
+            {
+                tileMapsDecoration[i].tileset = content.Load<Texture2D>(tileMapsDecoration[i].tilesetName);
+            }
             //load entities
-            objectFactory = new(player, tileMapCollisions.AsTileTypeMap(), collidableEntities, content, new Action<StationaryObject>(entity => entitiesToBeRemoved.Add(entity)));
+            objectFactory = new(player, tileMapCollisions.AsTileTypeMap(), collidableEntities, content, 
+                new Action<StationaryObject, int>((entity, timer) => entitiesToBeRemovedTimer.Add((entity, timer)))
+            );
+                                                                                                        //TODO: add way to remove entity in some time
             
             Layer entityLayer = levelJson.layers[levelJson.layers.Count - 1];
             foreach(EntityData entityData in entityLayer.entities)
             {
                 addEntity(entityData.name, entityData.x, entityData.y);
             }
-
-            
         }
         private void addEntity(string entityName, int tileX, int tileY)
         {
@@ -95,10 +101,9 @@ namespace MyGame.Scenes
                 collidableEntities.Add(entity);
             }
         }
-
         private void  removeEntity(StationaryObject entity)
         {
-            entities.Remove(entity);
+            entities.Remove(entity); //TODO: what if entity is not collidable?
             collidableEntities.Remove(entity);
         }
 
@@ -109,11 +114,24 @@ namespace MyGame.Scenes
                 entity.Update();
             }
             camera.Update();
-            foreach(StationaryObject entity in entitiesToBeRemoved)
+            
+            Debug.WriteLine("--");
+            for (int i = 0; i < entitiesToBeRemovedTimer.Count; i++)
             {
-                removeEntity(entity);
+                Debug.WriteLine(entitiesToBeRemovedTimer[i]);
+                //decrement timer by 1
+                entitiesToBeRemovedTimer[i] = (entitiesToBeRemovedTimer[i].entity, entitiesToBeRemovedTimer[i].timer - 1);
             }
-            entitiesToBeRemoved = new();
+            foreach (var item in entitiesToBeRemovedTimer)
+            {
+                Debug.WriteLine(item);
+                if(item.timer <= 0)
+                {
+                    Debug.WriteLine("DELETED!!");
+                    removeEntity(item.entity);
+                }
+            }
+            entitiesToBeRemovedTimer = entitiesToBeRemovedTimer.Where(i => i.timer > 0).ToList();
         }
         public void Draw(SpriteBatch spriteBatch)
         {

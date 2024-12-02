@@ -25,7 +25,7 @@ namespace MyGame
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Scene scene;
+        private IScene scene;
 
         public Game1()
         {
@@ -43,7 +43,7 @@ namespace MyGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            scene = new Scene("TestLevel1", Content); //TODO: refactor with scene factory/manager
+            scene = new LevelScene("TestLevel1", Content); //TODO: refactor with scene factory/manager
 
             base.Initialize();
         }
@@ -62,10 +62,10 @@ namespace MyGame
         {
             scene.LoadScene();
             //TODO: move to scene
-            for (int i = 0; i < scene.tileMapsDecoration.Length; i++) //load tileset images from tileset names
+            /*for (int i = 0; i < scene.tileMapsDecoration.Length; i++) //load tileset images from tileset names
             {
                 scene.tileMapsDecoration[i].tileset = Content.Load<Texture2D>(scene.tileMapsDecoration[i].tilesetName);
-            }
+            }*/
             //currently collisions and tileMap are the same
             //scene.Player = player;
         }

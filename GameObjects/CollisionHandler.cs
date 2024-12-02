@@ -165,11 +165,18 @@ namespace MyGame.GameObjects
 
         public List<StationaryObject> GetEntityCollisions(RectangleF rectangle)
         {
-            List<StationaryObject> entities = new();
+            //TODO: problem collision is checked for object itself
+            //temp fix:
+            if (!(Parent is Player))
+            {
+                return new();
+            }
 
+            List<StationaryObject> entities = new();
+            
             foreach (StationaryObject entity in CollidableEntities)
             {
-                if (rectangle.IntersectsWith(entity.CurrentCollisionBox))//.At(entity.pos)))
+                if (rectangle.IntersectsWith(entity.CurrentCollisionBox) && entity != Parent)//.At(entity.pos)))
                 {
                     entities.Add(entity);
                 }
@@ -180,6 +187,10 @@ namespace MyGame.GameObjects
 
         public (Vector2 vel, Vector2 acc, bool isGrounded) HandleCollisions(Vector2 pos, Vector2 vel, Vector2 acc)
         {
+            if(TileMapCollisions == null || CollidableEntities == null)
+            {
+                return (vel, acc, false);
+            }
             bool isGrounded = false;
             contactNormal = new Vector2(0, 0);
 
@@ -216,7 +227,8 @@ namespace MyGame.GameObjects
             {
                 if (dynamicRectVsRect(currentCollisionBox, vel, entity.CurrentCollisionBox, out contactPoint, out contactNormal, out timeHitNear))
                 {
-                    collisionsSorted.Add((entity, timeHitNear, TileType.None));
+                    collisionsSorted.Add((entity, timeHitNear, TileType.None)); //TODO: make it so touchable objects can exist
+                    //TODO: TileType -> CollisionType
                 }
             }//TODO: collisionsSorted -> collisions
             //TODO: still have bugs where you can jump on the wall
@@ -233,7 +245,24 @@ namespace MyGame.GameObjects
                     if (collision.collider is StationaryObject) //TODO chagne so you can stand on some enemies
                     {
                         StationaryObject entity = collision.collider as StationaryObject;
-                        entity.Touched.Invoke(Parent, contactNormal);
+                        Vector2 velAdded = entity.Touched.Invoke(Parent, contactNormal);
+
+                        //fix this
+                        float NumberIfNotZero(float num1, float num2)
+                        {
+                            if(num2 == 0)
+                            {
+                                return num1;
+                            }
+                            else
+                            {
+                                return num2;
+                            }
+                        }
+                        //TODO: use the solidSpeed stuff from Cakez!!
+                        vel = new(NumberIfNotZero(vel.X, velAdded.X), NumberIfNotZero(vel.Y, velAdded.Y));
+
+                        
                     }
                     else
                     {

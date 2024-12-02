@@ -24,6 +24,7 @@ namespace MyGame
         public enum State { Idling, Walking, Jumping, Crouching, MidAir, Dying, Attacking }
 
         public static readonly Texture2D DebugImage;
+        public const float MaxVerticalSpeed = 26f;
         #endregion
 
         #region methods
@@ -52,6 +53,13 @@ namespace MyGame
         }
         #endregion
 
-        public delegate void OnTouch(StationaryObject collisionObject, Vector2 normalVector);
+        //returns velocity
+        public delegate Vector2 OnTouch(StationaryObject collisionObject, Vector2 normalVector);
+
+        public static Vector2 Normalized(this Vector2 v)
+        {
+            v.Normalize();
+            return v;
+        }
     }
 }
