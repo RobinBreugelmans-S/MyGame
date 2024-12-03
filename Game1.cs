@@ -25,7 +25,8 @@ namespace MyGame
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private IScene scene;
+        private SceneFactory sceneFactory;
+        private IScene currentScene;
 
         public Game1()
         {
@@ -38,12 +39,16 @@ namespace MyGame
             _graphics.PreferredBackBufferHeight = BufferSize.Y;
             IsFixedTimeStep = true; //60fps
             TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d);
+
+            sceneFactory = new(Content,
+                (string sceneName) => currentScene = sceneFactory.GetScene(sceneName)
+            );
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            scene = new LevelScene("TestLevel1", Content); //TODO: refactor with scene factory/manager
+            currentScene = sceneFactory.GetScene("level1");//TODO: use enum? no cause no custom levels
 
             base.Initialize();
         }
@@ -60,7 +65,7 @@ namespace MyGame
 
         private void InitializeGameObjects()
         {
-            scene.LoadScene();
+            currentScene.LoadScene();
             //TODO: move to scene
             /*for (int i = 0; i < scene.tileMapsDecoration.Length; i++) //load tileset images from tileset names
             {
@@ -77,7 +82,7 @@ namespace MyGame
                 Exit();
             }
 
-            scene.Update();
+            currentScene.Update();
             base.Update(gameTime);
         }
 
@@ -85,8 +90,8 @@ namespace MyGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            scene.Draw(_spriteBatch);
+            _spriteBatch.Begin(samplerState: SamplerState.PointWrap);
+            currentScene.Draw(_spriteBatch);
             //TODO: V
             //_spriteBatch.Draw(textureAtlas, new Rectangle((int)player.currentCollisionBox.X, (int)player.currentCollisionBox.Y, (int)player.currentCollisionBox.Width, (int)player.currentCollisionBox.Height), textureStore[0], Color.Red);
             _spriteBatch.End();

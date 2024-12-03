@@ -20,6 +20,7 @@ namespace MyGame.GameObjects
         private TileType[,] tileMapCollisions;
         private List<StationaryObject> collidableEntities; //if entity is collidable, it will be added to this list
         public Player player;
+        private Dictionary<string, Func<int, int, StationaryObject>> getEntityMethods = new(); //TODO: change Object to Entity (statinaryEntity)
 
         //todo: singleton ???
         public ObjectFactory(Player player, TileType[,] tileMapCollisions, List<StationaryObject> collidableEntities, ContentManager content, Action<StationaryObject, int> remove)
@@ -30,14 +31,13 @@ namespace MyGame.GameObjects
             this.content = content;
             this.remove = remove;
 
-            getEntityMethods.Add("player", new((tileX, tileY) => getPlayer(tileX, tileY)));
-            getEntityMethods.Add("coin", new((tileX, tileY) => getCoin(tileX, tileY)));
-            getEntityMethods.Add("red_coin", new((tileX, tileY) => getRedCoin(tileX, tileY)));
-            getEntityMethods.Add("erik", new((tileX, tileY) => getErik(tileX, tileY)));
-            getEntityMethods.Add("jellyfish", new((tileX, tileY) => getJellyFish(tileX, tileY)));
+            getEntityMethods.Add("player", (tileX, tileY) => getPlayer(tileX, tileY));
+            getEntityMethods.Add("coin", (tileX, tileY) => getCoin(tileX, tileY));
+            getEntityMethods.Add("red_coin", (tileX, tileY) => getRedCoin(tileX, tileY));
+            getEntityMethods.Add("erik", (tileX, tileY) => getErik(tileX, tileY));
+            getEntityMethods.Add("jellyfish", (tileX, tileY) => getJellyFish(tileX, tileY));
         }
 
-        private Dictionary<string, Func<int, int, StationaryObject>> getEntityMethods = new(); //TODO: change Object to Entity (statinaryEntity)
         public StationaryObject GetEntity(string entityName, int tileX, int tileY)
         {
             return getEntityMethods[entityName](tileX, tileY);
@@ -292,13 +292,7 @@ namespace MyGame.GameObjects
             Enemy jellyFish = new(new Vector2(tileX * TileSize, tileY * TileSize), .5f, 2f, 0f, 0f, 0f, 2f, animationHandler, collisionHandler, target);
 
             jellyFish.doBehaviour = new(() =>
-            {/*
-                Debug.WriteLine("jellyFish");
-                Debug.WriteLine(jellyFish.pos);
-                Debug.WriteLine(jellyFish.vel);
-                Debug.WriteLine(jellyFish.acc);
-                Debug.WriteLine(jellyFish.targetDirection);*/
-
+            {
                 if (jellyFish.targetDirection.Length() <= 12 * TileSize && jellyFish.State != State.Dying)
                 {
                     jellyFish.ChangeState(State.Walking);
