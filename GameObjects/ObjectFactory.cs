@@ -153,20 +153,21 @@ namespace MyGame.GameObjects
 
             erik.doBehaviour = new(() =>
             {
-            //movement    
-            if (erik.input.X == 0)
-            {
-                erik.acc.X = Math.Sign(erik.vel.X) * -1; //friction
-            }
-            else
-            {
-                erik.acc.X = erik.input.X * erik.runAcc;
-            }
+                erik.FaceInputDirection();
+                //movement    
+                if (erik.input.X == 0)
+                {
+                    erik.acc.X = Math.Sign(erik.vel.X) * -1; //friction
+                }
+                else
+                {
+                    erik.acc.X = erik.input.X * erik.runAcc;
+                }
 
-            //jump
-            if (erik.isGrounded)
-            {
-                List<Vector2Int> horizontalCollisions = erik.collisionHandler.GetTileMapCollisions(erik.CurrentCollisionBox.At(new(erik.input.X * 8,0)));// erik.pos + new Vector2(erik.input.X * 8, 0));
+                //jump
+                if (erik.isGrounded)
+                {
+                    List<Vector2Int> horizontalCollisions = erik.collisionHandler.GetTileMapCollisions(erik.CurrentCollisionBox.At(new(erik.input.X * 8,0)));// erik.pos + new Vector2(erik.input.X * 8, 0));
                     foreach (Vector2Int collision in horizontalCollisions) //TODO: colissions -> tiles
                     {
                         if (erik.collisionHandler.TileMapCollisions.tryGetValue(collision, out TileType tileType) && (tileType == TileType.Solid)) //0 = air //|| tileType == TileType.SemiRight
@@ -291,13 +292,19 @@ namespace MyGame.GameObjects
             Enemy jellyFish = new(new Vector2(tileX * TileSize, tileY * TileSize), .5f, 2f, 0f, 0f, 0f, 2f, animationHandler, collisionHandler, target);
 
             jellyFish.doBehaviour = new(() =>
-            {
-                if(jellyFish.targetDirection.Length() <= 12 * TileSize)
+            {/*
+                Debug.WriteLine("jellyFish");
+                Debug.WriteLine(jellyFish.pos);
+                Debug.WriteLine(jellyFish.vel);
+                Debug.WriteLine(jellyFish.acc);
+                Debug.WriteLine(jellyFish.targetDirection);*/
+
+                if (jellyFish.targetDirection.Length() <= 12 * TileSize && jellyFish.State != State.Dying)
                 {
                     jellyFish.ChangeState(State.Walking);
                 }
 
-                if(jellyFish.State == State.Walking)
+                if(jellyFish.State == State.Walking && jellyFish.targetDirection != new Vector2(0f,0f))
                 {
                     jellyFish.acc = jellyFish.targetDirection.Normalized() * jellyFish.runAcc;
                 }
@@ -307,16 +314,19 @@ namespace MyGame.GameObjects
             {
                 if (jellyFish.State != State.Dying)
                 {
-                    if (touchNormal.Y == -1) //hit on head
+                    if (touchNormal.Y == -1 && collisionObject.CurrentCollisionBox.Bottom <= jellyFish.CurrentCollisionBox.Top) //hit on head
                     {
                         Player player;
                         if (IfPlayer(collisionObject, out player))
                         {
-                            //TODO: animation doesn't work  :(( :( :( :( :(  OR gets removed too fast !!!
-                            jellyFish.ChangeState(State.Dying); //TODO: use this function for erik too!
+                            jellyFish.ChangeState(State.Dying);
+                            //so the animation starts from 0
+                            //TODO: isn't changing state but also is ??? weird.
+                            //animationHandler.ChangeState(State.Dying); //TODO: use this function for erik too!
+
                             jellyFish.StopMoving();
                             collisionHandler = null;
-                            remove.Invoke(jellyFish, 6);
+                            remove.Invoke(jellyFish, 6 * 3); //TODO: why not 4??   getanimation length method!
                             return new Vector2(0, -12f); //TODO: for some reason player instantly goes back to previous velocity
                                                          //IS BECAUSE speed change happens during HandleCollisions, but this still returns the previous speed
                                                          //fix: have collisionhandler remember this velocity and return that ?? or use for collision

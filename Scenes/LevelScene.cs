@@ -125,7 +125,7 @@ namespace MyGame.Scenes
             foreach (var item in entitiesToBeRemovedTimer)
             {
                 Debug.WriteLine(item);
-                if(item.timer <= 0)
+                if (item.timer <= 0)
                 {
                     Debug.WriteLine("DELETED!!");
                     removeEntity(item.entity);

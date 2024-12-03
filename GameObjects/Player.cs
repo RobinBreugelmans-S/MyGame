@@ -129,17 +129,16 @@ namespace MyGame.GameObjects
             //UpdateChunks();
 
             #region states
-            if (input.X != 0)
+            if (input.X != 0 && input.Y != 1)
             {
                 //also changes y pos of partRect
                 animationHandler.ChangeState(State.Walking);
             }
-            else
+            else if(input.Y != 1)
             {
                 animationHandler.ChangeState(State.Idling);
             }
-
-            if (input.Y == 1)
+            else
             {
                 animationHandler.ChangeState(State.Crouching);
             }

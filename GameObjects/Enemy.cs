@@ -57,19 +57,10 @@ namespace MyGame.GameObjects
         {
             acc = new(0f, 0f);
             vel = new(0f, 0f);
-            target = null;
+            target = this;
         }
-        public new void Update()
+        public void FaceInputDirection()
         {
-            if(target != null)
-            {
-                targetDirection = GetMiddleOfRect(target.CurrentCollisionBox) - GetMiddleOfRect(CurrentCollisionBox);
-            }
-            else
-            {
-                targetDirection = new(0f, 0f);
-            }
-            
             if (input.X == 1)
             {
                 animationHandler.HorizontalFlip = SpriteEffects.None;
@@ -77,6 +68,17 @@ namespace MyGame.GameObjects
             else if (input.X == -1)
             {
                 animationHandler.HorizontalFlip = SpriteEffects.FlipHorizontally;
+            }
+        }
+        public new void Update()
+        {
+            if (target != null)
+            {
+                targetDirection = GetMiddleOfRect(target.CurrentCollisionBox) - GetMiddleOfRect(CurrentCollisionBox);
+            }
+            else
+            {
+                targetDirection = new(0f, 0f);
             }
 
             if (vel.Y >= 0)

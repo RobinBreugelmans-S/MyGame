@@ -35,10 +35,11 @@ namespace MyGame.Animation
 
         public void ChangeState(State state) //todo change to 
         {
-            if(alternateAnimationTimer <= 0) //aka animation is not playing
+            if(alternateAnimationTimer <= 0 && State != state) //aka animation is not playing
             {
                 State = state;
                 PartRectangle.Y = AnimationStates[state].Location * SpriteSize.Y;
+                PartRectangle.X = 0;
             }
         }
 
