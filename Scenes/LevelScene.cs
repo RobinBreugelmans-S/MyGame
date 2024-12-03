@@ -115,19 +115,19 @@ namespace MyGame.Scenes
             }
             camera.Update();
             
-            Debug.WriteLine("--");
+            //Debug.WriteLine("--");
             for (int i = 0; i < entitiesToBeRemovedTimer.Count; i++)
             {
-                Debug.WriteLine(entitiesToBeRemovedTimer[i]);
+                //Debug.WriteLine(entitiesToBeRemovedTimer[i]);
                 //decrement timer by 1
                 entitiesToBeRemovedTimer[i] = (entitiesToBeRemovedTimer[i].entity, entitiesToBeRemovedTimer[i].timer - 1);
             }
             foreach (var item in entitiesToBeRemovedTimer)
             {
-                Debug.WriteLine(item);
+                //Debug.WriteLine(item);
                 if (item.timer <= 0)
                 {
-                    Debug.WriteLine("DELETED!!");
+                    //Debug.WriteLine("DELETED!!");
                     removeEntity(item.entity);
                 }
             }
