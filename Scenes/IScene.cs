@@ -11,7 +11,7 @@ namespace MyGame.Scenes
 {
     internal interface IScene
     {
-        //public IScene(string level, ContentManager content);
+        //TODO: move to Interfaces folder && clean up files/folders
         public void LoadScene();
         public void Update();
         public void Draw(SpriteBatch spriteBatch);

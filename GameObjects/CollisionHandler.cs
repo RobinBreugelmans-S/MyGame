@@ -245,7 +245,7 @@ namespace MyGame.GameObjects
                     if (collision.collider is StationaryObject) //TODO chagne so you can stand on some enemies
                     {
                         StationaryObject entity = collision.collider as StationaryObject;
-                        Vector2 velAdded = entity.Touched.Invoke(Parent, contactNormal);
+                        Vector2 velAdded = entity.Touched(Parent, contactNormal);
 
                         //fix this
                         float NumberIfNotZero(float num1, float num2)
@@ -304,6 +304,21 @@ namespace MyGame.GameObjects
                                 {
                                     vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
                                     acc -= acc * contactNormal;
+                                }
+                                break;
+                            case TileType.Hazard:
+                                //same as solid
+                                vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1f - timeHitNear);
+                                acc -= acc * contactNormal;
+                                if (contactNormal == new Vector2(0, -1))
+                                {
+                                    isGrounded = true;
+                                }
+                                //damage
+                                if (Parent is Player)
+                                {
+                                    Player player = Parent as Player;
+                                    player.DamageIfNotImmune();
                                 }
                                 break;
                         }

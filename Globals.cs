@@ -21,7 +21,7 @@ namespace MyGame
         public const int OriginalTileSize = 8;
         public static int TileSize { get { return Zoom * OriginalTileSize; } }
         public enum TileType { None = -1, Solid, SemiUp, SemiRight, SemiDown, SemiLeft, Hazard, Water }
-        public enum State { Idling, Walking, Jumping, Crouching, MidAir, Dying, Attacking }
+        public enum State { Idling, Walking, Jumping, Crouching, MidAir, Dying, Attacking, Selected, Unselected }
 
         public static readonly Texture2D DebugImage;
         public const float MaxVerticalSpeed = 26f;
@@ -48,6 +48,10 @@ namespace MyGame
         }
 
         public static Vector2 GetMiddleOfRect(RectangleF rect)
+        {
+            return new Vector2(rect.X + rect.Width / 2, rect.Y + rect.Height / 2);
+        }
+        public static Vector2 GetMiddleOfRect(Microsoft.Xna.Framework.Rectangle rect)
         {
             return new Vector2(rect.X + rect.Width / 2, rect.Y + rect.Height / 2);
         }

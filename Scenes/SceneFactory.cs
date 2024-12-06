@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MyGame.Misc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,35 +15,44 @@ namespace MyGame.Scenes
     {
         private ContentManager content;
         private Action<string> loadScene;
+        private Action exit;
         private Dictionary<string, Func<IScene>> getSceneMethods = new();
-        public SceneFactory(ContentManager content, Action<string> loadScene)
+        private Vector2Int standardButtonSize = new(260, 130);
+        SpriteFont font;
+        public SceneFactory(ContentManager content, Action<string> loadScene, Action exit)
         {
             this.content = content;
-
+            this.loadScene = loadScene;
+            this.exit = exit;
+            
             getSceneMethods.Add("main_menu", () => getMainMenuScene());
             getSceneMethods.Add("level1", () => getLevel1Scene());
         }
 
         public IScene GetScene(string sceneName)
         {
-            return getSceneMethods[sceneName].Invoke();
+            return getSceneMethods[sceneName]();
         }
 
         private IScene getMainMenuScene()
         {
-            Button[] buttons = {                                                                        //TODO: must be given from constructor
-                new(() => loadScene("level1"), new(810,420,300,150), "ButtonSelected", "ButtonUnselected", content.Load<SpriteFont>("PixelFont"), "Start"),
-                new(() => loadScene("level1"), new(810,720,300,150), "ButtonSelected", "ButtonUnselected", content.Load<SpriteFont>("PixelFont"), "Start"),
-                new(() => /*exit game*/loadScene("level1"), new(810,920,300,150), "ButtonSelected", "ButtonUnselected", content.Load<SpriteFont>("PixelFont"), "Start")
+            //TODO: move this
+            font = content.Load<SpriteFont>("PixelFont");
+            var buttonSpriteSheet = content.Load<Texture2D>("ButtonSpriteSheet");
+            //TODO: fix the level loaidng!!
+            Button[] buttons = {//TODO: make getBuytton  //TODO: should be 900 ??
+                new(() => loadScene("level1"), new(730,320), buttonSpriteSheet, font, "Start"), //TODO: text first, then action, then rest
+                new(() => loadScene("level1"), new(730,520), buttonSpriteSheet, font, "button"),
+                new(exit, new(730,720), buttonSpriteSheet, font, "Quit")
             }; 
-            MenuScene mainMenuScene = new("TilesetNature", buttons, content);
+            MenuScene mainMenuScene = new("MainMenuBG", buttons, content);
 
             return mainMenuScene;
         }
 
         private IScene getLevel1Scene()
-        {
-            return new LevelScene("TestLevel1", content); //loading in level data is in LevelScene.cs
+        {//TestLevel1   level_001
+            return new LevelScene("level_001", "CloudsBG", new[] { 0f, -.05f, -.1f}, content); //loading in level data is in LevelScene.cs
         }
     }
 }

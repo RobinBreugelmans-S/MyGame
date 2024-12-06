@@ -31,16 +31,16 @@ namespace MyGame.GameObjects
             this.content = content;
             this.remove = remove;
 
-            getEntityMethods.Add("player", (tileX, tileY) => getPlayer(tileX, tileY));
-            getEntityMethods.Add("coin", (tileX, tileY) => getCoin(tileX, tileY));
-            getEntityMethods.Add("red_coin", (tileX, tileY) => getRedCoin(tileX, tileY));
-            getEntityMethods.Add("erik", (tileX, tileY) => getErik(tileX, tileY));
-            getEntityMethods.Add("jellyfish", (tileX, tileY) => getJellyFish(tileX, tileY));
+            getEntityMethods.Add("player", (x, y) => getPlayer(x, y));
+            getEntityMethods.Add("coin", (x, y) => getCoin(x, y));
+            getEntityMethods.Add("red_coin", (x, y) => getRedCoin(x, y));
+            getEntityMethods.Add("erik", (x, y) => getErik(x, y));
+            getEntityMethods.Add("jellyfish", (x, y) => getJellyFish(x, y));
         }
 
-        public StationaryObject GetEntity(string entityName, int tileX, int tileY)
+        public StationaryObject GetEntity(string entityName, int x, int y)
         {
-            return getEntityMethods[entityName](tileX, tileY);
+            return getEntityMethods[entityName](x, y);
         }
 
         private Dictionary<string, Texture2D> textureStore = new();
@@ -71,19 +71,19 @@ namespace MyGame.GameObjects
             return false;
         }
 
-        private Player getPlayer(int tileX, int tileY)
+        private Player getPlayer(int x, int y)
         {
             if (player == null)
             {
                 playerTexture = content.Load<Texture2D>("PlayerSpriteSheet"); //TODO: name + spritesheet?
 
-                player = new Player(new Vector2(tileX * TileSize, tileY * TileSize), playerTexture, new KeyboardReader(), tileMapCollisions, collidableEntities); //TODO: change input in settings
+                player = new Player(new Vector2(x, y), playerTexture, new KeyboardReader(), tileMapCollisions, collidableEntities); //TODO: change input in settings
                 return player;
             }
             throw new Exception("Cannot have 2 players!"); //TODO: fix ?
         }
 
-        private StationaryObject getCoin(int tileX, int tileY)
+        private StationaryObject getCoin(int x, int y)
         {
             Texture2D texture = getTexture("CoinSpriteSheet");
             
@@ -91,7 +91,7 @@ namespace MyGame.GameObjects
             animationHandler.AddAnimation(State.Idling, 0, 8, 6);
             animationHandler.ChangeState(State.Idling);
 
-            StationaryObject coin = new StationaryObject(new Vector2(tileX, tileY) * TileSize, new RectangleF(0, 0, TileSize, TileSize), animationHandler);
+            StationaryObject coin = new StationaryObject(new Vector2(x, y), new RectangleF(0, 0, TileSize, TileSize), animationHandler);
            
             //change to have declare onTouch, like in GetErik
             coin.Touched = (collisionObject, normalVector) => 
@@ -100,7 +100,7 @@ namespace MyGame.GameObjects
                 {
                     Player player = collisionObject as Player;
                     player.Score++;
-                    remove.Invoke(coin, 0);
+                    remove(coin, 0);
                 }
                 return new();
             };
@@ -108,7 +108,7 @@ namespace MyGame.GameObjects
             return coin;
         }
 
-        private StationaryObject getRedCoin(int tileX, int tileY)
+        private StationaryObject getRedCoin(int x, int y)
         {
             //TODO make red coin texture!!!
             Texture2D texture = getTexture("RedCoinSpriteSheet");
@@ -117,14 +117,14 @@ namespace MyGame.GameObjects
             animationHandler.AddAnimation(State.Idling, 0, 8, 6);
             animationHandler.ChangeState(State.Idling);
 
-            StationaryObject coin = new StationaryObject(new Vector2(tileX, tileY) * TileSize, new RectangleF(0, 0, TileSize, TileSize), animationHandler);
+            StationaryObject coin = new StationaryObject(new Vector2(x, y), new RectangleF(0, 0, TileSize, TileSize), animationHandler);
             coin.Touched = (collisionObject, normalVector) =>
             {
                 if (collisionObject is Player)
                 {
                     Player player = collisionObject as Player;
                     player.Score += 675034;
-                    remove.Invoke(coin, 0);
+                    remove(coin, 0);
                 }
                 return new();
             };
@@ -132,60 +132,70 @@ namespace MyGame.GameObjects
             return coin;
         }
 
-        private Enemy getErik(int tileX, int tileY)
+        private Enemy getErik(int x, int y)
         {
-            return getErik(tileX, tileY, player);
+            return getErik(x, y, player);
         }
-        private Enemy getErik(int tileX, int tileY, StationaryObject target)
+        private Enemy getErik(int x, int y, StationaryObject target)
         {
             //TODO: why does it dissappear sometimes when you hit it?
             Texture2D texture = getTexture("ErikSpriteSheet");
 
             AnimationHandler animationHandler = new(texture, new Vector2Int(23,16));
+            animationHandler.AnimationStates.Add(State.Idling, new AnimationState(0, 4, 16));
             animationHandler.AnimationStates.Add(State.Walking, new AnimationState(0, 4, 4));
             animationHandler.AnimationStates.Add(State.Jumping, new AnimationState(1, 1, 1)); //TODO add jumping anim to erik sprite sheet
             animationHandler.AnimationStates.Add(State.Attacking, new AnimationState(2, 1, 16)); //8 so spikes are there for atleast 8 frames
-            animationHandler.ChangeState(State.Walking);
+            animationHandler.ChangeState(State.Idling);
             
             CollisionHandler collisionHandler = new(new RectangleF(5f * Zoom, 8f * Zoom, 12f * Zoom, 8f * Zoom), tileMapCollisions, collidableEntities);
 
-            Enemy erik = new(new Vector2(tileX * TileSize, tileY * TileSize), .5f, 6f, 16f, 2f, 1f, animationHandler, collisionHandler, target);//, behaviour, onTouch);
+            Enemy erik = new(new Vector2(x, y), .5f, 6f, 16f, 2f, 1f, animationHandler, collisionHandler, target);//, behaviour, onTouch);
 
             erik.doBehaviour = new(() =>
             {
-                erik.FaceInputDirection();
-                //movement    
-                if (erik.input.X == 0)
+                if (erik.targetDirection.Length() <= 24 * TileSize)
                 {
-                    erik.acc.X = Math.Sign(erik.vel.X) * -1; //friction
+                    erik.ChangeState(State.Walking);
                 }
-                else
+                //if is activated //TODO: bool activated
+                if (erik.State == State.Walking && erik.targetDirection != new Vector2(0f, 0f))
                 {
-                    erik.acc.X = erik.input.X * erik.runAcc;
-                }
-
-                //jump
-                if (erik.isGrounded)
-                {
-                    List<Vector2Int> horizontalCollisions = erik.collisionHandler.GetTileMapCollisions(erik.CurrentCollisionBox.At(new(erik.input.X * 8,0)));// erik.pos + new Vector2(erik.input.X * 8, 0));
-                    foreach (Vector2Int collision in horizontalCollisions) //TODO: colissions -> tiles
+                    erik.FaceInputDirection();
+                    
+                    //movement    
+                    if (erik.input.X == 0)
                     {
-                        if (erik.collisionHandler.TileMapCollisions.tryGetValue(collision, out TileType tileType) && (tileType == TileType.Solid)) //0 = air //|| tileType == TileType.SemiRight
+                        erik.acc.X = Math.Sign(erik.vel.X) * -1; //friction
+                    }
+                    else
+                    {
+                        erik.acc.X = erik.input.X * erik.runAcc;
+                    }
+
+                    //jump
+                    if (erik.isGrounded)
+                    {
+                        List<Vector2Int> horizontalCollisions = erik.collisionHandler.GetTileMapCollisions(erik.CurrentCollisionBox.At(new(erik.input.X * 8, 0)));// erik.pos + new Vector2(erik.input.X * 8, 0));
+                        foreach (Vector2Int collision in horizontalCollisions) //TODO: colissions -> tiles
                         {
-                            erik.vel.Y = -erik.jumpPower;
-                            break;
+                            if (erik.collisionHandler.TileMapCollisions.tryGetValue(collision, out TileType tileType) && (tileType == TileType.Solid)) //0 = air //|| tileType == TileType.SemiRight
+                            {
+                                erik.vel.Y = -erik.jumpPower;
+                                break;
+                            }
                         }
                     }
-                }
 
-                //animation
-                if(erik.isGrounded)
-                {
-                    erik.animationHandler.ChangeState(State.Walking);
-                }
-                else
-                {
-                    erik.animationHandler.ChangeState(State.Jumping);
+                    //animation
+                    if (erik.isGrounded)
+                    {
+                        erik.animationHandler.ChangeState(State.Walking);
+                    }
+                    else
+                    {
+                        erik.animationHandler.ChangeState(State.Jumping);
+                    }
                 }
             });
             
@@ -205,12 +215,12 @@ namespace MyGame.GameObjects
             return erik;
         }
         /*
-        private Enemy getSnowballer(int tileX, int tileY)
+        private Enemy getSnowballer(int x, int y)
         {
-            return getSnowballer(tileX, tileY, player);
+            return getSnowballer(x, y, player);
         }
         //TODO: enemy that throws projectiles
-        private Enemy getSnowballer(int tileX, int tileY, StationaryObject target)
+        private Enemy getSnowballer(int x, int y, StationaryObject target)
         {
             Texture2D texture = getTexture("SnowballerSpriteSheet");
 
@@ -220,7 +230,7 @@ namespace MyGame.GameObjects
 
             CollisionHandler collisionHandler = new(new RectangleF(5f * Zoom, 8f * Zoom, 12f * Zoom, 8f * Zoom), tileMapCollisions, collidableEntities);
 
-            Enemy snowballer = new(new Vector2(tileX * TileSize, tileY * TileSize), .5f, 6f, 16f, 2f, 1f, animationHandler, collisionHandler, target);//, behaviour, onTouch);
+            Enemy snowballer = new(new Vector2(x, y), .5f, 6f, 16f, 2f, 1f, animationHandler, collisionHandler, target);//, behaviour, onTouch);
 
             snowballer.doBehaviour = new(() =>
             {
@@ -273,11 +283,11 @@ namespace MyGame.GameObjects
             return snowballer;
         }*/
 
-        private Enemy getJellyFish(int tileX, int tileY)
+        private Enemy getJellyFish(int x, int y)
         {
-            return getJellyFish(tileX, tileY, player);
+            return getJellyFish(x, y, player);
         }
-        private Enemy getJellyFish(int tileX, int tileY, StationaryObject target)
+        private Enemy getJellyFish(int x, int y, StationaryObject target)
         {
             Texture2D texture = getTexture("JellyFishSpriteSheet");
 
@@ -289,7 +299,7 @@ namespace MyGame.GameObjects
 
             CollisionHandler collisionHandler = new(new RectangleF(5f * Zoom, 9f * Zoom, 7f * Zoom, 7f * Zoom), null, null);
 
-            Enemy jellyFish = new(new Vector2(tileX * TileSize, tileY * TileSize), .5f, 2f, 0f, 0f, 0f, 2f, animationHandler, collisionHandler, target);
+            Enemy jellyFish = new(new Vector2(x, y), .5f, 2f, 0f, 0f, 0f, 2f, animationHandler, collisionHandler, target);
 
             jellyFish.doBehaviour = new(() =>
             {
@@ -313,14 +323,14 @@ namespace MyGame.GameObjects
                         Player player;
                         if (IfPlayer(collisionObject, out player))
                         {
-                            jellyFish.ChangeState(State.Dying);
+                            jellyFish.PlayAnimation(State.Dying);
                             //so the animation starts from 0
                             //TODO: isn't changing state but also is ??? weird.
                             //animationHandler.ChangeState(State.Dying); //TODO: use this function for erik too!
 
                             jellyFish.StopMoving();
                             collisionHandler = null;
-                            remove.Invoke(jellyFish, 6 * 3); //TODO: why not 4??   getanimation length method!
+                            remove(jellyFish, 6 * 3); //TODO: why not 4??   getanimation length method!
                             return new Vector2(0, -12f); //TODO: for some reason player instantly goes back to previous velocity
                                                          //IS BECAUSE speed change happens during HandleCollisions, but this still returns the previous speed
                                                          //fix: have collisionhandler remember this velocity and return that ?? or use for collision

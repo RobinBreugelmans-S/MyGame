@@ -25,11 +25,11 @@ namespace MyGame.GameObjects
                 Viewport.Y = value.Y;
             }
         }
-        private StationaryObject target;
+        private MoveableObject target;
         public RectangleF Viewport = new(0f, 0f, BufferSize.X, BufferSize.Y);
         private Vector2Int bounds;//boundary of the level. so that the camera can't go outside
         //top left is always 0, 0
-        public Camera(StationaryObject target, Vector2Int bounds)
+        public Camera(MoveableObject target, Vector2Int bounds)
         {
             this.target = target;
             PosMiddle = GetMiddleOfRect(target.CurrentCollisionBox);
@@ -38,7 +38,7 @@ namespace MyGame.GameObjects
 
         public void Update()
         {
-            PosMiddle += (GetMiddleOfRect(target.CurrentCollisionBox) - PosMiddle) / 16;
+            PosMiddle += (GetMiddleOfRect(target.CurrentCollisionBox) + target.vel - PosMiddle) / 8;
             
             if (Viewport.Right > bounds.X)
             {

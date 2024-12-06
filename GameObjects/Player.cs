@@ -37,6 +37,8 @@ namespace MyGame.GameObjects
         public int Score = 0;
         public int HP = 3;
 
+        private Rectangle levelBox;
+        
         //TODO: change to factory method to get player 
         public Player(Vector2 pos, Texture2D spriteSheet, IInputReader inputReader, TileType[,] tileMapCollisions, List<StationaryObject> collidableEntities)
             : base(pos, new Vector2(), new Vector2(), 0f, new AnimationHandler(spriteSheet, new Vector2Int(16, 16)), new CollisionHandler(new RectangleF(3f * Zoom, 10f * Zoom, 10f * Zoom, 6f * Zoom), tileMapCollisions, collidableEntities), null)
@@ -45,8 +47,9 @@ namespace MyGame.GameObjects
 
             collisionHandler.Parent = this; //can't put this in the constructor :(
 
-            //animationHandler = new AnimationHandler(spriteSheet, new Vector2Int(16,16));
+            levelBox = new(0, 0, tileMapCollisions.GetLength(0) * TileSize, tileMapCollisions.GetLength(1) * TileSize);
 
+            //animationHandler = new AnimationHandler(spriteSheet, new Vector2Int(16,16));
             animationHandler.AddAnimation(State.Idling, 0, 4, 16);
             animationHandler.AddAnimation(State.Walking, 1, 4, 4);
             animationHandler.AddAnimation(State.Crouching, 7, 4, 24);
@@ -64,6 +67,11 @@ namespace MyGame.GameObjects
 
         public new void Update() //TODO: new , fix ? ?
         {
+            if (!levelBox.Contains(GetMiddleOfRect(CurrentCollisionBox))) //if middle of player is outside of the level area
+            {
+                HP = 0;
+            }
+
             if (immuneTimer > 0)
             {
                 immuneTimer--;

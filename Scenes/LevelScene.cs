@@ -13,6 +13,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using Microsoft.Xna.Framework.Content;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 
 namespace MyGame.Scenes
@@ -29,7 +30,7 @@ namespace MyGame.Scenes
         private ContentManager content;
         //TODO: 
         //factory ? to return Scene object which has all of these loaded, methods go into SceneManager
-        
+
         //public TileType[,] tileMapCollisions { get; private set; } //TODO: naming conventions!
         public TileMap tileMapCollisions { get; private set; } //TODO: is get and private set needed?
         public TileMap[] tileMapsDecoration { get; private set; } //array of 2d arrays //TODO: naming conventions!
@@ -41,16 +42,30 @@ namespace MyGame.Scenes
         public List<StationaryObject> collidableEntities = new();
         public List<StationaryObject> entitiesToBeRemoved = new();
         public List<(StationaryObject entity, int timer)> entitiesToBeRemovedTimer = new();
-        private Texture2D background; //Background class with pos, paralax, Texture2D, Draw()
-        
-        public LevelScene(string level, ContentManager content)
+
+        private string backgroundName;
+        private float[] backgroundParalaxStrenghts;
+        private ParalaxBackground[] backgroundLayers; //Background class with pos, paralax, Texture2D, Draw()
+
+        public LevelScene(string level, string backgroundName, float[] paralaxStrenghts, ContentManager content)
         {
             filePath = $".././../../Maps/{level}.json";
             this.content = content;
+            this.backgroundName = backgroundName;
+            backgroundParalaxStrenghts = paralaxStrenghts;
         }
 
         public void LoadScene()
         {
+            //get backgrounds
+            backgroundLayers = new ParalaxBackground[backgroundParalaxStrenghts.Length];
+
+            for (int i = 0; i < backgroundParalaxStrenghts.Length; i++)
+            {
+                Texture2D texture = content.Load<Texture2D>($"{backgroundName}/{i + 1}");
+                backgroundLayers[i] = new(texture, backgroundParalaxStrenghts[i]);
+            }
+
             //TODO refactor
             font = content.Load<SpriteFont>("PixelFont");
             
@@ -75,24 +90,24 @@ namespace MyGame.Scenes
             objectFactory = new(player, tileMapCollisions.AsTileTypeMap(), collidableEntities, content, 
                 new Action<StationaryObject, int>((entity, timer) => entitiesToBeRemovedTimer.Add((entity, timer)))
             );
-                                                                                                        //TODO: add way to remove entity in some time
             
             Layer entityLayer = levelJson.layers[levelJson.layers.Count - 1];
             foreach(EntityData entityData in entityLayer.entities)
             {
-                addEntity(entityData.name, entityData.x, entityData.y);
+                addEntity(entityData.name, entityData.x * Zoom, entityData.y * Zoom);
             }
         }
-        private void addEntity(string entityName, int tileX, int tileY)
+        private void addEntity(string entityName, int x, int y)
         {
-            StationaryObject entity = objectFactory.GetEntity(entityName, tileX, tileY);
+            StationaryObject entity = objectFactory.GetEntity(entityName, x, y);
 
             if (entity is Player)
             {
                 Player _player = (Player)entity; //add check for adding 2 players
                 objectFactory.player = _player;
                 player = _player;
-                camera = new(player, new(tileMapCollisions.Width, tileMapCollisions.Height));
+                Debug.WriteLine(new Vector2(tileMapCollisions.Width, tileMapCollisions.Height));
+                camera = new(player, new(tileMapCollisions.Width * TileSize, tileMapCollisions.Height * TileSize));
             }
             entities.Add(entity);
             if (entity.Touched != null) //TODO: Touched -> OnTouch //TODO: use isCollidable
@@ -115,19 +130,15 @@ namespace MyGame.Scenes
             }
             camera.Update();
             
-            //Debug.WriteLine("--");
             for (int i = 0; i < entitiesToBeRemovedTimer.Count; i++)
             {
-                //Debug.WriteLine(entitiesToBeRemovedTimer[i]);
                 //decrement timer by 1
                 entitiesToBeRemovedTimer[i] = (entitiesToBeRemovedTimer[i].entity, entitiesToBeRemovedTimer[i].timer - 1);
             }
             foreach (var item in entitiesToBeRemovedTimer)
             {
-                //Debug.WriteLine(item);
                 if (item.timer <= 0)
                 {
-                    //Debug.WriteLine("DELETED!!");
                     removeEntity(item.entity);
                 }
             }
@@ -136,6 +147,12 @@ namespace MyGame.Scenes
         public void Draw(SpriteBatch spriteBatch)
         {
             Vector2 offset = -camera.Pos;
+
+            foreach(ParalaxBackground background in backgroundLayers)
+            {
+                background.Draw(camera.Pos, spriteBatch);
+            }
+
             foreach (TileMap tileMap in tileMapsDecoration)
             {
                 tileMap.Draw(offset, spriteBatch);

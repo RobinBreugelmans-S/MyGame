@@ -4,12 +4,15 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/ButtonSelected.png</File>
-    <File>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/ButtonUnselected.png</File>
+    <File>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/ButtonSpriteSheet.png</File>
+    <File>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/CloudsBG/1.png</File>
+    <File>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/CloudsBG/2.png</File>
+    <File>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/CloudsBG/3.png</File>
     <File>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/CoinSpriteSheet.png</File>
     <File>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/DebugImage.png</File>
     <File>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/ErikSpriteSheet.png</File>
     <File>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/JellyfishSpriteSheet.png</File>
+    <File>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/MainMenuBG.png</File>
     <File>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/PixelFont.spritefont</File>
     <File>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/PlayerSpriteSheet.png</File>
     <File>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/RedCoinSpriteSheet.png</File>
@@ -17,6 +20,9 @@
     <File>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/TilesTest.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

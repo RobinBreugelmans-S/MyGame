@@ -34,22 +34,25 @@ namespace MyGame
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            //_graphics.IsFullScreen = true;
+            
+            _graphics.IsFullScreen = true;
             _graphics.PreferredBackBufferWidth = BufferSize.X;
             _graphics.PreferredBackBufferHeight = BufferSize.Y;
             IsFixedTimeStep = true; //60fps
             TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d);
 
-            sceneFactory = new(Content,
-                (string sceneName) => currentScene = sceneFactory.GetScene(sceneName)
+            sceneFactory = new(Content, //add loading screen
+                (string sceneName) => { currentScene = sceneFactory.GetScene(sceneName); currentScene.LoadScene(); },
+                () => Exit()
             );
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            currentScene = sceneFactory.GetScene("level1");//TODO: use enum? no cause no custom levels
-
+            currentScene = sceneFactory.GetScene("main_menu"); //TODO: use enum? no cause no custom levels
+                                               //"level1"
+                                               //"main_menu"
             base.Initialize();
         }
 
@@ -66,13 +69,6 @@ namespace MyGame
         private void InitializeGameObjects()
         {
             currentScene.LoadScene();
-            //TODO: move to scene
-            /*for (int i = 0; i < scene.tileMapsDecoration.Length; i++) //load tileset images from tileset names
-            {
-                scene.tileMapsDecoration[i].tileset = Content.Load<Texture2D>(scene.tileMapsDecoration[i].tilesetName);
-            }*/
-            //currently collisions and tileMap are the same
-            //scene.Player = player;
         }
 
         protected override void Update(GameTime gameTime)

@@ -26,6 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="GameObjects\Enemies\" />
+    <Folder Include="GameObjects\Enemies\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

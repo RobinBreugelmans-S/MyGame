@@ -36,5 +36,11 @@ C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\PlayerSpriteSheet.xnb
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\PixelFont.xnb
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\JellyfishSpriteSheet.xnb
-C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\ButtonSelected.xnb
-C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\ButtonUnselected.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\CloudsBG\CloudsBG1.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\CloudsBG\CloudsBG2.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\CloudsBG\CloudsBG3.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\CloudsBG\1.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\CloudsBG\2.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\CloudsBG\3.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\MainMenuBG.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\ButtonSpriteSheet.xnb

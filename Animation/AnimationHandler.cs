@@ -39,7 +39,6 @@ namespace MyGame.Animation
             {
                 State = state;
                 PartRectangle.Y = AnimationStates[state].Location * SpriteSize.Y;
-                PartRectangle.X = 0;
             }
         }
 
@@ -59,6 +58,7 @@ namespace MyGame.Animation
 
         public void PlayAnimation(State state)
         {
+            PartRectangle.X = 0;
             ChangeState(state);
             alternateAnimationTimer = AnimationStates[state].Length * AnimationStates[state].Time;
         }

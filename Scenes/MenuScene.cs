@@ -43,24 +43,28 @@ namespace MyGame.Scenes
             this.content = content;
         }
         
-        public void select(int index)
+        private void select(int index)
         {
-            selectedButton.IsSelected = false;
+            selectedButton.Unselect();//selectedButton.IsSelected = false;
             selectedIndex = index;
-            selectedButton.IsSelected = true;
+            selectedButton.Select();
         }
 
         public void LoadScene()
         {
             background = content.Load<Texture2D>(backgroundName);
-            foreach (Button button in buttons)
+            /*foreach (Button button in buttons)
             {
-                button.textureSelected = content.Load<Texture2D>(button.textureSelectedName);
-                button.textureUnselected = content.Load<Texture2D>(button.textureUnselectedName);
-            }
+                //TODO: refactor into button
+                button.SpriteSheet = content.Load<Texture2D>(button.textureName);
+            }*/
             select(0);
         }
-        
+        int mod(int x, int m) //because negative module in c# is bad //TODO: phrase all comments better lol
+        {//TODO: move to globals
+            int r = x % m;
+            return r < 0 ? r + m : r;
+        }
         public void Update()
         {
             inputPrevious = input;
@@ -68,28 +72,28 @@ namespace MyGame.Scenes
 
             if(input.X != 0 && input.X != inputPrevious.X)
             {//TODO: fix index out of bounds
-                select((selectedIndex + input.X) % buttons.Length);
-            }/* TODO: FIX!! (use input vector2int to get directino or something,v  
+                select(mod(selectedIndex + input.X, buttons.Length));
+            }
             if (input.Y != 0 && input.Y != inputPrevious.Y)
             {
-                select((selectedIndex + input.Y) % buttons.Length);
-            }*/
-            Debug.WriteLine(selectedIndex);
+                select(mod(selectedIndex + input.Y, buttons.Length));
+            }
+
             foreach (Button button in buttons)
             {
                 button.Update();
             }
             
-            if (keyboardReader.ReadEnterInput())
+            if (keyboardReader.ReadEnterInput()) //command pattern
             {
-                selectedButton.OnClick.Invoke();
+                selectedButton.OnClick();
             }
         }
         public void Draw(SpriteBatch spriteBatch)
         {
             //draw bg
             spriteBatch.Draw(background, new Rectangle(0, 0, BufferSize.X, BufferSize.Y), Color.White);
-
+            
             //draw buttons
             foreach(Button button in buttons)
             {
