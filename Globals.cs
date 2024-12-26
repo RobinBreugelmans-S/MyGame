@@ -21,7 +21,7 @@ namespace MyGame
         public const int OriginalTileSize = 8;
         public static int TileSize { get { return Zoom * OriginalTileSize; } }
         public enum TileType { None = -1, Solid, SemiUp, SemiRight, SemiDown, SemiLeft, Hazard, Water }
-        public enum State { Idling, Walking, Jumping, Crouching, MidAir, Dying, Attacking, Selected, Unselected }
+        public enum State { Idling, Walking, Jumping, Crouching, MidAir, Dying, Dead, Attacking, Selected, Unselected }
 
         public static readonly Texture2D DebugImage;
         public const float MaxVerticalSpeed = 26f;
@@ -58,7 +58,7 @@ namespace MyGame
         #endregion
 
         //returns velocity
-        public delegate Vector2 OnTouch(StationaryObject collisionObject, Vector2 normalVector);
+        public delegate Vector2 OnTouch(Entity collisionObject, Vector2 normalVector);
 
         public static Vector2 Normalized(this Vector2 v)
         {

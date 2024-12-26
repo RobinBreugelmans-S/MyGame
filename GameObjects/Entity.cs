@@ -12,7 +12,7 @@ using static MyGame.Globals;
 
 namespace MyGame.GameObjects
 {
-    internal class StationaryObject : Collidable, IGameObject
+    internal class Entity : Collidable, IGameObject
     {
         //public List<object> data; //used to store some data for certain entities 
 
@@ -29,7 +29,7 @@ namespace MyGame.GameObjects
         public State State { get { return animationHandler.State; } }
         public AnimationHandler animationHandler; //TODO: -> AnimationHandler
 
-        public StationaryObject(Vector2 pos, RectangleF collisionBox, AnimationHandler animationHandler) : base(pos, collisionBox)
+        public Entity(Vector2 pos, RectangleF collisionBox, AnimationHandler animationHandler) : base(pos, collisionBox)
         {
             //this.pos = pos;
             //collisionHandler = new(collisionBox, null, null);
@@ -41,7 +41,7 @@ namespace MyGame.GameObjects
             //UpdateChunks();
         }
 
-        protected StationaryObject(Vector2 pos, AnimationHandler animationHandler, OnTouch touched) : base(pos, new())
+        protected Entity(Vector2 pos, AnimationHandler animationHandler, OnTouch touched) : base(pos, new())
         {
             this.animationHandler = animationHandler;
             Touched = touched;

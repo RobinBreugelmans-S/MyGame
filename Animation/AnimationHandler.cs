@@ -32,7 +32,14 @@ namespace MyGame.Animation
         {
             AnimationStates.Add(state, new AnimationState(location, length, time));
         }
-
+        public int GetAnimationTime(State state)
+        {
+            return AnimationStates[state].Length * AnimationStates[state].Time;
+        }
+        public int GetCurrentAnimationFrame()
+        {
+            return PartRectangle.X / SpriteSize.X;
+        }
         public void ChangeState(State state) //todo change to 
         {
             if(alternateAnimationTimer <= 0 && State != state) //aka animation is not playing

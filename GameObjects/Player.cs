@@ -16,7 +16,7 @@ using System.Net.Mime;
 namespace MyGame.GameObjects
 {
 
-    internal class Player : MoveableObject, IGameObject //TODO: inherit from class only with collisions, pos, vel acc
+    internal class Player : MoveableEntity, IGameObject //TODO: inherit from class only with collisions, pos, vel acc
     {
         private float runAcc = 2f;
         private float runSpeed = 8f;
@@ -40,7 +40,7 @@ namespace MyGame.GameObjects
         private Rectangle levelBox;
         
         //TODO: change to factory method to get player 
-        public Player(Vector2 pos, Texture2D spriteSheet, IInputReader inputReader, TileType[,] tileMapCollisions, List<StationaryObject> collidableEntities)
+        public Player(Vector2 pos, Texture2D spriteSheet, IInputReader inputReader, TileType[,] tileMapCollisions, List<Entity> collidableEntities)
             : base(pos, new Vector2(), new Vector2(), 0f, new AnimationHandler(spriteSheet, new Vector2Int(16, 16)), new CollisionHandler(new RectangleF(3f * Zoom, 10f * Zoom, 10f * Zoom, 6f * Zoom), tileMapCollisions, collidableEntities), null)
         {
             this.inputReader = inputReader;

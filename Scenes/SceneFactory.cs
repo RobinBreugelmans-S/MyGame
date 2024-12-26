@@ -25,8 +25,8 @@ namespace MyGame.Scenes
             this.loadScene = loadScene;
             this.exit = exit;
             
-            getSceneMethods.Add("main_menu", () => getMainMenuScene());
-            getSceneMethods.Add("level1", () => getLevel1Scene());
+            getSceneMethods.Add("main_menu", getMainMenuScene);
+            getSceneMethods.Add("level1", getLevel1Scene);
         }
 
         public IScene GetScene(string sceneName)

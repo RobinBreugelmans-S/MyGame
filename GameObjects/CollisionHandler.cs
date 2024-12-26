@@ -12,11 +12,11 @@ namespace MyGame.GameObjects
 {
     internal class CollisionHandler//TODO: erf over van iets met public pos enz.
     {
-        public MoveableObject Parent;
+        public MoveableEntity Parent;
 
         public RectangleF CollisionBox;
         public TileType[,] TileMapCollisions; //TODO: change to CollisionTileMap !!
-        public List<StationaryObject> CollidableEntities;
+        public List<Entity> CollidableEntities;
         //protected List<Entity> entities; //TODO make entity class, IGameObject with pos vel acc, collision rectangle, and stuff
         //TODO: gravity in globals
         private Vector2 contactNormal;
@@ -28,7 +28,7 @@ namespace MyGame.GameObjects
         {
             CollisionBox = collisionBox;
         }
-        public CollisionHandler(/*MoveableObject parent, */RectangleF collisionBox, TileType[,] tileMapCollisions, List<StationaryObject> collidableEntities)
+        public CollisionHandler(/*MoveableObject parent, */RectangleF collisionBox, TileType[,] tileMapCollisions, List<Entity> collidableEntities)
         {
             //this.parent = parent;
             CollisionBox = collisionBox;
@@ -163,7 +163,7 @@ namespace MyGame.GameObjects
             return collisions;
         }
 
-        public List<StationaryObject> GetEntityCollisions(RectangleF rectangle)
+        public List<Entity> GetEntityCollisions(RectangleF rectangle)
         {
             //TODO: problem collision is checked for object itself
             //temp fix:
@@ -172,9 +172,9 @@ namespace MyGame.GameObjects
                 return new();
             }
 
-            List<StationaryObject> entities = new();
+            List<Entity> entities = new();
             
-            foreach (StationaryObject entity in CollidableEntities)
+            foreach (Entity entity in CollidableEntities)
             {
                 if (rectangle.IntersectsWith(entity.CurrentCollisionBox) && entity != Parent)//.At(entity.pos)))
                 {
@@ -201,7 +201,7 @@ namespace MyGame.GameObjects
             List<Vector2Int> tileMapCollisions = GetTileMapCollisions(boundingBox);
 
             //TODO: change tileRect to Collidable, make new Collidbale for the tiles, and ofr entities just add
-            List<StationaryObject> entityCollisions = GetEntityCollisions(boundingBox);
+            List<Entity> entityCollisions = GetEntityCollisions(boundingBox);
 
             //sort collisions based on contactTime
             List<(Collidable collider, float TimeHitNear, TileType TileType)> collisionsSorted = new();
@@ -223,7 +223,7 @@ namespace MyGame.GameObjects
             }
 
             //check entity collisions
-            foreach(StationaryObject entity in entityCollisions)
+            foreach(Entity entity in entityCollisions)
             {
                 if (dynamicRectVsRect(currentCollisionBox, vel, entity.CurrentCollisionBox, out contactPoint, out contactNormal, out timeHitNear))
                 {
@@ -242,9 +242,9 @@ namespace MyGame.GameObjects
                     //resolve collisions
                     
                     //first check if the collidable is tile or entity
-                    if (collision.collider is StationaryObject) //TODO chagne so you can stand on some enemies
+                    if (collision.collider is Entity) //TODO chagne so you can stand on some enemies
                     {
-                        StationaryObject entity = collision.collider as StationaryObject;
+                        Entity entity = collision.collider as Entity;
                         Vector2 velAdded = entity.Touched(Parent, contactNormal);
 
                         //fix this

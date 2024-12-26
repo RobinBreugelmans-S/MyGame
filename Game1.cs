@@ -35,7 +35,7 @@ namespace MyGame
             IsMouseVisible = true;
 
             
-            _graphics.IsFullScreen = true;
+            //_graphics.IsFullScreen = true;
             _graphics.PreferredBackBufferWidth = BufferSize.X;
             _graphics.PreferredBackBufferHeight = BufferSize.Y;
             IsFixedTimeStep = true; //60fps

@@ -7,8 +7,9 @@ namespace MyGame.GameObjects
     internal class Collidable
     {
         public Vector2 pos; //TODO: pos -> Pos   naming convenitons!8
-        /*public RectangleF CollisionBox;
-        public RectangleF CurrentCollisionBox { get { return CollisionBox.At(pos); } }*/
+        /*public virtual RectangleF CollisionBox { get; protected set; }
+        public virtual RectangleF CurrentCollisionBox { get { return CollisionBox.At(pos); } }*/
+        //TODO: refactor to not use CollisionHandler for Collidable and (Stationary)Entity, override in MoveableEntity
         public CollisionHandler collisionHandler;
         public RectangleF CollisionBox { get { return collisionHandler.CollisionBox; } protected set { collisionHandler.CollisionBox = value; } }
         public RectangleF CurrentCollisionBox { get { return CollisionBox.At(pos); } }

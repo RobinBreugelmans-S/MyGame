@@ -36,12 +36,13 @@ namespace MyGame.Scenes
         public TileMap[] tileMapsDecoration { get; private set; } //array of 2d arrays //TODO: naming conventions!
         //public Texture2D[] tilesets { get; private set; }
         //public string[] tilesetNames { get; private set; }
-        private ObjectFactory objectFactory;
+        private EntityFactory objectFactory;
         //TODO: has to be public???
-        public List<StationaryObject> entities = new(); //TODO naming convetions
-        public List<StationaryObject> collidableEntities = new();
-        public List<StationaryObject> entitiesToBeRemoved = new();
-        public List<(StationaryObject entity, int timer)> entitiesToBeRemovedTimer = new();
+        public List<Entity> entities = new(); //TODO naming convetions
+        public List<Entity> collidableEntities = new();
+        public List<Entity> entitiesToBeRemoved = new();
+        private List<Entity> entitiesToBeAdded = new();
+        public List<(Entity entity, int timer)> entitiesToBeRemovedTimer = new();
 
         private string backgroundName;
         private float[] backgroundParalaxStrenghts;
@@ -87,8 +88,9 @@ namespace MyGame.Scenes
                 tileMapsDecoration[i].tileset = content.Load<Texture2D>(tileMapsDecoration[i].tilesetName);
             }
             //load entities
-            objectFactory = new(player, tileMapCollisions.AsTileTypeMap(), collidableEntities, content, 
-                new Action<StationaryObject, int>((entity, timer) => entitiesToBeRemovedTimer.Add((entity, timer)))
+            objectFactory = new(player, tileMapCollisions.AsTileTypeMap(), collidableEntities, content,
+                new Action<Entity, int>((entity, timer) => entitiesToBeRemovedTimer.Add((entity, timer))),
+                new Action<Entity>((entity) => addEntity(entity))
             );
             
             Layer entityLayer = levelJson.layers[levelJson.layers.Count - 1];
@@ -99,14 +101,13 @@ namespace MyGame.Scenes
         }
         private void addEntity(string entityName, int x, int y)
         {
-            StationaryObject entity = objectFactory.GetEntity(entityName, x, y);
+            Entity entity = objectFactory.GetEntity(entityName, x, y);
 
             if (entity is Player)
             {
                 Player _player = (Player)entity; //add check for adding 2 players
                 objectFactory.player = _player;
                 player = _player;
-                Debug.WriteLine(new Vector2(tileMapCollisions.Width, tileMapCollisions.Height));
                 camera = new(player, new(tileMapCollisions.Width * TileSize, tileMapCollisions.Height * TileSize));
             }
             entities.Add(entity);
@@ -116,7 +117,11 @@ namespace MyGame.Scenes
                 collidableEntities.Add(entity);
             }
         }
-        private void  removeEntity(StationaryObject entity)
+        private void addEntity(Entity entity)
+        {
+            entitiesToBeAdded.Add(entity);
+        }
+        private void  removeEntity(Entity entity)
         {
             entities.Remove(entity); //TODO: what if entity is not collidable?
             collidableEntities.Remove(entity);
@@ -143,6 +148,15 @@ namespace MyGame.Scenes
                 }
             }
             entitiesToBeRemovedTimer = entitiesToBeRemovedTimer.Where(i => i.timer > 0).ToList();
+            
+            foreach(Entity entity in entitiesToBeAdded)
+            {
+                entities.Add(entity);
+                if (entity.Touched != null)
+                {
+                    collidableEntities.Add(entity);
+                }
+            }
         }
         public void Draw(SpriteBatch spriteBatch)
         {

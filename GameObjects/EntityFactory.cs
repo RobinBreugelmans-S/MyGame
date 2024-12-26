@@ -13,32 +13,37 @@ using static MyGame.Globals;
 
 namespace MyGame.GameObjects
 {
-    internal class ObjectFactory
+    internal class EntityFactory
     {
+        //TODO: use Decorator pattern to define behaviours of the entities.
+
         private ContentManager content;
-        private Action<StationaryObject, int> remove;
+        private Action<Entity, int> remove;
+        private Action<Entity> add;
         private TileType[,] tileMapCollisions;
-        private List<StationaryObject> collidableEntities; //if entity is collidable, it will be added to this list
+        private List<Entity> collidableEntities; //if entity is collidable, it will be added to this list
         public Player player;
-        private Dictionary<string, Func<int, int, StationaryObject>> getEntityMethods = new(); //TODO: change Object to Entity (statinaryEntity)
+        private Dictionary<string, Func<int, int, Entity>> getEntityMethods = new(); //TODO: change Object to Entity (statinaryEntity)
 
         //todo: singleton ???
-        public ObjectFactory(Player player, TileType[,] tileMapCollisions, List<StationaryObject> collidableEntities, ContentManager content, Action<StationaryObject, int> remove)
+        public EntityFactory(Player player, TileType[,] tileMapCollisions, List<Entity> collidableEntities, ContentManager content, Action<Entity, int> remove, Action<Entity> add)
         {
             this.player = player;
             this.tileMapCollisions = tileMapCollisions;
             this.collidableEntities = collidableEntities;
             this.content = content;
             this.remove = remove;
+            this.add = add;
 
             getEntityMethods.Add("player", (x, y) => getPlayer(x, y));
             getEntityMethods.Add("coin", (x, y) => getCoin(x, y));
             getEntityMethods.Add("red_coin", (x, y) => getRedCoin(x, y));
             getEntityMethods.Add("erik", (x, y) => getErik(x, y));
             getEntityMethods.Add("jellyfish", (x, y) => getJellyFish(x, y));
+            getEntityMethods.Add("jones", (x, y) => getJones(x, y));
         }
 
-        public StationaryObject GetEntity(string entityName, int x, int y)
+        public Entity GetEntity(string entityName, int x, int y)
         {
             return getEntityMethods[entityName](x, y);
         }
@@ -60,7 +65,8 @@ namespace MyGame.GameObjects
             }
         }
 
-        private static bool IfPlayer(StationaryObject objectToCheck, out Player player)
+        //TODO: rename
+        private static bool IfPlayer(Entity objectToCheck, out Player player)
         {
             if (objectToCheck is Player)
             {
@@ -83,7 +89,7 @@ namespace MyGame.GameObjects
             throw new Exception("Cannot have 2 players!"); //TODO: fix ?
         }
 
-        private StationaryObject getCoin(int x, int y)
+        private Entity getCoin(int x, int y)
         {
             Texture2D texture = getTexture("CoinSpriteSheet");
             
@@ -91,7 +97,7 @@ namespace MyGame.GameObjects
             animationHandler.AddAnimation(State.Idling, 0, 8, 6);
             animationHandler.ChangeState(State.Idling);
 
-            StationaryObject coin = new StationaryObject(new Vector2(x, y), new RectangleF(0, 0, TileSize, TileSize), animationHandler);
+            Entity coin = new Entity(new Vector2(x, y), new RectangleF(0, 0, TileSize, TileSize), animationHandler);
            
             //change to have declare onTouch, like in GetErik
             coin.Touched = (collisionObject, normalVector) => 
@@ -108,16 +114,16 @@ namespace MyGame.GameObjects
             return coin;
         }
 
-        private StationaryObject getRedCoin(int x, int y)
+        //TODO: almost same as coin
+        private Entity getRedCoin(int x, int y)
         {
-            //TODO make red coin texture!!!
             Texture2D texture = getTexture("RedCoinSpriteSheet");
 
             AnimationHandler animationHandler = new(texture, new Vector2Int(8, 8));
             animationHandler.AddAnimation(State.Idling, 0, 8, 6);
             animationHandler.ChangeState(State.Idling);
 
-            StationaryObject coin = new StationaryObject(new Vector2(x, y), new RectangleF(0, 0, TileSize, TileSize), animationHandler);
+            Entity coin = new Entity(new Vector2(x, y), new RectangleF(0, 0, TileSize, TileSize), animationHandler);
             coin.Touched = (collisionObject, normalVector) =>
             {
                 if (collisionObject is Player)
@@ -136,7 +142,7 @@ namespace MyGame.GameObjects
         {
             return getErik(x, y, player);
         }
-        private Enemy getErik(int x, int y, StationaryObject target)
+        private Enemy getErik(int x, int y, Entity target)
         {
             //TODO: why does it dissappear sometimes when you hit it?
             Texture2D texture = getTexture("ErikSpriteSheet");
@@ -163,6 +169,7 @@ namespace MyGame.GameObjects
                 {
                     erik.FaceInputDirection();
                     
+                    //TODO: put in method, is same as the player
                     //movement    
                     if (erik.input.X == 0)
                     {
@@ -214,80 +221,12 @@ namespace MyGame.GameObjects
             
             return erik;
         }
-        /*
-        private Enemy getSnowballer(int x, int y)
-        {
-            return getSnowballer(x, y, player);
-        }
-        //TODO: enemy that throws projectiles
-        private Enemy getSnowballer(int x, int y, StationaryObject target)
-        {
-            Texture2D texture = getTexture("SnowballerSpriteSheet");
-
-            AnimationHandler animationHandler = new(texture, new Vector2Int(23, 16));
-            animationHandler.AnimationStates.Add(State.Walking, new AnimationState(0, 4, 4));
-            animationHandler.ChangeState(State.Walking);
-
-            CollisionHandler collisionHandler = new(new RectangleF(5f * Zoom, 8f * Zoom, 12f * Zoom, 8f * Zoom), tileMapCollisions, collidableEntities);
-
-            Enemy snowballer = new(new Vector2(x, y), .5f, 6f, 16f, 2f, 1f, animationHandler, collisionHandler, target);//, behaviour, onTouch);
-
-            snowballer.doBehaviour = new(() =>
-            {
-                //movement    
-                if (snowballer.input.X == 0)
-                {
-                    snowballer.acc.X = Math.Sign(snowballer.vel.X) * -1; //friction
-                }
-                else
-                {
-                    snowballer.acc.X = snowballer.input.X * snowballer.runAcc;
-                }
-                
-                //jump
-                if (snowballer.isGrounded)
-                {
-                    List<Vector2Int> horizontalCollisions = snowballer.collisionHandler.GetTileMapCollisions(snowballer.pos + new Vector2(snowballer.input.X * 8, 0));
-                    foreach (Vector2Int collision in horizontalCollisions) //TODO: colissions -> tiles
-                    {
-                        if (snowballer.collisionHandler.TileMapCollisions.tryGetValue(collision, out TileType tileType) && (tileType == TileType.Solid)) //0 = air //|| tileType == TileType.SemiRight
-                        {
-                            snowballer.vel.Y = -snowballer.jumpPower;
-                            break;
-                        }
-                    }
-                }
-
-                //animation
-                if (snowballer.isGrounded)
-                {
-                    snowballer.animationHandler.ChangeState(State.Walking);
-                }
-                else
-                {
-                    snowballer.animationHandler.ChangeState(State.Jumping);
-                }
-            });
-
-            snowballer.Touched = new((collisionObject, normalVector) =>
-            {
-                if (collisionObject is Player)
-                {
-                    Player player = collisionObject as Player;
-                    player.DamageIfNotImmune();
-                    animationHandler.PlayAnimation(State.Attacking);
-                }
-            }
-            );
-
-            return snowballer;
-        }*/
-
+        
         private Enemy getJellyFish(int x, int y)
         {
             return getJellyFish(x, y, player);
         }
-        private Enemy getJellyFish(int x, int y, StationaryObject target)
+        private Enemy getJellyFish(int x, int y, Entity target)
         {
             Texture2D texture = getTexture("JellyFishSpriteSheet");
 
@@ -324,17 +263,11 @@ namespace MyGame.GameObjects
                         if (IfPlayer(collisionObject, out player))
                         {
                             jellyFish.PlayAnimation(State.Dying);
-                            //so the animation starts from 0
-                            //TODO: isn't changing state but also is ??? weird.
-                            //animationHandler.ChangeState(State.Dying); //TODO: use this function for erik too!
 
                             jellyFish.StopMoving();
                             collisionHandler = null;
-                            remove(jellyFish, 6 * 3); //TODO: why not 4??   getanimation length method!
-                            return new Vector2(0, -12f); //TODO: for some reason player instantly goes back to previous velocity
-                                                         //IS BECAUSE speed change happens during HandleCollisions, but this still returns the previous speed
-                                                         //fix: have collisionhandler remember this velocity and return that ?? or use for collision
-                                                         //remove after animation has played
+                            remove(jellyFish, animationHandler.GetAnimationTime(State.Dying)); //*3 //TODO: why not 4?
+                            return new Vector2(0, -12f);
                         }
                     }
                     else
@@ -351,9 +284,163 @@ namespace MyGame.GameObjects
 
             return jellyFish;
         }
-        /* floating enemy:
-         * https://elthen.itch.io/2d-pixel-art-jellyfish-sprites
-         * https://elthen.itch.io/2d-pixel-art-flying-eye-monster
-         */
+
+        private Enemy getJones(int x, int y)
+        {
+            return getJones(x, y, player);
+        }
+        private Enemy getJones(int x, int y, Entity target)
+        {
+            //TODO: why does it dissappear sometimes when you hit it?
+            Texture2D texture = getTexture("JonesSpriteSheet");
+
+            AnimationHandler animationHandler = new(texture, new Vector2Int(64, 32));
+            animationHandler.AddAnimation(State.Idling, 0, 8, 8);
+            animationHandler.AddAnimation(State.Walking, 1, 8, 4);
+            animationHandler.AddAnimation(State.Jumping, 1, 1, 1);
+            animationHandler.AddAnimation(State.Attacking, 2, 4, 4);
+            animationHandler.AddAnimation(State.Dying, 3, 5, 6);
+            animationHandler.ChangeState(State.Idling);
+
+            CollisionHandler collisionHandler = new(new RectangleF(27f * Zoom, 14f * Zoom, 9f * Zoom, 18f * Zoom), tileMapCollisions, collidableEntities);
+
+            Enemy jones = new(new Vector2(x, y), .5f, 6f, 20f, 2f, 1f, animationHandler, collisionHandler, target);//, behaviour, onTouch);
+
+            jones.doBehaviour = new(() =>
+            {
+                jones.FaceInputDirection();
+
+                if(jones.targetDirection.Length() <= 64 * TileSize
+                && jones.targetDirection.Length() > 8 * TileSize)
+                {
+                    jones.ChangeState(State.Walking);
+                }
+                else if (jones.targetDirection.Length() <= 8 * TileSize)
+                {
+                    jones.ChangeState(State.Attacking);
+                    jones.vel.X = 0;
+                    jones.acc.X = 0;
+                }
+                else
+                {
+                    jones.ChangeState(State.Idling);
+                    jones.vel.X = 0;
+                    jones.acc.X = 0;
+                }
+
+                if (jones.State != State.Idling && jones.targetDirection != new Vector2(0f, 0f))
+                {
+                    if (jones.input.X == 0)
+                    {
+                        jones.acc.X = Math.Sign(jones.vel.X) * -1;
+                    }
+                    else
+                    {
+                        jones.acc.X = jones.input.X * jones.runAcc;
+                    }
+
+                    //jump
+                    if (jones.isGrounded)
+                    {
+                        List<Vector2Int> horizontalCollisions = jones.collisionHandler.GetTileMapCollisions(jones.CurrentCollisionBox.At(new(jones.input.X * 8, 0)));
+                        foreach (Vector2Int collision in horizontalCollisions) //TODO: colissions -> tiles
+                        {
+                            if (jones.collisionHandler.TileMapCollisions.tryGetValue(collision, out TileType tileType) && (tileType == TileType.Solid))
+                            {
+                                jones.vel.Y = -jones.jumpPower;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (!jones.isGrounded)
+                    {
+                        jones.animationHandler.ChangeState(State.Jumping);
+                    }
+                }
+                else
+                {
+                    jones.acc.X = Math.Sign(jones.vel.X) * -1;
+                }
+
+                if(jones.State == State.Attacking && jones.animationHandler.GetCurrentAnimationFrame() == 1 && jones.animationHandler.AnimationTimer % 4 == 0)
+                {
+                    add(getBullet((int)(jones.pos.X + (29.5f + jones.facingDirection * 12.5f) * Zoom), (int)jones.pos.Y + 19 * Zoom, jones.facingDirection));
+                }
+            });
+
+            jones.Touched = new((collisionObject, touchNormal) =>
+            {
+                if (jones.State != State.Dying)
+                {
+                    if (touchNormal.Y == -1 && collisionObject.CurrentCollisionBox.Bottom <= jones.CurrentCollisionBox.Top) //hit on head
+                    {
+                        Player player;
+                        if (IfPlayer(collisionObject, out player))
+                        {
+                            jones.PlayAnimation(State.Dying);
+                            collisionHandler = null;
+                            remove(jones, animationHandler.GetAnimationTime(State.Dying));
+                            return new Vector2(0, -12f);
+                        }
+                    }
+                    else
+                    {
+                        Player player;
+                        if (IfPlayer(collisionObject, out player))
+                        {
+                            player.DamageIfNotImmune();
+                        }
+                    }
+                }
+                return new();
+            });
+
+            return jones;
+        }
+        
+        private MoveableEntity getBullet(int x, int y, int direction)
+        {
+            Texture2D texture = getTexture("BulletTexture");
+
+            AnimationHandler animationHandler = new(texture, new(5, 3));
+            animationHandler.AddAnimation(State.Idling, 0, 1, 1);
+            animationHandler.AddAnimation(State.Dying, 1, 2, 4);
+
+            CollisionHandler collisionHandler = new(new(0,0,5 * Zoom, 3 * Zoom), tileMapCollisions, collidableEntities);
+
+            MoveableEntity bullet = new(new(x, y), new(direction * .1f * Zoom, 0), 0, animationHandler, collisionHandler, null);
+
+            bullet.FaceDirection(direction);
+
+            bullet.Touched = new((collisionObject, touchNormal) =>
+            {
+                if (bullet.State != State.Dying)
+                {
+                    if (touchNormal.Y == -1 && collisionObject.CurrentCollisionBox.Bottom <= bullet.CurrentCollisionBox.Top) //hit on head
+                    {
+                        Player player;
+                        if (IfPlayer(collisionObject, out player))
+                        {
+                            bullet.PlayAnimation(State.Dying);
+                            collisionHandler = null;
+                            remove(bullet, animationHandler.GetAnimationTime(State.Dying));
+                            return new Vector2(0, -12f);
+                        }
+                    }
+                    else
+                    {
+                        Player player;
+                        if (IfPlayer(collisionObject, out player))
+                        {
+                            player.DamageIfNotImmune();
+                        }
+                    }
+                }
+                return new();
+            });
+
+            return bullet;
+        }
     }
 }
