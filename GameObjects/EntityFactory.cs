@@ -20,13 +20,13 @@ namespace MyGame.GameObjects
         private ContentManager content;
         private Action<Entity, int> remove;
         private Action<Entity> add;
+        private Action<string> loadScene;
         private TileType[,] tileMapCollisions;
         private List<Entity> collidableEntities; //if entity is collidable, it will be added to this list
         public Player player;
         private Dictionary<string, Func<int, int, Entity>> getEntityMethods = new(); //TODO: change Object to Entity (statinaryEntity)
-
-        //todo: singleton ???
-        public EntityFactory(Player player, TileType[,] tileMapCollisions, List<Entity> collidableEntities, ContentManager content, Action<Entity, int> remove, Action<Entity> add)
+        
+        public EntityFactory(Player player, TileType[,] tileMapCollisions, List<Entity> collidableEntities, ContentManager content, Action<Entity, int> remove, Action<Entity> add, Action<string> loadScene)
         {
             this.player = player;
             this.tileMapCollisions = tileMapCollisions;
@@ -34,8 +34,10 @@ namespace MyGame.GameObjects
             this.content = content;
             this.remove = remove;
             this.add = add;
+            this.loadScene = loadScene;
 
             getEntityMethods.Add("player", (x, y) => getPlayer(x, y));
+            getEntityMethods.Add("finish", (x, y) => getFinish(x, y));
             getEntityMethods.Add("coin", (x, y) => getCoin(x, y));
             getEntityMethods.Add("red_coin", (x, y) => getRedCoin(x, y));
             getEntityMethods.Add("erik", (x, y) => getErik(x, y));
@@ -66,7 +68,7 @@ namespace MyGame.GameObjects
         }
 
         //TODO: rename
-        private static bool IfPlayer(Entity objectToCheck, out Player player)
+        private static bool IsPlayer(Entity objectToCheck, out Player player)
         {
             if (objectToCheck is Player)
             {
@@ -260,7 +262,7 @@ namespace MyGame.GameObjects
                     if (touchNormal.Y == -1 && collisionObject.CurrentCollisionBox.Bottom <= jellyFish.CurrentCollisionBox.Top) //hit on head
                     {
                         Player player;
-                        if (IfPlayer(collisionObject, out player))
+                        if (IsPlayer(collisionObject, out player))
                         {
                             jellyFish.PlayAnimation(State.Dying);
 
@@ -273,7 +275,7 @@ namespace MyGame.GameObjects
                     else
                     {
                         Player player;
-                        if (IfPlayer(collisionObject, out player))
+                        if (IsPlayer(collisionObject, out player))
                         {
                             player.DamageIfNotImmune();
                         }
@@ -310,7 +312,7 @@ namespace MyGame.GameObjects
             {
                 jones.FaceInputDirection();
 
-                if(jones.targetDirection.Length() <= 64 * TileSize
+                if(jones.targetDirection.Length() <= 32 * TileSize
                 && jones.targetDirection.Length() > 8 * TileSize)
                 {
                     jones.ChangeState(State.Walking);
@@ -376,7 +378,7 @@ namespace MyGame.GameObjects
                     if (touchNormal.Y == -1 && collisionObject.CurrentCollisionBox.Bottom <= jones.CurrentCollisionBox.Top) //hit on head
                     {
                         Player player;
-                        if (IfPlayer(collisionObject, out player))
+                        if (IsPlayer(collisionObject, out player))
                         {
                             jones.PlayAnimation(State.Dying);
                             collisionHandler = null;
@@ -387,7 +389,7 @@ namespace MyGame.GameObjects
                     else
                     {
                         Player player;
-                        if (IfPlayer(collisionObject, out player))
+                        if (IsPlayer(collisionObject, out player))
                         {
                             player.DamageIfNotImmune();
                         }
@@ -407,7 +409,7 @@ namespace MyGame.GameObjects
             animationHandler.AddAnimation(State.Idling, 0, 1, 1);
             animationHandler.AddAnimation(State.Dying, 1, 2, 4);
 
-            CollisionHandler collisionHandler = new(new(0,0,5 * Zoom, 3 * Zoom), tileMapCollisions, collidableEntities);
+            CollisionHandler collisionHandler = new(new(0,0,5 * Zoom, 3 * Zoom), null, null);
 
             MoveableEntity bullet = new(new(x, y), new(direction * .1f * Zoom, 0), 0, animationHandler, collisionHandler, null);
 
@@ -420,7 +422,7 @@ namespace MyGame.GameObjects
                     if (touchNormal.Y == -1 && collisionObject.CurrentCollisionBox.Bottom <= bullet.CurrentCollisionBox.Top) //hit on head
                     {
                         Player player;
-                        if (IfPlayer(collisionObject, out player))
+                        if (IsPlayer(collisionObject, out player))
                         {
                             bullet.PlayAnimation(State.Dying);
                             collisionHandler = null;
@@ -431,7 +433,7 @@ namespace MyGame.GameObjects
                     else
                     {
                         Player player;
-                        if (IfPlayer(collisionObject, out player))
+                        if (IsPlayer(collisionObject, out player))
                         {
                             player.DamageIfNotImmune();
                         }
@@ -441,6 +443,27 @@ namespace MyGame.GameObjects
             });
 
             return bullet;
+        }
+
+        private Finish getFinish(int x, int y)
+        {
+            Texture2D texture = getTexture("FinishSpriteSheet");
+
+            AnimationHandler animationHandler = new(texture, new(16, 16));
+            animationHandler.AddAnimation(State.Idling, 0, 4, 4);
+
+            Finish finish = new(new(x, y), new(0, 0, 16 * Zoom, 16 * Zoom), animationHandler);
+
+            finish.Touched = new((collisionObject, touchNormal) => {
+                Player player;
+                if (IsPlayer(collisionObject, out player))
+                {
+                    loadScene(finish.NextLevel);
+                }
+                return new();
+            });
+
+            return finish;
         }
     }
 }

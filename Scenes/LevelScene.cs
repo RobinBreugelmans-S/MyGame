@@ -25,6 +25,7 @@ namespace MyGame.Scenes
         //TODO: naming conventions
         private Player player;
         private Camera camera;
+        private Entity finish;
         //public Player Player { get { return player; } set { player = value; objectFactory.player = value; } }
         private string filePath;
         private ContentManager content;
@@ -45,26 +46,31 @@ namespace MyGame.Scenes
         public List<(Entity entity, int timer)> entitiesToBeRemovedTimer = new();
 
         private string backgroundName;
-        private float[] backgroundParalaxStrenghts;
+        private float[] backgroundParalaxStrengths;
         private ParalaxBackground[] backgroundLayers; //Background class with pos, paralax, Texture2D, Draw()
 
-        public LevelScene(string level, string backgroundName, float[] paralaxStrenghts, ContentManager content)
+        string nextLevel;
+        Action<string> loadScene;
+
+        public LevelScene(string level, string backgroundName, float[] paralaxStrengths, string nextLevel, ContentManager content, Action<string> loadScene)
         {
             filePath = $".././../../Maps/{level}.json";
-            this.content = content;
             this.backgroundName = backgroundName;
-            backgroundParalaxStrenghts = paralaxStrenghts;
+            backgroundParalaxStrengths = paralaxStrengths;
+            this.content = content;
+            this.loadScene = loadScene;
+            this.nextLevel = nextLevel;
         }
 
         public void LoadScene()
         {
             //get backgrounds
-            backgroundLayers = new ParalaxBackground[backgroundParalaxStrenghts.Length];
+            backgroundLayers = new ParalaxBackground[backgroundParalaxStrengths.Length];
 
-            for (int i = 0; i < backgroundParalaxStrenghts.Length; i++)
+            for (int i = 0; i < backgroundParalaxStrengths.Length; i++)
             {
                 Texture2D texture = content.Load<Texture2D>($"{backgroundName}/{i + 1}");
-                backgroundLayers[i] = new(texture, backgroundParalaxStrenghts[i]);
+                backgroundLayers[i] = new(texture, backgroundParalaxStrengths[i]);
             }
 
             //TODO refactor
@@ -90,7 +96,8 @@ namespace MyGame.Scenes
             //load entities
             objectFactory = new(player, tileMapCollisions.AsTileTypeMap(), collidableEntities, content,
                 new Action<Entity, int>((entity, timer) => entitiesToBeRemovedTimer.Add((entity, timer))),
-                new Action<Entity>((entity) => addEntity(entity))
+                new Action<Entity>((entity) => addEntity(entity)),
+                new Action<string>(sceneName => loadScene(sceneName))
             );
             
             Layer entityLayer = levelJson.layers[levelJson.layers.Count - 1];
@@ -109,6 +116,12 @@ namespace MyGame.Scenes
                 objectFactory.player = _player;
                 player = _player;
                 camera = new(player, new(tileMapCollisions.Width * TileSize, tileMapCollisions.Height * TileSize));
+                player.LoadScene = loadScene;
+            }
+            else if(entity is Finish)
+            {
+                Finish finish = (Finish)entity;
+                finish.NextLevel = nextLevel;
             }
             entities.Add(entity);
             if (entity.Touched != null) //TODO: Touched -> OnTouch //TODO: use isCollidable

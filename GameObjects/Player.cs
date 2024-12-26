@@ -38,6 +38,9 @@ namespace MyGame.GameObjects
         public int HP = 3;
 
         private Rectangle levelBox;
+
+        public Action<string> LoadScene { private get; set; }
+        private int deathTimer = 60;
         
         //TODO: change to factory method to get player 
         public Player(Vector2 pos, Texture2D spriteSheet, IInputReader inputReader, TileType[,] tileMapCollisions, List<Entity> collidableEntities)
@@ -66,8 +69,8 @@ namespace MyGame.GameObjects
         }
 
         public new void Update() //TODO: new , fix ? ?
-        {
-            if (!levelBox.Contains(GetMiddleOfRect(CurrentCollisionBox))) //if middle of player is outside of the level area
+        {//!levelBox.Contains(GetMiddleOfRect(CurrentCollisionBox))
+            if (GetMiddleOfRect(CurrentCollisionBox).Y > levelBox.Bottom) //if middle of player is below 0
             {
                 HP = 0;
             }
@@ -76,8 +79,17 @@ namespace MyGame.GameObjects
             {
                 immuneTimer--;
             }
-            //TODO: better region names;
-            #region input and Acceletaro
+
+            if(HP <= 0)
+            {
+                deathTimer--;
+            }
+            if(deathTimer <= 0)
+            {
+                LoadScene("main_menu");
+            }
+
+            #region input and acceleration
             //TODO: add animator class? to refactor animations and horizontalFlip
             input = inputReader.ReadInput();
             isJumpingPrevious = isJumping;
@@ -159,6 +171,9 @@ namespace MyGame.GameObjects
 
             //animation
             animationHandler.UpdatePartRectangle();
+
+            //load menu scene a bit after dying;
+
         }
         public new void Draw(Vector2 offset,SpriteBatch spriteBatch)
         {

@@ -26,7 +26,8 @@ namespace MyGame.Scenes
             this.exit = exit;
             
             getSceneMethods.Add("main_menu", getMainMenuScene);
-            getSceneMethods.Add("level1", getLevel1Scene);
+            getSceneMethods.Add("level_001", getLevel1Scene);
+            getSceneMethods.Add("level_002", getLevel2Scene);
         }
 
         public IScene GetScene(string sceneName)
@@ -41,8 +42,8 @@ namespace MyGame.Scenes
             var buttonSpriteSheet = content.Load<Texture2D>("ButtonSpriteSheet");
             //TODO: fix the level loaidng!!
             Button[] buttons = {//TODO: make getBuytton  //TODO: should be 900 ??
-                new(() => loadScene("level1"), new(730,320), buttonSpriteSheet, font, "Start"), //TODO: text first, then action, then rest
-                new(() => loadScene("level1"), new(730,520), buttonSpriteSheet, font, "button"),
+                new(() => loadScene("level_001"), new(730,320), buttonSpriteSheet, font, "Start"), //TODO: text first, then action, then rest
+                new(() => loadScene("level_001"), new(730,520), buttonSpriteSheet, font, "button"),
                 new(exit, new(730,720), buttonSpriteSheet, font, "Quit")
             }; 
             MenuScene mainMenuScene = new("MainMenuBG", buttons, content);
@@ -51,8 +52,18 @@ namespace MyGame.Scenes
         }
 
         private IScene getLevel1Scene()
-        {//TestLevel1   level_001
-            return new LevelScene("level_001", "CloudsBG", new[] { 0f, -.05f, -.1f}, content); //loading in level data is in LevelScene.cs
+        {
+            return getLevelScene("level_001", "CloudsBG", new[] { 0f, -.05f, -.1f}, "level_002"); //loading in level data is in LevelScene.cs
+        }
+
+        private IScene getLevel2Scene()
+        {
+            return getLevelScene("level_002", "DesertBG", new[] { 0f, -.05f, -.1f, -.15f, -.2f }, "level_002");
+        }
+
+        private LevelScene getLevelScene(string level, string backgroundName, float[] paralaxStrengths, string nextLevel)
+        {
+            return new LevelScene(level, backgroundName, paralaxStrengths, nextLevel, content, loadScene);
         }
     }
 }

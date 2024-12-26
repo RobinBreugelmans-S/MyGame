@@ -47,3 +47,10 @@ C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\ArchaeologistSpriteSheet.xnb
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\JonesSpriteSheet.xnb
 C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\BulletTexture.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\FinishSpriteSheet.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\DesertBG\1.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\DesertBG\2.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\DesertBG\3.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\DesertBG\4.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\DesertBG\5.xnb
+C:\Users\robin\Desktop\School\J2S1\Game development\Games\MyGame\bin\Debug\net6.0\Content\TilesetDesert.xnb
