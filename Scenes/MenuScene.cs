@@ -28,11 +28,12 @@ namespace MyGame.Scenes
         private Button selectedButton
         { 
             get { return buttons[selectedIndex]; }
-            set { selectedButton = value; }
         }
         private int selectedIndex = 0;
-        Vector2Int input;
         Vector2Int inputPrevious;
+        Vector2Int input;
+        bool enterInputPrevious;
+        bool enterInput;
         
         private KeyboardReader keyboardReader = new KeyboardReader();
 
@@ -45,7 +46,7 @@ namespace MyGame.Scenes
         
         private void select(int index)
         {
-            selectedButton.Unselect();//selectedButton.IsSelected = false;
+            selectedButton.Unselect();
             selectedIndex = index;
             selectedButton.Select();
         }
@@ -53,25 +54,18 @@ namespace MyGame.Scenes
         public void LoadScene()
         {
             background = content.Load<Texture2D>(backgroundName);
-            /*foreach (Button button in buttons)
-            {
-                //TODO: refactor into button
-                button.SpriteSheet = content.Load<Texture2D>(button.textureName);
-            }*/
             select(0);
         }
-        int mod(int x, int m) //because negative module in c# is bad //TODO: phrase all comments better lol
-        {//TODO: move to globals
-            int r = x % m;
-            return r < 0 ? r + m : r;
-        }
+        bool isFirstFrame = true;
         public void Update()
         {
+            enterInputPrevious = enterInput;
+            enterInput = keyboardReader.ReadEnterInput();
             inputPrevious = input;
             input = keyboardReader.ReadInput();
 
             if(input.X != 0 && input.X != inputPrevious.X)
-            {//TODO: fix index out of bounds
+            {
                 select(mod(selectedIndex + input.X, buttons.Length));
             }
             if (input.Y != 0 && input.Y != inputPrevious.Y)
@@ -83,8 +77,13 @@ namespace MyGame.Scenes
             {
                 button.Update();
             }
-            
-            if (keyboardReader.ReadEnterInput()) //command pattern
+
+            //don't read input on first frame, else if user is still holding Enter from previous scene it will instantly press a button
+            if (isFirstFrame)
+            {
+                isFirstFrame = false;
+            }
+            else if (enterInput && !enterInputPrevious) //command pattern
             {
                 selectedButton.OnClick();
             }

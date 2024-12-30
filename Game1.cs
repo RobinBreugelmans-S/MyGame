@@ -35,13 +35,13 @@ namespace MyGame
             IsMouseVisible = true;
 
             
-            //_graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = true;
             _graphics.PreferredBackBufferWidth = BufferSize.X;
             _graphics.PreferredBackBufferHeight = BufferSize.Y;
-            IsFixedTimeStep = true; //60fps
-            TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d);
+            IsFixedTimeStep = true;
+            TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d); //60fps
 
-            sceneFactory = new(Content, //add loading screen
+            sceneFactory = new(Content,
                 (string sceneName) => { currentScene = sceneFactory.GetScene(sceneName); currentScene.LoadScene(); },
                 () => Exit()
             );
@@ -49,20 +49,13 @@ namespace MyGame
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            currentScene = sceneFactory.GetScene("main_menu"); //TODO: use enum? no cause no custom levels
-                                               //"level1"
-                                               //"main_menu"
+            currentScene = sceneFactory.GetScene("main_menu");
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            //TODO: remove?
-            //DebugImage = Content.Load<Texture2D>("DebugImage");
-
             InitializeGameObjects();
         }
 
@@ -88,8 +81,6 @@ namespace MyGame
 
             _spriteBatch.Begin(samplerState: SamplerState.PointWrap);
             currentScene.Draw(_spriteBatch);
-            //TODO: V
-            //_spriteBatch.Draw(textureAtlas, new Rectangle((int)player.currentCollisionBox.X, (int)player.currentCollisionBox.Y, (int)player.currentCollisionBox.Width, (int)player.currentCollisionBox.Height), textureStore[0], Color.Red);
             _spriteBatch.End();
 
             base.Draw(gameTime);

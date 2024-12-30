@@ -73,7 +73,7 @@ namespace MyGame.Scenes
                 new("Main Menu", () => loadScene("main_menu"), new(730,520), buttonSpriteSheet, font),
                 new("Quit", exit, new(730,720), buttonSpriteSheet, font)
             };
-            MenuScene mainMenuScene = new("MainMenuBG", buttons, content);
+            MenuScene mainMenuScene = new("WinBG", buttons, content);
 
             return mainMenuScene;
         }

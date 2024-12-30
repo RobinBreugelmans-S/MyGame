@@ -55,6 +55,11 @@ namespace MyGame
         {
             return new Vector2(rect.X + rect.Width / 2, rect.Y + rect.Height / 2);
         }
+        public static int mod(int x, int m) //because negative modulo in c# is wrong
+        {
+            int r = x % m;
+            return r < 0 ? r + m : r;
+        }
         #endregion
 
         //returns velocity
