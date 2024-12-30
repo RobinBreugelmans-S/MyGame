@@ -102,8 +102,7 @@
               "RelativeToolTip": "Maps\\level_002.json",
               "ViewState": "AgIAAI0AAAAAAAAAAAAAAGwAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-12-26T15:04:41.13Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-26T15:04:41.13Z"
             },
             {
               "$type": "Document",
@@ -115,8 +114,7 @@
               "RelativeToolTip": "GameObjects\\Finish.cs",
               "ViewState": "AgIAAAQAAAAAAAAAAAAIwA0AAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-26T14:26:00.812Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-26T14:26:00.812Z"
             },
             {
               "$type": "Document",
@@ -128,8 +126,7 @@
               "RelativeToolTip": "Scenes\\SceneFactory.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAwDwAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-26T14:02:17.427Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-26T14:02:17.427Z"
             },
             {
               "$type": "Document",
@@ -141,8 +138,7 @@
               "RelativeToolTip": "GameObjects\\Entity.cs",
               "ViewState": "AgIAADUAAAAAAAAAAAAgwBwAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-26T12:03:26.627Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-26T12:03:26.627Z"
             },
             {
               "$type": "Document",
@@ -154,8 +150,7 @@
               "RelativeToolTip": "GameObjects\\MoveableEntity.cs",
               "ViewState": "AgIAAAsAAAAAAAAAAAAiwEUAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-26T12:02:06.698Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-26T12:02:06.698Z"
             },
             {
               "$type": "Document",
@@ -165,7 +160,7 @@
               "RelativeDocumentMoniker": "GameObjects\\EntityFactory.cs",
               "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\EntityFactory.cs",
               "RelativeToolTip": "GameObjects\\EntityFactory.cs",
-              "ViewState": "AgIAACYBAAAAAAAAAAAAADoBAAA3AAAAAAAAAA==",
+              "ViewState": "AgIAACUBAAAAAAAAAAD4vzUBAABRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-05T15:50:58.135Z",
               "EditorCaption": ""
@@ -180,8 +175,7 @@
               "RelativeToolTip": "Scenes\\LevelScene.cs",
               "ViewState": "AgIAACcAAAAAAAAAAAAUwF0AAABaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-03T19:21:12.543Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-03T19:21:12.543Z"
             },
             {
               "$type": "Document",
@@ -193,8 +187,7 @@
               "RelativeToolTip": "GameObjects\\Collidable.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAUwAsAAAB2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-26T12:01:41.341Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-26T12:01:41.341Z"
             },
             {
               "$type": "Document",
@@ -206,8 +199,7 @@
               "RelativeToolTip": "GameObjects\\Enemy.cs",
               "ViewState": "AgIAAEIAAAAAAAAAAAAAAEgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-13T10:30:04.886Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-13T10:30:04.886Z"
             },
             {
               "$type": "Document",
@@ -267,8 +259,7 @@
               "RelativeToolTip": "GameObjects\\Player.cs",
               "ViewState": "AgIAACIAAAAAAAAAAAAQwCoAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-05T15:21:46.601Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-05T15:21:46.601Z"
             },
             {
               "$type": "Document",
@@ -304,8 +295,7 @@
               "RelativeToolTip": "Scenes\\Button.cs",
               "ViewState": "AgIAAC4AAAAAAAAAAADwvyEAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-04T20:37:41.525Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-04T20:37:41.525Z"
             },
             {
               "$type": "Document",
@@ -329,8 +319,7 @@
               "RelativeToolTip": "Scenes\\MenuScene.cs",
               "ViewState": "AgIAAFIAAAAAAAAAAAASwFoAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-03T19:16:52.487Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-03T19:16:52.487Z"
             }
           ]
         }

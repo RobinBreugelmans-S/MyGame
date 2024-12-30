@@ -39,7 +39,6 @@ namespace MyGame.GameObjects
             getEntityMethods.Add("player", (x, y) => getPlayer(x, y));
             getEntityMethods.Add("finish", (x, y) => getFinish(x, y));
             getEntityMethods.Add("coin", (x, y) => getCoin(x, y));
-            getEntityMethods.Add("red_coin", (x, y) => getRedCoin(x, y));
             getEntityMethods.Add("erik", (x, y) => getErik(x, y));
             getEntityMethods.Add("jellyfish", (x, y) => getJellyFish(x, y));
             getEntityMethods.Add("jones", (x, y) => getJones(x, y));
@@ -113,30 +112,6 @@ namespace MyGame.GameObjects
                 return new();
             };
             
-            return coin;
-        }
-
-        //TODO: almost same as coin
-        private Entity getRedCoin(int x, int y)
-        {
-            Texture2D texture = getTexture("RedCoinSpriteSheet");
-
-            AnimationHandler animationHandler = new(texture, new Vector2Int(8, 8));
-            animationHandler.AddAnimation(State.Idling, 0, 8, 6);
-            animationHandler.ChangeState(State.Idling);
-
-            Entity coin = new Entity(new Vector2(x, y), new RectangleF(0, 0, TileSize, TileSize), animationHandler);
-            coin.Touched = (collisionObject, normalVector) =>
-            {
-                if (collisionObject is Player)
-                {
-                    Player player = collisionObject as Player;
-                    player.Score += 675034;
-                    remove(coin, 0);
-                }
-                return new();
-            };
-
             return coin;
         }
 
@@ -264,6 +239,8 @@ namespace MyGame.GameObjects
                         Player player;
                         if (IsPlayer(collisionObject, out player))
                         {
+                            player.Score += 8;
+
                             jellyFish.PlayAnimation(State.Dying);
 
                             jellyFish.StopMoving();
@@ -306,7 +283,7 @@ namespace MyGame.GameObjects
 
             CollisionHandler collisionHandler = new(new RectangleF(27f * Zoom, 14f * Zoom, 9f * Zoom, 18f * Zoom), tileMapCollisions, collidableEntities);
 
-            Enemy jones = new(new Vector2(x, y), .5f, 6f, 20f, 2f, 1f, animationHandler, collisionHandler, target);//, behaviour, onTouch);
+            Enemy jones = new(new Vector2(x, y), .5f, 5f, 20f, 2f, 1f, animationHandler, collisionHandler, target);//, behaviour, onTouch);
 
             jones.doBehaviour = new(() =>
             {
@@ -330,7 +307,7 @@ namespace MyGame.GameObjects
                     jones.acc.X = 0;
                 }
 
-                if (jones.State != State.Idling && jones.targetDirection != new Vector2(0f, 0f))
+                if (jones.State != State.Idling && jones.State != State.Attacking && jones.targetDirection != new Vector2(0f, 0f))
                 {
                     if (jones.input.X == 0)
                     {
@@ -380,7 +357,10 @@ namespace MyGame.GameObjects
                         Player player;
                         if (IsPlayer(collisionObject, out player))
                         {
+                            player.Score += 6;
+
                             jones.PlayAnimation(State.Dying);
+
                             collisionHandler = null;
                             remove(jones, animationHandler.GetAnimationTime(State.Dying));
                             return new Vector2(0, -12f);
