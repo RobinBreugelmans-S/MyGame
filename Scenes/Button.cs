@@ -28,15 +28,15 @@ namespace MyGame.Scenes
 
         public bool IsSelected;
 
-        public Button(Action onclick, Vector2 pos, Texture2D spriteSheet, SpriteFont font, string text)
+        public Button(string text, Action onclick, Vector2 pos, Texture2D spriteSheet, SpriteFont font)
         {
             //TODO: fix the stuf with buttonbox
             OnClick = onclick;
             //this.buttonBox = buttonBox;
+            this.text = text;
             this.pos = pos;
             this.spriteSheet = spriteSheet;
             this.font = font;
-            this.text = text;
             //TODO: add animated selected button
             animationHandler = new(spriteSheet, size);
             animationHandler.AddAnimation(State.Unselected, 0, 2, 8); //so that if you move the color doesn't always reset to yellow of the selected button
@@ -63,7 +63,7 @@ namespace MyGame.Scenes
         public void Draw(Vector2 offset, SpriteBatch spriteBatch)
         {
             animationHandler.Draw(spriteBatch, pos);
-            spriteBatch.DrawString(font, text, GetMiddleOfRect(new Rectangle((int)pos.X, (int)pos.Y, size.X * Zoom, size.Y * Zoom)), Color.White, 0, font.MeasureString(text) / 2, 4f, SpriteEffects.None, 0.5f);
+            spriteBatch.DrawString(font, text, GetMiddleOfRect(new Rectangle((int)pos.X, (int)pos.Y, size.X * Zoom, size.Y * Zoom)), Color.White, 0, font.MeasureString(text) / 2, 3f, SpriteEffects.None, 0.5f);
         }
     }
 }
