@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static MyGame.Globals;
 
-namespace MyGame.Scenes
+namespace MyGame.GameObjects.MenuObjects
 {
     internal class Button : IGameObject
     {
@@ -37,7 +37,7 @@ namespace MyGame.Scenes
             this.pos = pos;
             this.spriteSheet = spriteSheet;
             this.font = font;
-            
+
             animationHandler = new(spriteSheet, size);
             animationHandler.AddAnimation(State.Unselected, 0, 2, 8); //so that if you move the color doesn't always reset to yellow of the selected button
             animationHandler.AddAnimation(State.Selected, 1, 2, 8);

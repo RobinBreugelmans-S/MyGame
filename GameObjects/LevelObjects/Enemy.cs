@@ -67,7 +67,7 @@ namespace MyGame.GameObjects.LevelObjects
             }
         }
 
-        public new void Update()
+        public override void Update()
         {
             if (target != null)
             {

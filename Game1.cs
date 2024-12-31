@@ -34,7 +34,7 @@ namespace MyGame
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             
-            //_graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = true;
             _graphics.PreferredBackBufferWidth = ViewPortSize.X;
             _graphics.PreferredBackBufferHeight = ViewPortSize.Y;
             IsFixedTimeStep = true;

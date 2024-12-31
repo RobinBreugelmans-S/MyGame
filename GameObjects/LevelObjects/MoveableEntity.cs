@@ -63,7 +63,7 @@ namespace MyGame.GameObjects.LevelObjects
             }
         }
 
-        public new void Update()
+        public override void Update()
         {
             vel.Y += gravityWhenFalling;
 

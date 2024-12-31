@@ -1,19 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using static MyGame.Globals;
 using System.Drawing;
 using MyGame.Misc;
-using System.Diagnostics;
-using System;
 
 namespace MyGame.GameObjects.LevelObjects
 {
     internal class Camera
     {
-        //TODO: refactor so that the pos is the top left ! ! ! ! ! ! !
-
-        //TODO: use Vector2Int?
-        //public Vector2 pos { get; private set; } //pos is the middle of the viewport here! //TODO: naming conventions
         public Vector2 PosMiddle
         {
             get { return Vector2.Floor(GetMiddleOfRect(Viewport) / Zoom) * Zoom; }

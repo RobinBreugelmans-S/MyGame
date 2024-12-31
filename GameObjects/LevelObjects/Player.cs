@@ -67,7 +67,7 @@ namespace MyGame.GameObjects.LevelObjects
             }
         }
 
-        public new void Update() //TODO: new , fix ? ?
+        public override void Update() //TODO: new , fix ? ?
         {
             if (GetMiddleOfRect(CurrentCollisionBox).Y > levelBox.Bottom) //if middle of player is below 0
             {
@@ -170,7 +170,7 @@ namespace MyGame.GameObjects.LevelObjects
             //animation
             AnimationHandler.Update();
         }
-        public new void Draw(Vector2 offset, SpriteBatch spriteBatch)
+        public override void Draw(Vector2 offset, SpriteBatch spriteBatch)
         {
             if (immuneTimer / 4 % 2 == 0)
             {

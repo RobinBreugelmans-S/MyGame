@@ -84,8 +84,8 @@ namespace MyGame.Scenes
 
             LevelJson levelJson = JsonSerializer.Deserialize<LevelJson>(jsonData);
 
-            tileMapCollisions = new TileMap(levelJson.layers[0]);         //TODO: make it so tileMapsDeco doesn't get entity, than make list withb entity layers
-            tileMapsDecoration = new TileMap[levelJson.layers.Count - 2]; //-2: first layer is collisios, last is entities //TODO: add checks for if there are not enough layers
+            tileMapCollisions = new TileMap(levelJson.layers[0]);
+            tileMapsDecoration = new TileMap[levelJson.layers.Count - 2]; //-2: first layer is collisios, last is entities
             for (int i = 0; i < levelJson.layers.Count - 2; i++)
             {
                 tileMapsDecoration[i] = new TileMap(levelJson.layers[i + 1]); // i+1 cause layer 0 is collisions
@@ -151,7 +151,7 @@ namespace MyGame.Scenes
             
             for (int i = 0; i < entitiesToBeRemovedTimer.Count; i++)
             {
-                //decrement timer by 1
+                //decrement timers by 1
                 entitiesToBeRemovedTimer[i] = (entitiesToBeRemovedTimer[i].entity, entitiesToBeRemovedTimer[i].timer - 1);
             }
             foreach (var item in entitiesToBeRemovedTimer)
@@ -180,12 +180,10 @@ namespace MyGame.Scenes
             {
                 background.Draw(camera.Pos, spriteBatch);
             }
-
             foreach (TileMap tileMap in tileMapsDecoration)
             {
                 tileMap.Draw(offset, spriteBatch);
             }
-            
             foreach (IGameObject entity in entities)
             {
                 entity.Draw(offset, spriteBatch);

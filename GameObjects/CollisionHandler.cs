@@ -232,18 +232,15 @@ namespace MyGame.GameObjects
                     //TODO: TileType -> CollisionType
                 }
             }//TODO: collisionsSorted -> collisions
-            //TODO: still have bugs where you can jump on the wall
+
             collisionsSorted = collisionsSorted.OrderBy(c => c.TimeHitNear).ThenBy(c => (GetMiddleOfRect(c.collider.CurrentCollisionBox) - GetMiddleOfRect(currentCollisionBox)).Length()).ToList();
-            //TODO: give Collibdable instaed of TileRect
+            
             foreach ((Collidable collider, float TimeHitNear, TileType TileType) collision in collisionsSorted)
             {
                 if (dynamicRectVsRect(currentCollisionBox, vel, collision.collider.CurrentCollisionBox, out contactPoint, out contactNormal, out timeHitNear))
                 {
-                    //Action<Vector2> collisionMethod; TODO
-                    //resolve collisions
-                    
                     //first check if the collidable is tile or entity
-                    if (collision.collider is Entity) //TODO chagne so you can stand on some enemies
+                    if (collision.collider is Entity)
                     {
                         Entity entity = collision.collider as Entity;
                         Vector2 velAdded = entity.OnTouch(Parent, contactNormal);
@@ -260,57 +257,55 @@ namespace MyGame.GameObjects
                                 return num2;
                             }
                         }
-                        //TODO: use the solidSpeed stuff from Cakez!!
+                         
                         vel = new(NumberIfNotZero(vel.X, velAdded.X), NumberIfNotZero(vel.Y, velAdded.Y));
-
-                        
                     }
                     else
                     {
+                        //defined here so it has access to vel and acc
+                        void applyCollisionResult()
+                        {
+                            vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1f - timeHitNear);
+                            acc -= acc * contactNormal;
+                        }
+
                         switch (collision.TileType)
                         {
                             case TileType.Solid:
-                                vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1f - timeHitNear);
-                                acc -= acc * contactNormal;
-                                if(contactNormal == new Vector2(0, -1))
+                                applyCollisionResult();
+                                if (contactNormal == new Vector2(0, -1))
                                 {
                                     isGrounded = true;
                                 }
-                                //TODO: put these 2 in a method?
                                 break;
                             case TileType.SemiUp:
                                 if (contactNormal == new Vector2(0, -1) && currentCollisionBox.Bottom <= collision.collider.CurrentCollisionBox.Top) //check if player is above (normal vector)
                                 {
-                                    vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
-                                    acc -= acc * contactNormal;
+                                    applyCollisionResult();
                                     isGrounded = true;
                                 }
                                 break;
                             case TileType.SemiRight:
                                 if (contactNormal == new Vector2(1, 0) && currentCollisionBox.Left >= collision.collider.CurrentCollisionBox.Right) //check if player is above (normal vector)
                                 {
-                                    vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
-                                    acc -= acc * contactNormal;
+                                    applyCollisionResult();
                                 }
                                 break;
                             case TileType.SemiDown:
                                 if (contactNormal == new Vector2(0, 1) && currentCollisionBox.Top >= collision.collider.CurrentCollisionBox.Bottom) //check if player is above (normal vector)
                                 {
-                                    vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
-                                    acc -= acc * contactNormal;
+                                    applyCollisionResult();
                                 }
                                 break;
                             case TileType.SemiLeft:
                                 if (contactNormal == new Vector2(-1, 0) && currentCollisionBox.Right <= collision.collider.CurrentCollisionBox.Left) //check if player is above (normal vector)
                                 {
-                                    vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1 - timeHitNear);
-                                    acc -= acc * contactNormal;
+                                    applyCollisionResult();
                                 }
                                 break;
                             case TileType.Hazard:
                                 //same as solid
-                                vel += contactNormal * new Vector2(Math.Abs(vel.X), Math.Abs(vel.Y)) * (1f - timeHitNear);
-                                acc -= acc * contactNormal;
+                                applyCollisionResult();
                                 if (contactNormal == new Vector2(0, -1))
                                 {
                                     isGrounded = true;
@@ -324,8 +319,6 @@ namespace MyGame.GameObjects
                                 break;
                         }
                     }
-
-
                 }
             }
 

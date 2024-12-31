@@ -47,12 +47,12 @@ namespace MyGame.GameObjects.LevelObjects
             AnimationHandler.ChangeState(state);
         }
 
-        public void Update()
+        public virtual void Update()
         {
             AnimationHandler.Update();
         }
 
-        public void Draw(Vector2 offset, SpriteBatch spriteBatch)
+        public virtual void Draw(Vector2 offset, SpriteBatch spriteBatch)
         {
             AnimationHandler.Draw(Pos + offset, spriteBatch); //TODO: first offset, then spritebatch
         }
