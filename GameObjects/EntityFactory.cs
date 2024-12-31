@@ -140,7 +140,7 @@ namespace MyGame.GameObjects
                     erik.ChangeState(State.Walking);
                 }
                 //if is activated //TODO: bool activated
-                if (erik.State == State.Walking && erik.targetDirection != new Vector2(0f, 0f))
+                if (erik.State != State.Idling && erik.targetDirection != new Vector2(0f, 0f))
                 {
                     erik.FaceInputDirection();
                     
