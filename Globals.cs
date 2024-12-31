@@ -16,7 +16,7 @@ namespace MyGame
     internal static class Globals
     {
         #region constants
-        public static readonly Vector2Int BufferSize = new(1920, 1080);
+        public static readonly Vector2Int ViewPortSize = new(1920, 1080);
         public const int Zoom = 4; //1px in sprite is 4px on ingame
         public const int OriginalTileSize = 8;
         public static int TileSize { get { return Zoom * OriginalTileSize; } }
@@ -60,15 +60,14 @@ namespace MyGame
             int r = x % m;
             return r < 0 ? r + m : r;
         }
-        #endregion
-
-        //returns velocity
-        public delegate Vector2 OnTouch(Entity collisionObject, Vector2 normalVector);
-
         public static Vector2 Normalized(this Vector2 v)
         {
             v.Normalize();
             return v;
         }
+        #endregion
+
+        //returns velocity
+        public delegate Vector2 Touch(Entity collisionObject, Vector2 normalVector);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MyGame.GameObjects;
+using MyGame.Interfaces;
 using MyGame.Misc;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using static MyGame.Globals;
 
 namespace MyGame.Animation
 {
-    internal class AnimationHandler
+    internal class AnimationHandler : IGameObject
     {
         //TODO which can be private, or get/set?
         public Dictionary<State, AnimationState> AnimationStates = new();
@@ -49,7 +50,7 @@ namespace MyGame.Animation
             }
         }
 
-        public void UpdatePartRectangle()
+        public void Update()
         {
             if(alternateAnimationTimer > 0)
             {
@@ -70,7 +71,7 @@ namespace MyGame.Animation
             alternateAnimationTimer = AnimationStates[state].Length * AnimationStates[state].Time;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 pos)
+        public void Draw(Vector2 pos, SpriteBatch spriteBatch)
         {
             //first rect = destination, second rect = source in image
             spriteBatch.Draw(SpriteSheet, new Rectangle((int)(Math.Round(pos.X / Zoom) * Zoom),

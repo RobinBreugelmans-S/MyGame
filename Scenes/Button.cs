@@ -30,14 +30,14 @@ namespace MyGame.Scenes
 
         public Button(string text, Action onclick, Vector2 pos, Texture2D spriteSheet, SpriteFont font)
         {
-            //TODO: fix the stuf with buttonbox
+            //TODO: fix the stuff with buttonbox
             OnClick = onclick;
             //this.buttonBox = buttonBox;
             this.text = text;
             this.pos = pos;
             this.spriteSheet = spriteSheet;
             this.font = font;
-            //TODO: add animated selected button
+            
             animationHandler = new(spriteSheet, size);
             animationHandler.AddAnimation(State.Unselected, 0, 2, 8); //so that if you move the color doesn't always reset to yellow of the selected button
             animationHandler.AddAnimation(State.Selected, 1, 2, 8);
@@ -57,12 +57,12 @@ namespace MyGame.Scenes
 
         public void Update()
         {
-            animationHandler.UpdatePartRectangle();
+            animationHandler.Update();
         }
 
         public void Draw(Vector2 offset, SpriteBatch spriteBatch)
         {
-            animationHandler.Draw(spriteBatch, pos);
+            animationHandler.Draw(pos, spriteBatch);
             spriteBatch.DrawString(font, text, GetMiddleOfRect(new Rectangle((int)pos.X, (int)pos.Y, size.X * Zoom, size.Y * Zoom)), Color.White, 0, font.MeasureString(text) / 2, 3f, SpriteEffects.None, 0.5f);
         }
     }

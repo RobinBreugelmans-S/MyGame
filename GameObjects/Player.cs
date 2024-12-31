@@ -48,15 +48,14 @@ namespace MyGame.GameObjects
         {
             this.inputReader = inputReader;
 
-            collisionHandler.Parent = this; //can't put this in the constructor :(
+            collisionHandler.Parent = this; //can't put this in the constructor
 
             levelBox = new(0, 0, tileMapCollisions.GetLength(0) * TileSize, tileMapCollisions.GetLength(1) * TileSize);
 
-            //animationHandler = new AnimationHandler(spriteSheet, new Vector2Int(16,16));
-            animationHandler.AddAnimation(State.Idling, 0, 4, 16);
-            animationHandler.AddAnimation(State.Walking, 1, 4, 4);
-            animationHandler.AddAnimation(State.Crouching, 7, 4, 24);
-            animationHandler.AddAnimation(State.MidAir, 11, 1, 1);
+            AnimationHandler.AddAnimation(State.Idling, 0, 4, 16);
+            AnimationHandler.AddAnimation(State.Walking, 1, 4, 4);
+            AnimationHandler.AddAnimation(State.Crouching, 7, 4, 24);
+            AnimationHandler.AddAnimation(State.MidAir, 11, 1, 1);
         }
 
         public void DamageIfNotImmune()
@@ -69,7 +68,7 @@ namespace MyGame.GameObjects
         }
 
         public new void Update() //TODO: new , fix ? ?
-        {//!levelBox.Contains(GetMiddleOfRect(CurrentCollisionBox))
+        {
             if (GetMiddleOfRect(CurrentCollisionBox).Y > levelBox.Bottom) //if middle of player is below 0
             {
                 HP = 0;
@@ -98,11 +97,11 @@ namespace MyGame.GameObjects
             
             if (input.X == 1)
             {
-                animationHandler.HorizontalFlip = SpriteEffects.None;
+                AnimationHandler.HorizontalFlip = SpriteEffects.None;
             }
             else if (input.X == -1)
             {
-                animationHandler.HorizontalFlip = SpriteEffects.FlipHorizontally;
+                AnimationHandler.HorizontalFlip = SpriteEffects.FlipHorizontally;
             }
 
             if (vel.Y >= 0 || !isJumping)
@@ -141,45 +140,41 @@ namespace MyGame.GameObjects
             #endregion
 
             //collissions
-            (vel, acc, isGrounded) = collisionHandler.HandleCollisions(pos, vel, acc);
+            (vel, acc, isGrounded) = collisionHandler.HandleCollisions(Pos, vel, acc);
             
             //update position
-            pos += vel;
+            Pos += vel;
 
-            //UpdateChunks();
-
+            
             #region states
             if (input.X != 0 && input.Y != 1)
             {
                 //also changes y pos of partRect
-                animationHandler.ChangeState(State.Walking);
+                AnimationHandler.ChangeState(State.Walking);
             }
             else if(input.Y != 1)
             {
-                animationHandler.ChangeState(State.Idling);
+                AnimationHandler.ChangeState(State.Idling);
             }
             else
             {
-                animationHandler.ChangeState(State.Crouching);
+                AnimationHandler.ChangeState(State.Crouching);
             }
 
             if(!isGrounded) //TODO: change to is in air! (if water is added)
             {
-                animationHandler.ChangeState(State.MidAir);
+                AnimationHandler.ChangeState(State.MidAir);
             }
             #endregion
 
             //animation
-            animationHandler.UpdatePartRectangle();
-
-            //load menu scene a bit after dying;
-
+            AnimationHandler.Update();
         }
         public new void Draw(Vector2 offset,SpriteBatch spriteBatch)
         {
             if (immuneTimer/4 % 2 == 0)
             {
-                animationHandler.Draw(spriteBatch, pos + offset);
+                AnimationHandler.Draw(Pos + offset, spriteBatch);
             }
         }
 

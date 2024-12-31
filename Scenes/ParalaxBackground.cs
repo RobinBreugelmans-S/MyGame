@@ -21,10 +21,9 @@ namespace MyGame.Scenes
         public void Draw(Vector2 cameraPos, SpriteBatch spritebatch)
         {
             //for infinite tiling of moving bg
-            int posX = (int)(cameraPos.X * paralaxStrength) % BufferSize.X;
-            spritebatch.Draw(backgroundTexture, new Rectangle(posX, 0, BufferSize.X, BufferSize.Y), Color.White);
-            spritebatch.Draw(backgroundTexture, new Rectangle(posX + BufferSize.X * Math.Sign(-paralaxStrength), 0, BufferSize.X, BufferSize.Y), Color.White);
-                                                                //TODO: sign from paralax stregghthng
+            int posX = (int)(cameraPos.X * paralaxStrength) % ViewPortSize.X;
+            spritebatch.Draw(backgroundTexture, new Rectangle(posX, 0, ViewPortSize.X, ViewPortSize.Y), Color.White);
+            spritebatch.Draw(backgroundTexture, new Rectangle(posX + ViewPortSize.X * Math.Sign(-paralaxStrength), 0, ViewPortSize.X, ViewPortSize.Y), Color.White);
         }
     }
 }

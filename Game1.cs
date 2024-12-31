@@ -33,17 +33,16 @@ namespace MyGame
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
             
-            _graphics.IsFullScreen = true;
-            _graphics.PreferredBackBufferWidth = BufferSize.X;
-            _graphics.PreferredBackBufferHeight = BufferSize.Y;
+            //_graphics.IsFullScreen = true;
+            _graphics.PreferredBackBufferWidth = ViewPortSize.X;
+            _graphics.PreferredBackBufferHeight = ViewPortSize.Y;
             IsFixedTimeStep = true;
             TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d); //60fps
 
             sceneFactory = new(Content,
                 (string sceneName) => { currentScene = sceneFactory.GetScene(sceneName); currentScene.LoadScene(); },
-                () => Exit()
+                Exit
             );
         }
 

@@ -26,7 +26,7 @@ namespace MyGame.GameObjects
         public bool isGrounded;
         public int facingDirection { get 
             {
-                if (animationHandler.HorizontalFlip == SpriteEffects.None)
+                if (AnimationHandler.HorizontalFlip == SpriteEffects.None)
                 {
                     return 1;
                 }
@@ -37,7 +37,7 @@ namespace MyGame.GameObjects
             } 
         }
 
-        public MoveableEntity(Vector2 pos, Vector2 vel, Vector2 acc, float gravity, AnimationHandler animationHandler, CollisionHandler collisionHandler, OnTouch onTouch) : base(pos, animationHandler, onTouch)
+        public MoveableEntity(Vector2 pos, Vector2 vel, Vector2 acc, float gravity, AnimationHandler animationHandler, CollisionHandler collisionHandler, Touch onTouch) : base(pos, animationHandler, onTouch)
         {
             this.vel = vel;
             this.acc = acc;
@@ -45,7 +45,7 @@ namespace MyGame.GameObjects
             this.collisionHandler = collisionHandler;
         }
 
-        public MoveableEntity(Vector2 pos, Vector2 vel, float gravity, AnimationHandler animationHandler, CollisionHandler collisionHandler, OnTouch onTouch)
+        public MoveableEntity(Vector2 pos, Vector2 vel, float gravity, AnimationHandler animationHandler, CollisionHandler collisionHandler, Touch onTouch)
             : this(pos, vel, new Vector2(), gravity, animationHandler, collisionHandler, onTouch)
         { }
 
@@ -53,11 +53,11 @@ namespace MyGame.GameObjects
         {
             if (dir == 1)
             {
-                animationHandler.HorizontalFlip = SpriteEffects.None;
+                AnimationHandler.HorizontalFlip = SpriteEffects.None;
             }
             else if (dir == -1)
             {
-                animationHandler.HorizontalFlip = SpriteEffects.FlipHorizontally;
+                AnimationHandler.HorizontalFlip = SpriteEffects.FlipHorizontally;
             }
         }
 
@@ -70,10 +70,10 @@ namespace MyGame.GameObjects
             
             if(collisionHandler != null)
             {
-                (vel, acc, isGrounded) = collisionHandler.HandleCollisions(pos, vel, acc);
+                (vel, acc, isGrounded) = collisionHandler.HandleCollisions(Pos, vel, acc);
             }
 
-            pos += vel;
+            Pos += vel;
 
             base.Update();
         }

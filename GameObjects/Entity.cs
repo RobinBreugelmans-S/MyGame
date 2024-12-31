@@ -14,57 +14,47 @@ namespace MyGame.GameObjects
 {
     internal class Entity : Collidable, IGameObject
     {
-        //public List<object> data; //used to store some data for certain entities 
-
-        //public Vector2 pos; //TODO: naming conventions!
-        //public List<Vector2> Chunks = new(); //list of chunks this entity intersects with
-
         //public RectangleF CollisionBox;// { get { return collisionHandler.CollisionBox; } protected set { collisionHandler.CollisionBox = value; } }
-        public bool isCollidable; //TODO: add to constructors?
         //public int priority; TODO: use this (sort entity list by this), //lower values will get updated and drawed first
-        public OnTouch Touched; // (collisionObject, normalVector) => stuff
-        public Action Initialize;
-
+        public Touch OnTouch; //(collisionObject, normalVector) => stuff
+        
         protected Texture2D texture;
-        public State State { get { return animationHandler.State; } }
-        public AnimationHandler animationHandler; //TODO: -> AnimationHandler
+        public State State { get { return AnimationHandler.State; } }
+        public AnimationHandler AnimationHandler;
 
         public Entity(Vector2 pos, RectangleF collisionBox, AnimationHandler animationHandler) : base(pos, collisionBox)
         {
             //this.pos = pos;
             //collisionHandler = new(collisionBox, null, null);
             //CollisionBox = collisionBox;
-            this.animationHandler = animationHandler;
+            AnimationHandler = animationHandler;
             //Touched = touched;
-
-            //set once since it never has to be updated
-            //UpdateChunks();
         }
 
-        protected Entity(Vector2 pos, AnimationHandler animationHandler, OnTouch touched) : base(pos, new())
+        protected Entity(Vector2 pos, AnimationHandler animationHandler, Touch touched) : base(pos, new())
         {
-            this.animationHandler = animationHandler;
-            Touched = touched;
+            AnimationHandler = animationHandler;
+            OnTouch = touched;
         }
 
         public void PlayAnimation(State animationState)
         {
-            animationHandler.PlayAnimation(animationState);
+            AnimationHandler.PlayAnimation(animationState);
         }
 
         public void ChangeState(State state)
         {
-            animationHandler.ChangeState(state);
+            AnimationHandler.ChangeState(state);
         }
 
         public void Update()
         {
-            animationHandler.UpdatePartRectangle();
+            AnimationHandler.Update();
         }
 
         public void Draw(Vector2 offset, SpriteBatch spriteBatch)
         {
-            animationHandler.Draw(spriteBatch, pos + offset); //TODO: first offset, then spritebatch
+            AnimationHandler.Draw(Pos + offset, spriteBatch); //TODO: first offset, then spritebatch
         }
     }
 }

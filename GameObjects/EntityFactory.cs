@@ -24,7 +24,7 @@ namespace MyGame.GameObjects
         private TileType[,] tileMapCollisions;
         private List<Entity> collidableEntities; //if entity is collidable, it will be added to this list
         public Player player;
-        private Dictionary<string, Func<int, int, Entity>> getEntityMethods = new(); //TODO: change Object to Entity (statinaryEntity)
+        private Dictionary<string, Func<int, int, Entity>> getEntityMethods = new();
         
         public EntityFactory(Player player, TileType[,] tileMapCollisions, List<Entity> collidableEntities, ContentManager content, Action<Entity, int> remove, Action<Entity> add, Action<string> loadScene)
         {
@@ -66,7 +66,6 @@ namespace MyGame.GameObjects
             }
         }
 
-        //TODO: rename
         private static bool IsPlayer(Entity objectToCheck, out Player player)
         {
             if (objectToCheck is Player)
@@ -99,9 +98,8 @@ namespace MyGame.GameObjects
             animationHandler.ChangeState(State.Idling);
 
             Entity coin = new Entity(new Vector2(x, y), new RectangleF(0, 0, TileSize, TileSize), animationHandler);
-           
-            //change to have declare onTouch, like in GetErik
-            coin.Touched = (collisionObject, normalVector) => 
+            
+            coin.OnTouch = (collisionObject, normalVector) => 
             {
                 if(collisionObject is Player)
                 {
@@ -121,7 +119,6 @@ namespace MyGame.GameObjects
         }
         private Enemy getErik(int x, int y, Entity target)
         {
-            //TODO: why does it dissappear sometimes when you hit it?
             Texture2D texture = getTexture("ErikSpriteSheet");
 
             AnimationHandler animationHandler = new(texture, new Vector2Int(23,16));
@@ -174,23 +171,22 @@ namespace MyGame.GameObjects
                     //animation
                     if (erik.isGrounded)
                     {
-                        erik.animationHandler.ChangeState(State.Walking);
+                        erik.AnimationHandler.ChangeState(State.Walking);
                     }
                     else
                     {
-                        erik.animationHandler.ChangeState(State.Jumping);
+                        erik.AnimationHandler.ChangeState(State.Jumping);
                     }
                 }
             });
             
-            erik.Touched = new((collisionObject, touchNormal) =>
+            erik.OnTouch = new((collisionObject, touchNormal) =>
                 {
                     if (collisionObject is Player)
                     {
                         Player player = collisionObject as Player;
                         player.DamageIfNotImmune();
                         animationHandler.PlayAnimation(State.Attacking);
-                        //TODO: return velocity 
                     }
                     return new();
                 }
@@ -230,7 +226,7 @@ namespace MyGame.GameObjects
                 }
             });
 
-            jellyFish.Touched = new((collisionObject, touchNormal) =>
+            jellyFish.OnTouch = new((collisionObject, touchNormal) =>
             {
                 if (jellyFish.State != State.Dying)
                 {
@@ -289,7 +285,7 @@ namespace MyGame.GameObjects
             {
                 jones.FaceInputDirection();
 
-                if(jones.targetDirection.Length() <= 32 * TileSize
+                if(jones.targetDirection.Length() <= 24 * TileSize
                 && jones.targetDirection.Length() > 8 * TileSize)
                 {
                     jones.ChangeState(State.Walking);
@@ -334,7 +330,7 @@ namespace MyGame.GameObjects
                     
                     if (!jones.isGrounded)
                     {
-                        jones.animationHandler.ChangeState(State.Jumping);
+                        jones.AnimationHandler.ChangeState(State.Jumping);
                     }
                 }
                 else
@@ -342,13 +338,13 @@ namespace MyGame.GameObjects
                     jones.acc.X = Math.Sign(jones.vel.X) * -1;
                 }
 
-                if(jones.State == State.Attacking && jones.animationHandler.GetCurrentAnimationFrame() == 1 && jones.animationHandler.AnimationTimer % 4 == 0)
+                if(jones.State == State.Attacking && jones.AnimationHandler.GetCurrentAnimationFrame() == 1 && jones.AnimationHandler.AnimationTimer % 4 == 0)
                 {
-                    add(getBullet((int)(jones.pos.X + (29.5f + jones.facingDirection * 12.5f) * Zoom), (int)jones.pos.Y + 19 * Zoom, jones.facingDirection));
+                    add(getBullet((int)(jones.Pos.X + (29.5f + jones.facingDirection * 12.5f) * Zoom), (int)jones.Pos.Y + 19 * Zoom, jones.facingDirection));
                 }
             });
 
-            jones.Touched = new((collisionObject, touchNormal) =>
+            jones.OnTouch = new((collisionObject, touchNormal) =>
             {
                 if (jones.State != State.Dying)
                 {
@@ -395,7 +391,7 @@ namespace MyGame.GameObjects
 
             bullet.FaceDirection(direction);
 
-            bullet.Touched = new((collisionObject, touchNormal) =>
+            bullet.OnTouch = new((collisionObject, touchNormal) =>
             {
                 if (bullet.State != State.Dying)
                 {
@@ -406,6 +402,7 @@ namespace MyGame.GameObjects
                         {
                             bullet.PlayAnimation(State.Dying);
                             collisionHandler = null;
+                            //TODO: bullet doesn't get removed for some reason
                             remove(bullet, animationHandler.GetAnimationTime(State.Dying));
                             return new Vector2(0, -12f);
                         }
@@ -434,9 +431,9 @@ namespace MyGame.GameObjects
 
             Finish finish = new(new(x, y), new(0, 0, 16 * Zoom, 16 * Zoom), animationHandler);
 
-            finish.Touched = new((collisionObject, touchNormal) => {
+            finish.OnTouch = new((collisionObject, touchNormal) => {
                 Player player;
-                if (IsPlayer(collisionObject, out player))
+                if (IsPlayer(collisionObject, out player) && player.HP > 0)
                 {
                     loadScene(finish.NextLevel);
                 }

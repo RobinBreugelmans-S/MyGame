@@ -245,7 +245,7 @@ namespace MyGame.GameObjects
                     if (collision.collider is Entity) //TODO chagne so you can stand on some enemies
                     {
                         Entity entity = collision.collider as Entity;
-                        Vector2 velAdded = entity.Touched(Parent, contactNormal);
+                        Vector2 velAdded = entity.OnTouch(Parent, contactNormal);
 
                         //fix this
                         float NumberIfNotZero(float num1, float num2)

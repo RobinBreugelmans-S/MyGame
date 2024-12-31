@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SourceFile>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/TilesetDesert.png</SourceFile>
-  <SourceTime>2024-12-26T17:07:34.0656777+01:00</SourceTime>
+  <SourceTime>2024-12-31T11:37:07.5775056+01:00</SourceTime>
   <DestFile>C:/Users/robin/Desktop/School/J2S1/Game development/Games/MyGame/Content/bin/DesktopGL/Content/TilesetDesert.xnb</DestFile>
-  <DestTime>2024-12-26T17:07:38.956919+01:00</DestTime>
+  <DestTime>2024-12-31T11:37:21.9174245+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T13:44:56+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

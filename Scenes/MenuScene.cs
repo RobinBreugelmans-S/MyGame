@@ -19,7 +19,7 @@ namespace MyGame.Scenes
     internal class MenuScene : IScene
     {
         private ContentManager content;
-        private SpriteFont font;
+        //private SpriteFont font; //TODO: give font to button in constructor instead of loading it in button
 
         private string backgroundName;
         private Texture2D background;
@@ -78,12 +78,12 @@ namespace MyGame.Scenes
                 button.Update();
             }
 
-            //don't read input on first frame, else if user is still holding Enter from previous scene it will instantly press a button
+            //don't execute input on first frame, else if user is still holding Enter from previous scene it will instantly press a button
             if (isFirstFrame)
             {
                 isFirstFrame = false;
             }
-            else if (enterInput && !enterInputPrevious) //command pattern
+            else if (enterInput && !enterInputPrevious)
             {
                 selectedButton.OnClick();
             }
@@ -91,7 +91,7 @@ namespace MyGame.Scenes
         public void Draw(SpriteBatch spriteBatch)
         {
             //draw bg
-            spriteBatch.Draw(background, new Rectangle(0, 0, BufferSize.X, BufferSize.Y), Color.White);
+            spriteBatch.Draw(background, new Rectangle(0, 0, ViewPortSize.X, ViewPortSize.Y), Color.White);
             
             //draw buttons
             foreach(Button button in buttons)

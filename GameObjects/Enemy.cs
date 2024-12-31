@@ -49,10 +49,6 @@ namespace MyGame.GameObjects
             : this(pos, runAcc, runSpeed, jumpPower, gravityWhenFalling, gravityWhenJumping, MaxVerticalSpeed, animationHandler, collisionHandler, target)
         { }
 
-        public Enemy(Vector2 pos, float runAcc, float runSpeed, float jumpPower, float gravityWhenFalling, float gravityWhenJumping, AnimationHandler animationHandler, CollisionHandler collisionHandler, Entity target, Action behaviour, OnTouch onTouch)
-            : base(pos, new Vector2(), new Vector2(), gravityWhenFalling, animationHandler, collisionHandler, onTouch)
-        { //TODO: what is this
-        }
         public void StopMoving()
         {
             acc = new(0f, 0f);
@@ -63,11 +59,11 @@ namespace MyGame.GameObjects
         {
             if (input.X == 1)
             {
-                animationHandler.HorizontalFlip = SpriteEffects.None;
+                AnimationHandler.HorizontalFlip = SpriteEffects.None;
             }
             else if (input.X == -1)
             {
-                animationHandler.HorizontalFlip = SpriteEffects.FlipHorizontally;
+                AnimationHandler.HorizontalFlip = SpriteEffects.FlipHorizontally;
             }
         }
 
@@ -98,11 +94,11 @@ namespace MyGame.GameObjects
             
             if (collisionHandler != null)
             {
-                (vel, acc, isGrounded) = collisionHandler.HandleCollisions(pos, vel, acc);
+                (vel, acc, isGrounded) = collisionHandler.HandleCollisions(Pos, vel, acc);
             }
-            pos += vel;
+            Pos += vel;
 
-            animationHandler.UpdatePartRectangle();
+            AnimationHandler.Update();
         }
     }
 }

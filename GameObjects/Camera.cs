@@ -15,8 +15,8 @@ namespace MyGame.GameObjects
         //TODO: use Vector2Int?
         //public Vector2 pos { get; private set; } //pos is the middle of the viewport here! //TODO: naming conventions
         public Vector2 PosMiddle { get { return Vector2.Floor(GetMiddleOfRect(Viewport) / Zoom) * Zoom; }
-                                          private set { Viewport.X = value.X - BufferSize.X/2;
-                                                        Viewport.Y = value.Y - BufferSize.Y/2; }
+                                          private set { Viewport.X = value.X - ViewPortSize.X/2;
+                                                        Viewport.Y = value.Y - ViewPortSize.Y/2; }
         }
         public Vector2 Pos { get { return Vector2.Floor(new Vector2(Viewport.X, Viewport.Y) / Zoom) * Zoom; }
             private set
@@ -26,7 +26,7 @@ namespace MyGame.GameObjects
             }
         }
         private MoveableEntity target;
-        public RectangleF Viewport = new(0f, 0f, BufferSize.X, BufferSize.Y);
+        public RectangleF Viewport = new(0f, 0f, ViewPortSize.X, ViewPortSize.Y);
         private Vector2Int bounds;//boundary of the level. so that the camera can't go outside
         //top left is always 0, 0
         public Camera(MoveableEntity target, Vector2Int bounds)

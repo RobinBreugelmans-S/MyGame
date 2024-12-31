@@ -29,6 +29,7 @@ namespace MyGame.Scenes
         //public Player Player { get { return player; } set { player = value; objectFactory.player = value; } }
         private string filePath;
         private ContentManager content;
+        private Texture2D blank;
         //TODO: 
         //factory ? to return Scene object which has all of these loaded, methods go into SceneManager
 
@@ -38,19 +39,18 @@ namespace MyGame.Scenes
         //public Texture2D[] tilesets { get; private set; }
         //public string[] tilesetNames { get; private set; }
         private EntityFactory objectFactory;
-        //TODO: has to be public???
-        public List<Entity> entities = new(); //TODO naming convetions
-        public List<Entity> collidableEntities = new();
-        public List<Entity> entitiesToBeRemoved = new();
+        private List<Entity> entities = new(); //TODO naming convetions
+        private List<Entity> collidableEntities = new();
+        private List<Entity> entitiesToBeRemoved = new();
         private List<Entity> entitiesToBeAdded = new();
-        public List<(Entity entity, int timer)> entitiesToBeRemovedTimer = new();
+        private List<(Entity entity, int timer)> entitiesToBeRemovedTimer = new();
 
         private string backgroundName;
         private float[] backgroundParalaxStrengths;
         private ParalaxBackground[] backgroundLayers; //Background class with pos, paralax, Texture2D, Draw()
 
-        string nextLevel;
-        Action<string> loadScene;
+        private string nextLevel;
+        private Action<string> loadScene;
 
         public LevelScene(string level, string backgroundName, float[] paralaxStrengths, string nextLevel, ContentManager content, Action<string> loadScene)
         {
@@ -64,6 +64,8 @@ namespace MyGame.Scenes
 
         public void LoadScene()
         {
+            blank = content.Load<Texture2D>("blank");
+
             //get backgrounds
             backgroundLayers = new ParalaxBackground[backgroundParalaxStrengths.Length];
 
@@ -73,16 +75,14 @@ namespace MyGame.Scenes
                 backgroundLayers[i] = new(texture, backgroundParalaxStrengths[i]);
             }
 
-            //TODO refactor
             font = content.Load<SpriteFont>("PixelFont");
             
-            //parse ogmo json            
+            //parse json data from ogmo          
             StreamReader reader = new(filePath);
             string jsonData = reader.ReadToEnd();
 
             LevelJson levelJson = JsonSerializer.Deserialize<LevelJson>(jsonData);
 
-            //refactor with tileMap class
             tileMapCollisions = new TileMap(levelJson.layers[0]);         //TODO: make it so tileMapsDeco doesn't get entity, than make list withb entity layers
             tileMapsDecoration = new TileMap[levelJson.layers.Count - 2]; //-2: first layer is collisios, last is entities //TODO: add checks for if there are not enough layers
             for (int i = 0; i < levelJson.layers.Count - 2; i++)
@@ -112,7 +112,7 @@ namespace MyGame.Scenes
 
             if (entity is Player)
             {
-                Player _player = (Player)entity; //add check for adding 2 players
+                Player _player = (Player)entity;
                 objectFactory.player = _player;
                 player = _player;
                 camera = new(player, new(tileMapCollisions.Width * TileSize, tileMapCollisions.Height * TileSize));
@@ -124,8 +124,8 @@ namespace MyGame.Scenes
                 finish.NextLevel = nextLevel;
             }
             entities.Add(entity);
-            if (entity.Touched != null) //TODO: Touched -> OnTouch //TODO: use isCollidable
-                //TODO: also make it so if you can stand on entity
+            if (entity.OnTouch != null) //TODO: Touched -> OnTouch //TODO: use isCollidable
+                                        //TODO: also make it so you can stand on entities
             {
                 collidableEntities.Add(entity);
             }
@@ -165,7 +165,7 @@ namespace MyGame.Scenes
             foreach(Entity entity in entitiesToBeAdded)
             {
                 entities.Add(entity);
-                if (entity.Touched != null)
+                if (entity.OnTouch != null)
                 {
                     collidableEntities.Add(entity);
                 }
@@ -201,12 +201,13 @@ namespace MyGame.Scenes
                 //Death screen
                 if (player.HP <= 0)
                 {
-                    spriteBatch.DrawString(font, "epic fail", new(BufferSize.X / 2, BufferSize.Y / 2), Color.Black, 0, font.MeasureString("epic fail")/2, 12f, SpriteEffects.None, 0.5f);
+                    spriteBatch.Draw(blank, new Rectangle(0, 0, ViewPortSize.X, ViewPortSize.Y), Color.Black);
+                    spriteBatch.DrawString(font, "epic fail", new(ViewPortSize.X / 2, ViewPortSize.Y / 2), Color.White, 0, font.MeasureString("epic fail")/2, 12f, SpriteEffects.None, 0.5f);
                 }
 
                 //Score
                 string scoreText = $"Score: {player.Score.ToString("D8")}";
-                spriteBatch.DrawString(font, scoreText, new Vector2(BufferSize.X- font.MeasureString(scoreText).X * 2 - 16, 32), Color.Black, 0, font.MeasureString(scoreText) / 2, 4f, SpriteEffects.None, 0.5f);
+                spriteBatch.DrawString(font, scoreText, new Vector2(ViewPortSize.X- font.MeasureString(scoreText).X * 2 - 16, 32), Color.Black, 0, font.MeasureString(scoreText) / 2, 4f, SpriteEffects.None, 0.5f);
             }
         }
 
