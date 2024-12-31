@@ -6,7 +6,7 @@ using MyGame.Misc;
 using System.Diagnostics;
 using System;
 
-namespace MyGame.GameObjects
+namespace MyGame.GameObjects.LevelObjects
 {
     internal class Camera
     {
@@ -14,11 +14,18 @@ namespace MyGame.GameObjects
 
         //TODO: use Vector2Int?
         //public Vector2 pos { get; private set; } //pos is the middle of the viewport here! //TODO: naming conventions
-        public Vector2 PosMiddle { get { return Vector2.Floor(GetMiddleOfRect(Viewport) / Zoom) * Zoom; }
-                                          private set { Viewport.X = value.X - ViewPortSize.X/2;
-                                                        Viewport.Y = value.Y - ViewPortSize.Y/2; }
+        public Vector2 PosMiddle
+        {
+            get { return Vector2.Floor(GetMiddleOfRect(Viewport) / Zoom) * Zoom; }
+            private set
+            {
+                Viewport.X = value.X - ViewPortSize.X / 2;
+                Viewport.Y = value.Y - ViewPortSize.Y / 2;
+            }
         }
-        public Vector2 Pos { get { return Vector2.Floor(new Vector2(Viewport.X, Viewport.Y) / Zoom) * Zoom; }
+        public Vector2 Pos
+        {
+            get { return Vector2.Floor(new Vector2(Viewport.X, Viewport.Y) / Zoom) * Zoom; }
             private set
             {
                 Viewport.X = value.X;
@@ -39,7 +46,7 @@ namespace MyGame.GameObjects
         public void Update()
         {
             PosMiddle += (GetMiddleOfRect(target.CurrentCollisionBox) + target.vel - PosMiddle) / 8;
-            
+
             if (Viewport.Right > bounds.X)
             {
                 Viewport.X = bounds.X - Viewport.Width;

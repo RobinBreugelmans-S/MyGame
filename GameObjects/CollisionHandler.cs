@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MyGame.GameObjects.LevelObjects;
 using MyGame.Misc;
 using MyGame.Scenes;
 using System;

@@ -2,7 +2,7 @@
 using MyGame.Misc;
 using System.Drawing;
 
-namespace MyGame.GameObjects
+namespace MyGame.GameObjects.LevelObjects
 {
     internal class Collidable
     {

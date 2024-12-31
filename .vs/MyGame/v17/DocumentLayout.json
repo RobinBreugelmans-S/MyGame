@@ -31,40 +31,40 @@
       "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\collisionhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\levelobjects\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\levelobjects\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\scenes\\menuscene.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:scenes\\menuscene.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\moveableentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\moveableentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\levelobjects\\moveableentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\levelobjects\\moveableentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\collidable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\collidable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\levelobjects\\collidable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\levelobjects\\collidable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\interfaces\\igameobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:interfaces\\igameobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\entity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\entity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\levelobjects\\entity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\levelobjects\\entity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\camera.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\camera.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\levelobjects\\camera.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\levelobjects\\camera.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\scenes\\paralaxbackground.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:scenes\\paralaxbackground.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\enemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\enemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\levelobjects\\enemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\levelobjects\\enemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\maps\\level_001.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -75,8 +75,8 @@
       "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:scenes\\scenefactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\finish.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\finish.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\gameobjects\\levelobjects\\finish.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|solutionrelative:gameobjects\\levelobjects\\finish.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D73417E2-79FE-4B5E-B784-EA8DFF66D6A5}|MyGame.csproj|c:\\users\\robin\\desktop\\school\\j2s1\\game development\\games\\mygame\\maps\\level_002.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -112,13 +112,14 @@
               "$type": "Document",
               "DocumentIndex": 18,
               "Title": "Finish.cs",
-              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\Finish.cs",
-              "RelativeDocumentMoniker": "GameObjects\\Finish.cs",
-              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\Finish.cs",
-              "RelativeToolTip": "GameObjects\\Finish.cs",
+              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\LevelObjects\\Finish.cs",
+              "RelativeDocumentMoniker": "GameObjects\\LevelObjects\\Finish.cs",
+              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\LevelObjects\\Finish.cs",
+              "RelativeToolTip": "GameObjects\\LevelObjects\\Finish.cs",
               "ViewState": "AgIAAAQAAAAAAAAAAAAIwA0AAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-26T14:26:00.812Z"
+              "WhenOpened": "2024-12-26T14:26:00.812Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -136,25 +137,27 @@
               "$type": "Document",
               "DocumentIndex": 12,
               "Title": "Entity.cs",
-              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\Entity.cs",
-              "RelativeDocumentMoniker": "GameObjects\\Entity.cs",
-              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\Entity.cs",
-              "RelativeToolTip": "GameObjects\\Entity.cs",
+              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\LevelObjects\\Entity.cs",
+              "RelativeDocumentMoniker": "GameObjects\\LevelObjects\\Entity.cs",
+              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\LevelObjects\\Entity.cs",
+              "RelativeToolTip": "GameObjects\\LevelObjects\\Entity.cs",
               "ViewState": "AgIAABAAAAAAAAAAAAAIwBYAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-26T12:03:26.627Z"
+              "WhenOpened": "2024-12-26T12:03:26.627Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 9,
               "Title": "MoveableEntity.cs",
-              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\MoveableEntity.cs",
-              "RelativeDocumentMoniker": "GameObjects\\MoveableEntity.cs",
-              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\MoveableEntity.cs",
-              "RelativeToolTip": "GameObjects\\MoveableEntity.cs",
+              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\LevelObjects\\MoveableEntity.cs",
+              "RelativeDocumentMoniker": "GameObjects\\LevelObjects\\MoveableEntity.cs",
+              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\LevelObjects\\MoveableEntity.cs",
+              "RelativeToolTip": "GameObjects\\LevelObjects\\MoveableEntity.cs",
               "ViewState": "AgIAAA0AAAAAAAAAAAAUwBgAAABcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-26T12:02:06.698Z"
+              "WhenOpened": "2024-12-26T12:02:06.698Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -162,9 +165,9 @@
               "Title": "EntityFactory.cs",
               "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\EntityFactory.cs",
               "RelativeDocumentMoniker": "GameObjects\\EntityFactory.cs",
-              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\EntityFactory.cs",
-              "RelativeToolTip": "GameObjects\\EntityFactory.cs",
-              "ViewState": "AgIAAIEBAAAAAAAAAAAuwJQBAABOAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\EntityFactory.cs*",
+              "RelativeToolTip": "GameObjects\\EntityFactory.cs*",
+              "ViewState": "AgIAABgBAAAAAAAAAAAqwCABAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-05T15:50:58.135Z",
               "EditorCaption": ""
@@ -175,9 +178,9 @@
               "Title": "LevelScene.cs",
               "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\Scenes\\LevelScene.cs",
               "RelativeDocumentMoniker": "Scenes\\LevelScene.cs",
-              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\Scenes\\LevelScene.cs",
-              "RelativeToolTip": "Scenes\\LevelScene.cs",
-              "ViewState": "AgIAAJEAAAAAAAAAAAAAADQAAAAQAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\Scenes\\LevelScene.cs*",
+              "RelativeToolTip": "Scenes\\LevelScene.cs*",
+              "ViewState": "AgIAAJIAAAAAAAAAAAAAADUAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-03T19:21:12.543Z",
               "EditorCaption": ""
@@ -186,13 +189,14 @@
               "$type": "Document",
               "DocumentIndex": 10,
               "Title": "Collidable.cs",
-              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\Collidable.cs",
-              "RelativeDocumentMoniker": "GameObjects\\Collidable.cs",
-              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\Collidable.cs",
-              "RelativeToolTip": "GameObjects\\Collidable.cs",
+              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\LevelObjects\\Collidable.cs",
+              "RelativeDocumentMoniker": "GameObjects\\LevelObjects\\Collidable.cs",
+              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\LevelObjects\\Collidable.cs",
+              "RelativeToolTip": "GameObjects\\LevelObjects\\Collidable.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAABMAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-26T12:01:41.341Z"
+              "WhenOpened": "2024-12-26T12:01:41.341Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -222,13 +226,14 @@
               "$type": "Document",
               "DocumentIndex": 15,
               "Title": "Enemy.cs",
-              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\Enemy.cs",
-              "RelativeDocumentMoniker": "GameObjects\\Enemy.cs",
-              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\Enemy.cs",
-              "RelativeToolTip": "GameObjects\\Enemy.cs",
+              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\LevelObjects\\Enemy.cs",
+              "RelativeDocumentMoniker": "GameObjects\\LevelObjects\\Enemy.cs",
+              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\LevelObjects\\Enemy.cs",
+              "RelativeToolTip": "GameObjects\\LevelObjects\\Enemy.cs",
               "ViewState": "AgIAACoAAAAAAAAAAAAiwDIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-13T10:30:04.886Z"
+              "WhenOpened": "2024-12-13T10:30:04.886Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -246,13 +251,14 @@
               "$type": "Document",
               "DocumentIndex": 13,
               "Title": "Camera.cs",
-              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\Camera.cs",
-              "RelativeDocumentMoniker": "GameObjects\\Camera.cs",
-              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\Camera.cs",
-              "RelativeToolTip": "GameObjects\\Camera.cs",
+              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\LevelObjects\\Camera.cs",
+              "RelativeDocumentMoniker": "GameObjects\\LevelObjects\\Camera.cs",
+              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\LevelObjects\\Camera.cs",
+              "RelativeToolTip": "GameObjects\\LevelObjects\\Camera.cs",
               "ViewState": "AgIAABAAAAAAAAAAAAAzwCgAAABSAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-03T20:05:40.603Z"
+              "WhenOpened": "2024-12-03T20:05:40.603Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -277,19 +283,21 @@
               "RelativeToolTip": "GameObjects\\CollisionHandler.cs",
               "ViewState": "AgIAAN4AAAAAAAAAAAAIwBQAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-05T17:20:17.149Z"
+              "WhenOpened": "2024-12-05T17:20:17.149Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 7,
               "Title": "Player.cs",
-              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\Player.cs",
-              "RelativeDocumentMoniker": "GameObjects\\Player.cs",
-              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\Player.cs",
-              "RelativeToolTip": "GameObjects\\Player.cs",
+              "DocumentMoniker": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\LevelObjects\\Player.cs",
+              "RelativeDocumentMoniker": "GameObjects\\LevelObjects\\Player.cs",
+              "ToolTip": "C:\\Users\\robin\\Desktop\\School\\J2S1\\Game development\\Games\\MyGame\\GameObjects\\LevelObjects\\Player.cs",
+              "RelativeToolTip": "GameObjects\\LevelObjects\\Player.cs",
               "ViewState": "AgIAABAAAAAAAAAAAIAwwLAAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-05T15:21:46.601Z"
+              "WhenOpened": "2024-12-05T15:21:46.601Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -314,7 +322,8 @@
               "RelativeToolTip": "Globals.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAABIAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-05T12:34:51.247Z"
+              "WhenOpened": "2024-12-05T12:34:51.247Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",

@@ -8,13 +8,13 @@ using System.Diagnostics;
 using System.Drawing;
 using static MyGame.Globals;
 
-namespace MyGame.GameObjects
+namespace MyGame.GameObjects.LevelObjects
 {
     internal class MoveableEntity : Entity, IGameObject
     {
         public Vector2 vel;
         public Vector2 acc;
-        
+
         protected float maxHorizontalSpeed;
         protected float maxVerticalSpeed;
 
@@ -24,7 +24,9 @@ namespace MyGame.GameObjects
         //public new RectangleF CollisionBox { get { return collisionHandler.CollisionBox; } protected set { collisionHandler.CollisionBox = value; } }
         //public new RectangleF CurrentCollisionBox { get { return CollisionBox.At(pos); } }
         public bool isGrounded;
-        public int facingDirection { get 
+        public int facingDirection
+        {
+            get
             {
                 if (AnimationHandler.HorizontalFlip == SpriteEffects.None)
                 {
@@ -34,7 +36,7 @@ namespace MyGame.GameObjects
                 {
                     return -1;
                 }
-            } 
+            }
         }
 
         public MoveableEntity(Vector2 pos, Vector2 vel, Vector2 acc, float gravity, AnimationHandler animationHandler, CollisionHandler collisionHandler, Touch onTouch) : base(pos, animationHandler, onTouch)
@@ -67,8 +69,8 @@ namespace MyGame.GameObjects
 
             vel.X = vel.X + acc.X;// Math.Clamp(, -maxHorizontalSpeed, maxHorizontalSpeed);
             vel.Y = Math.Clamp(vel.Y + acc.Y, -maxVerticalSpeed, maxVerticalSpeed);
-            
-            if(collisionHandler != null)
+
+            if (collisionHandler != null)
             {
                 (vel, acc, isGrounded) = collisionHandler.HandleCollisions(Pos, vel, acc);
             }

@@ -10,14 +10,14 @@ using System.Drawing;
 using static MyGame.Globals;
 
 
-namespace MyGame.GameObjects
+namespace MyGame.GameObjects.LevelObjects
 {
     internal class Entity : Collidable, IGameObject
     {
         //public RectangleF CollisionBox;// { get { return collisionHandler.CollisionBox; } protected set { collisionHandler.CollisionBox = value; } }
         //public int priority; TODO: use this (sort entity list by this), //lower values will get updated and drawed first
         public Touch OnTouch; //(collisionObject, normalVector) => stuff
-        
+
         protected Texture2D texture;
         public State State { get { return AnimationHandler.State; } }
         public AnimationHandler AnimationHandler;

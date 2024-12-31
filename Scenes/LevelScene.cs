@@ -14,6 +14,7 @@ using System.Text.Json;
 using Microsoft.Xna.Framework.Content;
 using System.Linq;
 using System.Runtime.InteropServices;
+using MyGame.GameObjects.LevelObjects;
 
 
 namespace MyGame.Scenes

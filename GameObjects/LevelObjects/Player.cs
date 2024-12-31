@@ -13,7 +13,7 @@ using System.Diagnostics;
 using System.Net.Mime;
 
 
-namespace MyGame.GameObjects
+namespace MyGame.GameObjects.LevelObjects
 {
 
     internal class Player : MoveableEntity, IGameObject //TODO: inherit from class only with collisions, pos, vel acc
@@ -33,7 +33,7 @@ namespace MyGame.GameObjects
 
         private bool isImmune { get { return immuneTimer > 0; } }
         private int immuneTimer = 0;
-        
+
         public int Score = 0;
         public int HP = 3;
 
@@ -41,7 +41,7 @@ namespace MyGame.GameObjects
 
         public Action<string> LoadScene { private get; set; }
         private int deathTimer = 60;
-        
+
         //TODO: change to factory method to get player 
         public Player(Vector2 pos, Texture2D spriteSheet, IInputReader inputReader, TileType[,] tileMapCollisions, List<Entity> collidableEntities)
             : base(pos, new Vector2(), new Vector2(), 0f, new AnimationHandler(spriteSheet, new Vector2Int(16, 16)), new CollisionHandler(new RectangleF(3f * Zoom, 10f * Zoom, 10f * Zoom, 6f * Zoom), tileMapCollisions, collidableEntities), null)
@@ -79,11 +79,11 @@ namespace MyGame.GameObjects
                 immuneTimer--;
             }
 
-            if(HP <= 0)
+            if (HP <= 0)
             {
                 deathTimer--;
             }
-            if(deathTimer <= 0)
+            if (deathTimer <= 0)
             {
                 LoadScene("main_menu");
             }
@@ -94,7 +94,7 @@ namespace MyGame.GameObjects
             isJumpingPrevious = isJumping;
             //add jump timer and coyote time
             isJumping = inputReader.ReadJumpInput();
-            
+
             if (input.X == 1)
             {
                 AnimationHandler.HorizontalFlip = SpriteEffects.None;
@@ -113,12 +113,12 @@ namespace MyGame.GameObjects
                 acc.Y = gravityWhenJumping;
             }
 
-            if(vel.Y < 0 &&!isJumping && isJumpingPrevious)
+            if (vel.Y < 0 && !isJumping && isJumpingPrevious)
             {
                 vel.Y *= .5f;
             }
-            
-            if (input.X == 0 || (input.Y == 1 && isGrounded))
+
+            if (input.X == 0 || input.Y == 1 && isGrounded)
             {
                 acc.X = Math.Sign(vel.X) * -1; //friction
             }
@@ -141,18 +141,18 @@ namespace MyGame.GameObjects
 
             //collissions
             (vel, acc, isGrounded) = collisionHandler.HandleCollisions(Pos, vel, acc);
-            
+
             //update position
             Pos += vel;
 
-            
+
             #region states
             if (input.X != 0 && input.Y != 1)
             {
                 //also changes y pos of partRect
                 AnimationHandler.ChangeState(State.Walking);
             }
-            else if(input.Y != 1)
+            else if (input.Y != 1)
             {
                 AnimationHandler.ChangeState(State.Idling);
             }
@@ -161,7 +161,7 @@ namespace MyGame.GameObjects
                 AnimationHandler.ChangeState(State.Crouching);
             }
 
-            if(!isGrounded) //TODO: change to is in air! (if water is added)
+            if (!isGrounded) //TODO: change to is in air! (if water is added)
             {
                 AnimationHandler.ChangeState(State.MidAir);
             }
@@ -170,9 +170,9 @@ namespace MyGame.GameObjects
             //animation
             AnimationHandler.Update();
         }
-        public new void Draw(Vector2 offset,SpriteBatch spriteBatch)
+        public new void Draw(Vector2 offset, SpriteBatch spriteBatch)
         {
-            if (immuneTimer/4 % 2 == 0)
+            if (immuneTimer / 4 % 2 == 0)
             {
                 AnimationHandler.Draw(Pos + offset, spriteBatch);
             }

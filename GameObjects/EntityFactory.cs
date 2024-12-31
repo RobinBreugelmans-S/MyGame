@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MyGame.Animation;
+using MyGame.GameObjects.LevelObjects;
 using MyGame.Misc;
 using MyGame.Scenes;
 using System;

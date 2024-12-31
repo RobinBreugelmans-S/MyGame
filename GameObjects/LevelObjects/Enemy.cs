@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static MyGame.Globals;
 
-namespace MyGame.GameObjects
+namespace MyGame.GameObjects.LevelObjects
 {
     internal class Enemy : MoveableEntity, IGameObject
     {
@@ -26,11 +26,11 @@ namespace MyGame.GameObjects
         //private bool isJumping;
 
         public Vector2 targetDirection { get; private set; } //TODO: change to targetVector or sometihgn
-        public Vector2Int input { get { return new Vector2Int(Math.Sign(targetDirection.X), Math.Sign(targetDirection.Y));  } }
+        public Vector2Int input { get { return new Vector2Int(Math.Sign(targetDirection.X), Math.Sign(targetDirection.Y)); } }
         public Entity target; //change to Object or sometinhg
 
         public Action doBehaviour;
-        
+
         public Enemy(Vector2 pos, float runAcc, float runSpeed, float jumpPower, float gravityWhenFalling, float gravityWhenJumping, float maxVerticalSpeed, AnimationHandler animationHandler, CollisionHandler collisionHandler, Entity target)
             : base(pos, new Vector2(), new Vector2(), gravityWhenFalling, animationHandler, collisionHandler, null)
         {
@@ -86,12 +86,12 @@ namespace MyGame.GameObjects
             {
                 acc.Y = gravityWhenJumping;
             }
-            
+
             doBehaviour();
 
             vel.X = Math.Clamp(vel.X + acc.X, -runSpeed, runSpeed);
             vel.Y = Math.Clamp(vel.Y + acc.Y, -maxVerticalSpeed, maxVerticalSpeed);
-            
+
             if (collisionHandler != null)
             {
                 (vel, acc, isGrounded) = collisionHandler.HandleCollisions(Pos, vel, acc);

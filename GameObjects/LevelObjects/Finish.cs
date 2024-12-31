@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyGame.GameObjects
+namespace MyGame.GameObjects.LevelObjects
 {
     internal class Finish : Entity
     {
         public string NextLevel;
         public Finish(Vector2 pos, RectangleF collisionBox, AnimationHandler animationHandler) : base(pos, collisionBox, animationHandler)
-        {}
+        { }
     }
 }

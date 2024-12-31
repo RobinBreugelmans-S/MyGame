@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MyGame.GameObjects;
+using MyGame.GameObjects.LevelObjects;
 using MyGame.Misc;
 using System;
 using System.Collections.Concurrent;

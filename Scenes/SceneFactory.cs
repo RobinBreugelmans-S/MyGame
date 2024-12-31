@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MyGame.GameObjects.MenuObjects;
 using MyGame.Misc;
 using System;
 using System.Collections.Generic;
