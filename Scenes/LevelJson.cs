@@ -6,17 +6,15 @@ using System.Threading.Tasks;
 
 namespace MyGame.Scenes
 {
-    public class EntityData
+    public class LevelJson
     {
-        public string name { get; set; }
-        public int id { get; set; }
-        public string _eid { get; set; }
-        public int x { get; set; }
-        public int y { get; set; }
-        public int originX { get; set; }
-        public int originY { get; set; }
+        public string ogmoVersion { get; set; }
+        public int width { get; set; }
+        public int height { get; set; }
+        public int offsetX { get; set; }
+        public int offsetY { get; set; }
+        public List<Layer> layers { get; set; }
     }
-
     public class Layer
     {
         public string name { get; set; }
@@ -33,16 +31,14 @@ namespace MyGame.Scenes
         public int arrayMode { get; set; }
         public List<EntityData> entities { get; set; }
     }
-
-    public class LevelJson
+    public class EntityData
     {
-        public string ogmoVersion { get; set; }
-        public int width { get; set; }
-        public int height { get; set; }
-        public int offsetX { get; set; }
-        public int offsetY { get; set; }
-        public List<Layer> layers { get; set; }
-    }
-
-
+        public string name { get; set; }
+        public int id { get; set; }
+        public string _eid { get; set; }
+        public int x { get; set; }
+        public int y { get; set; }
+        public int originX { get; set; }
+        public int originY { get; set; }
+    }  
 }
