@@ -2,19 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.IO;
-using System.Drawing;
-using MyGame.GameObjects;
-using MyGame.Misc;
-using System.Collections.Generic;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Color = Microsoft.Xna.Framework.Color;
 using static MyGame.Globals;
 using MyGame.Scenes;
+using MyGame.Input;
 
-/* TODO:
- * comments where i used a coding structure thing (factory, command, any more used?)
- * 
+/* TODO
  * https://anokolisa.itch.io/action
  */
 
@@ -27,7 +20,7 @@ namespace MyGame
 
         private SceneFactory sceneFactory;
         private IScene currentScene;
-
+        private IInputReader inputReader;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -40,7 +33,11 @@ namespace MyGame
             IsFixedTimeStep = true;
             TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d); //60fps
 
-            sceneFactory = new(Content,
+            inputReader = new KeyboardReader();
+
+            sceneFactory = new(
+                inputReader,
+                Content,
                 (string sceneName) => { currentScene = sceneFactory.GetScene(sceneName); currentScene.LoadScene(); },
                 Exit
             );

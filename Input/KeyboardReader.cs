@@ -1,9 +1,8 @@
 ﻿using MyGame.Misc;
-using MyGame.Interfaces;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace MyGame.Misc
+namespace MyGame.Input
 {
     internal class KeyboardReader : IInputReader
     {
@@ -54,6 +53,6 @@ namespace MyGame.Misc
             }
             return false;
         }
-        
+
     }
 }

@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MyGame.Animation;
-using MyGame.Interfaces;
 using MyGame.Misc;
 using System;
 using System.Collections.Generic;
@@ -16,7 +15,6 @@ namespace MyGame.GameObjects.MenuObjects
 {
     internal class Button : IGameObject
     {
-        private Texture2D spriteSheet;
         private AnimationHandler animationHandler;
         public string textureName { get; private set; }
         //private Rectangle buttonBox;
@@ -24,7 +22,7 @@ namespace MyGame.GameObjects.MenuObjects
         private Vector2Int size = new(120, 40);
         private SpriteFont font;
         private string text;
-        public Action OnClick { get; }
+        public Action OnClick { get; private set; }
 
         public bool IsSelected;
 
@@ -35,7 +33,6 @@ namespace MyGame.GameObjects.MenuObjects
             //this.buttonBox = buttonBox;
             this.text = text;
             this.pos = pos;
-            this.spriteSheet = spriteSheet;
             this.font = font;
 
             animationHandler = new(spriteSheet, size);

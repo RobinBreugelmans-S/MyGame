@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MyGame.GameObjects.MenuObjects;
-using MyGame.Interfaces;
+using MyGame.Input;
 using MyGame.Misc;
 using System;
 using System.Collections.Generic;
@@ -38,13 +38,14 @@ namespace MyGame.Scenes
         
         private bool isFirstFrame = true;
         
-        private KeyboardReader keyboardReader = new KeyboardReader();
+        private IInputReader inputReader;
 
-        public MenuScene(string backgroundName, Button[] buttons, ContentManager content)
+        public MenuScene(string backgroundName, Button[] buttons, ContentManager content, IInputReader inputReader)
         {
             this.backgroundName = backgroundName;
             this.buttons = buttons;
             this.content = content;
+            this.inputReader = inputReader;
         }
         
         private void select(int index)
@@ -62,9 +63,9 @@ namespace MyGame.Scenes
         public void Update()
         {
             enterInputPrevious = enterInput;
-            enterInput = keyboardReader.ReadEnterInput();
+            enterInput = inputReader.ReadEnterInput();
             inputPrevious = input;
-            input = keyboardReader.ReadInput();
+            input = inputReader.ReadInput();
 
             if(input.X != 0 && input.X != inputPrevious.X)
             {

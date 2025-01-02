@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Nodes;
 using static MyGame.Globals;
-using MyGame.Interfaces;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 using System.Text.Json;
@@ -15,6 +14,7 @@ using Microsoft.Xna.Framework.Content;
 using System.Linq;
 using System.Runtime.InteropServices;
 using MyGame.GameObjects.LevelObjects;
+using MyGame.Input;
 
 
 namespace MyGame.Scenes
@@ -30,6 +30,7 @@ namespace MyGame.Scenes
         private string filePath;
         private ContentManager content;
         private Texture2D blank;
+        private IInputReader inputReader;
 
         public TileMap TileMapCollisions { get; private set; } //TODO: is get and private set needed?
         public TileMap[] TileMapsDecoration { get; private set; } //array of 2d arrays
@@ -42,12 +43,12 @@ namespace MyGame.Scenes
 
         private string backgroundName;
         private float[] backgroundParalaxStrengths;
-        private ParalaxBackground[] backgroundLayers; //Background class with pos, paralax, Texture2D, Draw()
+        private ParalaxBackground[] backgroundLayers;
 
         private string nextLevel;
         private Action<string> loadScene;
 
-        public LevelScene(string level, string backgroundName, float[] paralaxStrengths, string nextLevel, ContentManager content, Action<string> loadScene)
+        public LevelScene(string level, string backgroundName, float[] paralaxStrengths, string nextLevel, ContentManager content, Action<string> loadScene, IInputReader inputReader)
         {
             filePath = $".././../../Maps/{level}.json";
             this.backgroundName = backgroundName;
@@ -55,6 +56,7 @@ namespace MyGame.Scenes
             this.content = content;
             this.loadScene = loadScene;
             this.nextLevel = nextLevel;
+            this.inputReader = inputReader;
         }
 
         public void LoadScene()
@@ -89,7 +91,7 @@ namespace MyGame.Scenes
                 TileMapsDecoration[i].Tileset = content.Load<Texture2D>(TileMapsDecoration[i].TilesetName);
             }
             //load entities
-            entityFactory = new(player, TileMapCollisions.AsTileTypeMap(), collidableEntities, content,
+            entityFactory = new(player, inputReader, TileMapCollisions.AsTileTypeMap(), collidableEntities, content,
                 new Action<Entity, int>((entity, timer) => entitiesToBeRemovedTimer.Add((entity, timer))),
                 new Action<Entity>((entity) => addEntity(entity)),
                 new Action<string>(sceneName => loadScene(sceneName))
@@ -119,7 +121,7 @@ namespace MyGame.Scenes
                 finish.NextLevel = nextLevel;
             }
             entities.Add(entity);
-            if (entity.OnTouch != null) //TODO: Touched -> OnTouch //TODO: use isCollidable
+            if (entity.OnTouch != null) //TODO: use isCollidable
                                         //TODO: also make it so you can stand on entities
             {
                 collidableEntities.Add(entity);

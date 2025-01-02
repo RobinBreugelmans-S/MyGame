@@ -1,7 +1,9 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MyGame.GameObjects.MenuObjects;
+using MyGame.Input;
 using MyGame.Misc;
 using System;
 using System.Collections.Generic;
@@ -19,10 +21,13 @@ namespace MyGame.Scenes
         private Action exit;
         private Dictionary<string, Func<IScene>> getSceneMethods = new();
         private Vector2Int standardButtonSize = new(260, 130);
-        SpriteFont font;
-        Texture2D buttonSpriteSheet;
-        public SceneFactory(ContentManager content, Action<string> loadScene, Action exit)
+        private SpriteFont font;
+        private Texture2D buttonSpriteSheet;
+
+        private IInputReader inputReader;
+        public SceneFactory(IInputReader inputReader, ContentManager content, Action<string> loadScene, Action exit)
         {
+            this.inputReader = inputReader;
             this.content = content;
             this.loadScene = loadScene;
             this.exit = exit;
@@ -33,12 +38,12 @@ namespace MyGame.Scenes
             getSceneMethods.Add("win", getWinScene);
 
             //error: content is null, but content isn't actually null??
-            //moved to loadIfNeeded() for now
+            //moved to loadContentIfNeeded() for now
             //font = content.Load<SpriteFont>("PixelFont");
             //buttonSpriteSheet = content.Load<Texture2D>("ButtonSpriteSheet");
         }
 
-        private void loadIfNeeded()
+        private void loadContentIfNeeded()
         {
             if(font == null)
             {
@@ -55,33 +60,42 @@ namespace MyGame.Scenes
             return getSceneMethods[sceneName]();
         }
 
+        private MenuScene getMenuScene(string backgroundName, Button[] buttons)
+        {
+            return new(backgroundName, buttons, content, inputReader);
+        }
+
+        private Button getButton(string text, Action action, Vector2 pos)
+        {
+            return new(text, action, pos, buttonSpriteSheet, font);
+        }
+
         private IScene getMainMenuScene()
         {
-            loadIfNeeded();
-            Button[] buttons = {                //TODO: should be 900 ??
-                new("Start", () => loadScene("level_001"), new(730,320), buttonSpriteSheet, font), //TODO: text first, then action, then rest
-                new("Quit", exit, new(730,520), buttonSpriteSheet, font)
+            loadContentIfNeeded();
+            Button[] buttons = {                       //TODO: 730 should be 900 ??
+                getButton("Start", () => loadScene("level_001"), new(730,320)), //TODO: text first, then action, then rest
+                getButton("Quit", exit, new(730,520))
             }; 
-            MenuScene mainMenuScene = new("MainMenuBG", buttons, content);
-
-            return mainMenuScene;
+            
+            return getMenuScene("MainMenuBG", buttons);
         }
 
         private IScene getWinScene()
         {
-            Button[] buttons = {                //TODO: should be 900 ??
-                new("Play Again", () => loadScene("level_001"), new(730,320), buttonSpriteSheet, font), //TODO: text first, then action, then rest
-                new("Main Menu", () => loadScene("main_menu"), new(730,520), buttonSpriteSheet, font),
-                new("Quit", exit, new(730,720), buttonSpriteSheet, font)
+            Button[] buttons = {
+                getButton("Play Again", () => loadScene("level_001"), new(730,320)), //TODO: text first, then action, then rest
+                getButton("Main Menu", () => loadScene("main_menu"), new(730,520)),
+                getButton("Quit", exit, new(730,720))
             };
-            MenuScene mainMenuScene = new("WinBG", buttons, content);
 
-            return mainMenuScene;
+            return getMenuScene("WinBG", buttons);
         }
+
         
         private LevelScene getLevelScene(string level, string backgroundName, float[] paralaxStrengths, string nextLevel)
         {
-            return new LevelScene(level, backgroundName, paralaxStrengths, nextLevel, content, loadScene);
+            return new LevelScene(level, backgroundName, paralaxStrengths, nextLevel, content, loadScene, inputReader);
         }
 
         private IScene getLevel1Scene()

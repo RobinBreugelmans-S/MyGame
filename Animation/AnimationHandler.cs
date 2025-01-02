@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MyGame.GameObjects;
-using MyGame.Interfaces;
 using MyGame.Misc;
 using System;
 using System.Collections.Generic;

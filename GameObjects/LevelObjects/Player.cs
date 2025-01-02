@@ -5,12 +5,12 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Color = Microsoft.Xna.Framework.Color;
 using Microsoft.Xna.Framework.Graphics;
 using System.Drawing;
-using MyGame.Interfaces;
 using MyGame.Animation;
 using MyGame.Misc;
 using static MyGame.Globals;
 using System.Diagnostics;
 using System.Net.Mime;
+using MyGame.Input;
 
 
 namespace MyGame.GameObjects.LevelObjects

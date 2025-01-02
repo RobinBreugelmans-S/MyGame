@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MyGame.Animation;
 using MyGame.GameObjects.LevelObjects;
+using MyGame.Input;
 using MyGame.Misc;
 using MyGame.Scenes;
 using System;
@@ -19,17 +20,23 @@ namespace MyGame.GameObjects
         //TODO: use Decorator pattern to define behaviours of the entities.
 
         private ContentManager content;
+        private IInputReader inputReader;
+
         private Action<Entity, int> remove;
         private Action<Entity> add;
         private Action<string> loadScene;
+        
         private TileType[,] tileMapCollisions;
         private List<Entity> collidableEntities; //if entity is collidable, it will be added to this list
-        public Player Player;
+        
         private Dictionary<string, Func<int, int, Entity>> getEntityMethods = new();
         
-        public EntityFactory(Player player, TileType[,] tileMapCollisions, List<Entity> collidableEntities, ContentManager content, Action<Entity, int> remove, Action<Entity> add, Action<string> loadScene)
+        public Player Player;
+
+        public EntityFactory(Player player, IInputReader inputReader, TileType[,] tileMapCollisions, List<Entity> collidableEntities, ContentManager content, Action<Entity, int> remove, Action<Entity> add, Action<string> loadScene)
         {
-            this.Player = player;
+            Player = player;
+            this.inputReader = inputReader;
             this.tileMapCollisions = tileMapCollisions;
             this.collidableEntities = collidableEntities;
             this.content = content;
@@ -51,7 +58,6 @@ namespace MyGame.GameObjects
         }
 
         private Dictionary<string, Texture2D> textureStore = new();
-        private Texture2D playerTexture; //TODO: is needed?
 
         private Texture2D getTexture(string textureFileName)
         {
@@ -82,9 +88,9 @@ namespace MyGame.GameObjects
         {
             if (Player == null)
             {
-                playerTexture = content.Load<Texture2D>("PlayerSpriteSheet"); //TODO: name + spritesheet?
+                Texture2D playerTexture = content.Load<Texture2D>("PlayerSpriteSheet"); //TODO: name + spritesheet?
 
-                Player = new Player(new Vector2(x, y), playerTexture, new KeyboardReader(), tileMapCollisions, collidableEntities); //TODO: change input in settings
+                Player = new Player(new Vector2(x, y), playerTexture, inputReader, tileMapCollisions, collidableEntities); //TODO: change input in settings
                 return Player;
             }
             throw new Exception("Cannot have 2 players!"); //TODO: fix ?
@@ -180,18 +186,17 @@ namespace MyGame.GameObjects
                     }
                 }
             });
-            
-            erik.OnTouch = new((collisionObject, touchNormal) =>
+
+            erik.OnTouch = (collisionObject, touchNormal) =>
+            {
+                if (collisionObject is Player)
                 {
-                    if (collisionObject is Player)
-                    {
-                        Player player = collisionObject as Player;
-                        player.DamageIfNotImmune();
-                        animationHandler.PlayAnimation(State.Attacking);
-                    }
-                    return new();
+                    Player player = collisionObject as Player;
+                    player.DamageIfNotImmune();
+                    animationHandler.PlayAnimation(State.Attacking);
                 }
-            );
+                return new();
+            };
             
             return erik;
         }
