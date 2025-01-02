@@ -22,8 +22,7 @@ namespace MyGame.Scenes
     internal class LevelScene : IScene
     {
         private SpriteFont font;
-
-        //TODO: naming conventions
+        
         private Player player;
         private Camera camera;
         private Entity finish;
@@ -31,16 +30,11 @@ namespace MyGame.Scenes
         private string filePath;
         private ContentManager content;
         private Texture2D blank;
-        //TODO: 
-        //factory ? to return Scene object which has all of these loaded, methods go into SceneManager
 
-        //public TileType[,] tileMapCollisions { get; private set; } //TODO: naming conventions!
-        public TileMap tileMapCollisions { get; private set; } //TODO: is get and private set needed?
-        public TileMap[] tileMapsDecoration { get; private set; } //array of 2d arrays //TODO: naming conventions!
-        //public Texture2D[] tilesets { get; private set; }
-        //public string[] tilesetNames { get; private set; }
-        private EntityFactory objectFactory;
-        private List<Entity> entities = new(); //TODO naming convetions
+        public TileMap TileMapCollisions { get; private set; } //TODO: is get and private set needed?
+        public TileMap[] TileMapsDecoration { get; private set; } //array of 2d arrays
+        private EntityFactory entityFactory;
+        private List<Entity> entities = new();
         private List<Entity> collidableEntities = new();
         private List<Entity> entitiesToBeRemoved = new();
         private List<Entity> entitiesToBeAdded = new();
@@ -84,18 +78,18 @@ namespace MyGame.Scenes
 
             LevelJson levelJson = JsonSerializer.Deserialize<LevelJson>(jsonData);
 
-            tileMapCollisions = new TileMap(levelJson.layers[0]);
-            tileMapsDecoration = new TileMap[levelJson.layers.Count - 2]; //-2: first layer is collisios, last is entities
+            TileMapCollisions = new TileMap(levelJson.layers[0]);
+            TileMapsDecoration = new TileMap[levelJson.layers.Count - 2]; //-2: first layer is collisios, last is entities
             for (int i = 0; i < levelJson.layers.Count - 2; i++)
             {
-                tileMapsDecoration[i] = new TileMap(levelJson.layers[i + 1]); // i+1 cause layer 0 is collisions
+                TileMapsDecoration[i] = new TileMap(levelJson.layers[i + 1]); // i+1 cause layer 0 is collisions
             }
-            for (int i = 0; i < tileMapsDecoration.Length; i++) //load tileset images from tileset names
+            for (int i = 0; i < TileMapsDecoration.Length; i++) //load tileset images from tileset names
             {
-                tileMapsDecoration[i].tileset = content.Load<Texture2D>(tileMapsDecoration[i].tilesetName);
+                TileMapsDecoration[i].Tileset = content.Load<Texture2D>(TileMapsDecoration[i].TilesetName);
             }
             //load entities
-            objectFactory = new(player, tileMapCollisions.AsTileTypeMap(), collidableEntities, content,
+            entityFactory = new(player, TileMapCollisions.AsTileTypeMap(), collidableEntities, content,
                 new Action<Entity, int>((entity, timer) => entitiesToBeRemovedTimer.Add((entity, timer))),
                 new Action<Entity>((entity) => addEntity(entity)),
                 new Action<string>(sceneName => loadScene(sceneName))
@@ -109,14 +103,14 @@ namespace MyGame.Scenes
         }
         private void addEntity(string entityName, int x, int y)
         {
-            Entity entity = objectFactory.GetEntity(entityName, x, y);
+            Entity entity = entityFactory.GetEntity(entityName, x, y);
 
             if (entity is Player)
             {
                 Player _player = (Player)entity;
-                objectFactory.player = _player;
+                entityFactory.Player = _player;
                 player = _player;
-                camera = new(player, new(tileMapCollisions.Width * TileSize, tileMapCollisions.Height * TileSize));
+                camera = new(player, new(TileMapCollisions.Width * TileSize, TileMapCollisions.Height * TileSize));
                 player.LoadScene = loadScene;
             }
             else if(entity is Finish)
@@ -180,7 +174,7 @@ namespace MyGame.Scenes
             {
                 background.Draw(camera.Pos, spriteBatch);
             }
-            foreach (TileMap tileMap in tileMapsDecoration)
+            foreach (TileMap tileMap in TileMapsDecoration)
             {
                 tileMap.Draw(offset, spriteBatch);
             }

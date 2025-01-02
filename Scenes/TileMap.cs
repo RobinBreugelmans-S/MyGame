@@ -14,9 +14,9 @@ namespace MyGame.Scenes
     internal class TileMap
     {
 
-        public int[,] map; //TODO: naming conventions
-        public Texture2D tileset;
-        public string tilesetName;
+        private int[,] map;
+        public Texture2D Tileset;
+        public string TilesetName;
         public int Width { get { return map.GetLength(0); } }
         public int Height { get { return map.GetLength(1); } }
 
@@ -29,12 +29,12 @@ namespace MyGame.Scenes
                 {
                     for (int y = 0; y < Height; y++)
                     {
-                        map[x, y] = layer.data2D[y][x]; //TODO: if has data2D or has entities
+                        map[x, y] = layer.data2D[y][x];
                     }
                 }
             }
-            // else {} //do entities
-            tilesetName = layer.tileset;
+            
+            TilesetName = layer.tileset;
         }
         
         public TileType[,] AsTileTypeMap() //for collisions
@@ -53,8 +53,8 @@ namespace MyGame.Scenes
         }
         public Rectangle getTextureRect(int id)
         {
-            return new Rectangle(id * OriginalTileSize % tileset.Width,
-                                 (int)Math.Floor((float)id * OriginalTileSize / tileset.Width) * OriginalTileSize,
+            return new Rectangle(id * OriginalTileSize % Tileset.Width,
+                                 (int)Math.Floor((float)id * OriginalTileSize / Tileset.Width) * OriginalTileSize,
                                  OriginalTileSize,
                                  OriginalTileSize);
         }
@@ -68,8 +68,8 @@ namespace MyGame.Scenes
                     if (map[x, y] != -1)
                     {                                       //TODO: maybe do Math.Round()
                         Rectangle dest = new(x * TileSize + (int)offset.X, y * TileSize + (int)offset.Y, TileSize, TileSize);
-                        Rectangle src = getTextureRect(map[x, y]); //TODO: remove -1 //try catch, so game doesn't crash if invalid number in map
-                        spriteBatch.Draw(tileset, dest, src, Color.White);
+                        Rectangle src = getTextureRect(map[x, y]); //TODO: try catch, so game doesn't crash if invalid number in map
+                        spriteBatch.Draw(Tileset, dest, src, Color.White);
                     }
                 }
             }

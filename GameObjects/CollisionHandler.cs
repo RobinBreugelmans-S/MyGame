@@ -13,10 +13,10 @@ namespace MyGame.GameObjects
 {
     internal class CollisionHandler//TODO: erf over van iets met public pos enz.
     {
-        public MoveableEntity Parent;
+        public MoveableEntity Parent { private get; set; }
 
         public RectangleF CollisionBox;
-        public TileType[,] TileMapCollisions; //TODO: change to CollisionTileMap !!
+        public TileType[,] TileMapCollisions;
         public List<Entity> CollidableEntities;
         //protected List<Entity> entities; //TODO make entity class, IGameObject with pos vel acc, collision rectangle, and stuff
         //TODO: gravity in globals

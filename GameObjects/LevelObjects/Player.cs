@@ -22,8 +22,8 @@ namespace MyGame.GameObjects.LevelObjects
         private float runSpeed = 8f;
         private float jumpPower = 22f;
         private float gravityWhenJumping = 1f;
-        private new float gravityWhenFalling = 2f;
-        private new float maxVerticalSpeed = 26f;
+        //gravityWhenFalling = 2f;
+        //maxVerticalSpeed = 26f;
 
         private IInputReader inputReader;
 
@@ -46,9 +46,12 @@ namespace MyGame.GameObjects.LevelObjects
         public Player(Vector2 pos, Texture2D spriteSheet, IInputReader inputReader, TileType[,] tileMapCollisions, List<Entity> collidableEntities)
             : base(pos, new Vector2(), new Vector2(), 0f, new AnimationHandler(spriteSheet, new Vector2Int(16, 16)), new CollisionHandler(new RectangleF(3f * Zoom, 10f * Zoom, 10f * Zoom, 6f * Zoom), tileMapCollisions, collidableEntities), null)
         {
+            gravityWhenFalling = 2f;
+            maxVerticalSpeed = 26f;
+
             this.inputReader = inputReader;
 
-            collisionHandler.Parent = this; //can't put this in the constructor
+            CollisionHandler.Parent = this; //can't put this in the constructor
 
             levelBox = new(0, 0, tileMapCollisions.GetLength(0) * TileSize, tileMapCollisions.GetLength(1) * TileSize);
 
@@ -104,46 +107,46 @@ namespace MyGame.GameObjects.LevelObjects
                 AnimationHandler.HorizontalFlip = SpriteEffects.FlipHorizontally;
             }
 
-            if (vel.Y >= 0 || !isJumping)
+            if (Vel.Y >= 0 || !isJumping)
             {
-                acc.Y = gravityWhenFalling;
+                Acc.Y = gravityWhenFalling;
             }
             else
             {
-                acc.Y = gravityWhenJumping;
+                Acc.Y = gravityWhenJumping;
             }
 
-            if (vel.Y < 0 && !isJumping && isJumpingPrevious)
+            if (Vel.Y < 0 && !isJumping && isJumpingPrevious)
             {
-                vel.Y *= .5f;
+                Vel.Y *= .5f;
             }
 
-            if (input.X == 0 || input.Y == 1 && isGrounded)
+            if (input.X == 0 || input.Y == 1 && IsGrounded)
             {
-                acc.X = Math.Sign(vel.X) * -1; //friction
+                Acc.X = Math.Sign(Vel.X) * -1; //friction
             }
             else
             {
-                acc.X = input.X * runAcc;
+                Acc.X = input.X * runAcc;
             }
 
             //jump
-            if (isJumping && isGrounded)
+            if (isJumping && IsGrounded)
             {
-                vel.Y = -jumpPower;
+                Vel.Y = -jumpPower;
             }
 
             //update velocity
-            vel.X = Math.Clamp(vel.X + acc.X, -runSpeed, runSpeed);
-            vel.Y = Math.Clamp(vel.Y + acc.Y, -maxVerticalSpeed, maxVerticalSpeed);
+            Vel.X = Math.Clamp(Vel.X + Acc.X, -runSpeed, runSpeed);
+            Vel.Y = Math.Clamp(Vel.Y + Acc.Y, -maxVerticalSpeed, maxVerticalSpeed);
 
             #endregion
 
             //collissions
-            (vel, acc, isGrounded) = collisionHandler.HandleCollisions(Pos, vel, acc);
+            (Vel, Acc, IsGrounded) = CollisionHandler.HandleCollisions(Pos, Vel, Acc);
 
             //update position
-            Pos += vel;
+            Pos += Vel;
 
 
             #region states
@@ -161,7 +164,7 @@ namespace MyGame.GameObjects.LevelObjects
                 AnimationHandler.ChangeState(State.Crouching);
             }
 
-            if (!isGrounded) //TODO: change to is in air! (if water is added)
+            if (!IsGrounded) //TODO: change to is in air! (if water is added)
             {
                 AnimationHandler.ChangeState(State.MidAir);
             }

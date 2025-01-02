@@ -16,10 +16,10 @@ namespace MyGame.GameObjects.LevelObjects
 {
     internal class Enemy : MoveableEntity, IGameObject
     {
-        public float runAcc; //TODO all public?
-        public float runSpeed;
-        public float jumpPower;
-        public float gravityWhenJumping;
+        public float RunAcc; //TODO all public?
+        public float RunSpeed;
+        public float JumpPower;
+        public float GravityWhenJumping;
 
         //public new RectangleF CurrentCollisionBox { get { return CollisionBox.At(pos); } }
 
@@ -27,21 +27,21 @@ namespace MyGame.GameObjects.LevelObjects
 
         public Vector2 targetDirection { get; private set; } //TODO: change to targetVector or sometihgn
         public Vector2Int input { get { return new Vector2Int(Math.Sign(targetDirection.X), Math.Sign(targetDirection.Y)); } }
-        public Entity target; //change to Object or sometinhg
+        public Entity Target;
 
-        public Action doBehaviour;
+        public Action DoBehaviour { protected get; set; }
 
         public Enemy(Vector2 pos, float runAcc, float runSpeed, float jumpPower, float gravityWhenFalling, float gravityWhenJumping, float maxVerticalSpeed, AnimationHandler animationHandler, CollisionHandler collisionHandler, Entity target)
             : base(pos, new Vector2(), new Vector2(), gravityWhenFalling, animationHandler, collisionHandler, null)
         {
             //new Enemy(pos, runAcc, runSpeed, jumpPower, gravityWhenFalling, gravityWhenJumping, animationHandler, collisionHandler, target, null, null);
-            this.runAcc = runAcc;
-            this.runSpeed = runSpeed;
-            this.jumpPower = jumpPower;
+            this.RunAcc = runAcc;
+            this.RunSpeed = runSpeed;
+            this.JumpPower = jumpPower;
             //this.gravityWhenFalling = gravityWhenFalling; is in base constructor
-            this.gravityWhenJumping = gravityWhenJumping;
+            this.GravityWhenJumping = gravityWhenJumping;
 
-            this.target = target;
+            this.Target = target;
 
             this.maxVerticalSpeed = maxVerticalSpeed;
         }
@@ -51,9 +51,9 @@ namespace MyGame.GameObjects.LevelObjects
 
         public void StopMoving()
         {
-            acc = new(0f, 0f);
-            vel = new(0f, 0f);
-            target = this;
+            Acc = new(0f, 0f);
+            Vel = new(0f, 0f);
+            Target = this;
         }
         public void FaceInputDirection()
         {
@@ -69,34 +69,34 @@ namespace MyGame.GameObjects.LevelObjects
 
         public override void Update()
         {
-            if (target != null)
+            if (Target != null)
             {
-                targetDirection = GetMiddleOfRect(target.CurrentCollisionBox) - GetMiddleOfRect(CurrentCollisionBox);
+                targetDirection = GetMiddleOfRect(Target.CurrentCollisionBox) - GetMiddleOfRect(CurrentCollisionBox);
             }
             else
             {
                 targetDirection = new(0f, 0f);
             }
 
-            if (vel.Y >= 0)
+            if (Vel.Y >= 0)
             {
-                acc.Y = gravityWhenFalling;
+                Acc.Y = gravityWhenFalling;
             }
             else
             {
-                acc.Y = gravityWhenJumping;
+                Acc.Y = GravityWhenJumping;
             }
 
-            doBehaviour();
+            DoBehaviour();
 
-            vel.X = Math.Clamp(vel.X + acc.X, -runSpeed, runSpeed);
-            vel.Y = Math.Clamp(vel.Y + acc.Y, -maxVerticalSpeed, maxVerticalSpeed);
+            Vel.X = Math.Clamp(Vel.X + Acc.X, -RunSpeed, RunSpeed);
+            Vel.Y = Math.Clamp(Vel.Y + Acc.Y, -maxVerticalSpeed, maxVerticalSpeed);
 
-            if (collisionHandler != null)
+            if (CollisionHandler != null)
             {
-                (vel, acc, isGrounded) = collisionHandler.HandleCollisions(Pos, vel, acc);
+                (Vel, Acc, IsGrounded) = CollisionHandler.HandleCollisions(Pos, Vel, Acc);
             }
-            Pos += vel;
+            Pos += Vel;
 
             AnimationHandler.Update();
         }

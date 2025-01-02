@@ -12,41 +12,40 @@ namespace MyGame.Animation
 {
     internal class AnimationHandler : IGameObject
     {
-        //TODO which can be private, or get/set?
-        public Dictionary<State, AnimationState> AnimationStates = new();
-        public Rectangle PartRectangle;
-        public State State; //TODO: naming convention enums!! States State //TODO change to currentState
-        public Texture2D SpriteSheet;
-        public Vector2Int SpriteSize;
+        private Dictionary<State, AnimationState> animationStates = new();
+        private Rectangle partRectangle;
+        public State CurrentState;
+        private Texture2D spriteSheet;
+        private Vector2Int spriteSize;
         public SpriteEffects HorizontalFlip = SpriteEffects.None;
-        public int AnimationTimer = 0; //TODO: private?
+        public int AnimationTimer = 0;
         private int alternateAnimationTimer = 0;
 
         public AnimationHandler(Texture2D spriteSheet, Vector2Int spriteSize)
         {
-            SpriteSheet = spriteSheet;
-            SpriteSize = spriteSize;
-            PartRectangle = new Rectangle(0, 0, spriteSize.X, spriteSize.Y);
+            this.spriteSheet = spriteSheet;
+            this.spriteSize = spriteSize;
+            partRectangle = new Rectangle(0, 0, spriteSize.X, spriteSize.Y);
         }
 
         public void AddAnimation(State state, int location, int length, int time)
         {
-            AnimationStates.Add(state, new AnimationState(location, length, time));
+            animationStates.Add(state, new AnimationState(location, length, time));
         }
         public int GetAnimationTime(State state)
         {
-            return AnimationStates[state].Length * AnimationStates[state].Time;
+            return animationStates[state].Length * animationStates[state].Time;
         }
         public int GetCurrentAnimationFrame()
         {
-            return PartRectangle.X / SpriteSize.X;
+            return partRectangle.X / spriteSize.X;
         }
         public void ChangeState(State state) //todo change to 
         {
-            if(alternateAnimationTimer <= 0 && State != state) //aka animation is not playing
+            if(alternateAnimationTimer <= 0 && CurrentState != state) //aka animation is not playing
             {
-                State = state;
-                PartRectangle.Y = AnimationStates[state].Location * SpriteSize.Y;
+                CurrentState = state;
+                partRectangle.Y = animationStates[state].Location * spriteSize.Y;
             }
         }
 
@@ -57,26 +56,26 @@ namespace MyGame.Animation
                 alternateAnimationTimer--;
             }
 
-            AnimationTimer = (AnimationTimer + 1) % AnimationStates[State].Time;
+            AnimationTimer = (AnimationTimer + 1) % animationStates[CurrentState].Time;
             if (AnimationTimer == 0)
             {
-                PartRectangle.X = (PartRectangle.X + SpriteSize.X) % (SpriteSize.X * AnimationStates[State].Length);
+                partRectangle.X = (partRectangle.X + spriteSize.X) % (spriteSize.X * animationStates[CurrentState].Length);
             }
         }
 
         public void PlayAnimation(State state)
         {
-            PartRectangle.X = 0;
+            partRectangle.X = 0;
             ChangeState(state);
-            alternateAnimationTimer = AnimationStates[state].Length * AnimationStates[state].Time;
+            alternateAnimationTimer = animationStates[state].Length * animationStates[state].Time;
         }
 
         public void Draw(Vector2 pos, SpriteBatch spriteBatch)
         {
             //first rect = destination, second rect = source in image
-            spriteBatch.Draw(SpriteSheet, new Rectangle((int)(Math.Round(pos.X / Zoom) * Zoom),
-                (int)(Math.Round(pos.Y / Zoom) * Zoom), PartRectangle.Width * Zoom, PartRectangle.Height * Zoom), // <- dest rect
-                PartRectangle, Color.White, 0f, new Vector2(0, 0), HorizontalFlip, 0f);
+            spriteBatch.Draw(spriteSheet, new Rectangle((int)(Math.Round(pos.X / Zoom) * Zoom),
+                (int)(Math.Round(pos.Y / Zoom) * Zoom), partRectangle.Width * Zoom, partRectangle.Height * Zoom), // <- dest rect
+                partRectangle, Color.White, 0f, new Vector2(0, 0), HorizontalFlip, 0f);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace MyGame.GameObjects.LevelObjects
 
         public void Update()
         {
-            PosMiddle += (GetMiddleOfRect(target.CurrentCollisionBox) + target.vel - PosMiddle) / 8;
+            PosMiddle += (GetMiddleOfRect(target.CurrentCollisionBox) + target.Vel - PosMiddle) / 8;
 
             if (Viewport.Right > bounds.X)
             {

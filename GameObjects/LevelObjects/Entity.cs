@@ -19,7 +19,7 @@ namespace MyGame.GameObjects.LevelObjects
         public Touch OnTouch; //(collisionObject, normalVector) => stuff
 
         protected Texture2D texture;
-        public State State { get { return AnimationHandler.State; } }
+        public State State { get { return AnimationHandler.CurrentState; } }
         public AnimationHandler AnimationHandler;
 
         public Entity(Vector2 pos, RectangleF collisionBox, AnimationHandler animationHandler) : base(pos, collisionBox)

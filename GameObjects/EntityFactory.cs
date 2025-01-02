@@ -24,12 +24,12 @@ namespace MyGame.GameObjects
         private Action<string> loadScene;
         private TileType[,] tileMapCollisions;
         private List<Entity> collidableEntities; //if entity is collidable, it will be added to this list
-        public Player player;
+        public Player Player;
         private Dictionary<string, Func<int, int, Entity>> getEntityMethods = new();
         
         public EntityFactory(Player player, TileType[,] tileMapCollisions, List<Entity> collidableEntities, ContentManager content, Action<Entity, int> remove, Action<Entity> add, Action<string> loadScene)
         {
-            this.player = player;
+            this.Player = player;
             this.tileMapCollisions = tileMapCollisions;
             this.collidableEntities = collidableEntities;
             this.content = content;
@@ -80,12 +80,12 @@ namespace MyGame.GameObjects
 
         private Player getPlayer(int x, int y)
         {
-            if (player == null)
+            if (Player == null)
             {
                 playerTexture = content.Load<Texture2D>("PlayerSpriteSheet"); //TODO: name + spritesheet?
 
-                player = new Player(new Vector2(x, y), playerTexture, new KeyboardReader(), tileMapCollisions, collidableEntities); //TODO: change input in settings
-                return player;
+                Player = new Player(new Vector2(x, y), playerTexture, new KeyboardReader(), tileMapCollisions, collidableEntities); //TODO: change input in settings
+                return Player;
             }
             throw new Exception("Cannot have 2 players!"); //TODO: fix ?
         }
@@ -116,24 +116,24 @@ namespace MyGame.GameObjects
 
         private Enemy getErik(int x, int y)
         {
-            return getErik(x, y, player);
+            return getErik(x, y, Player);
         }
         private Enemy getErik(int x, int y, Entity target)
         {
             Texture2D texture = getTexture("ErikSpriteSheet");
 
             AnimationHandler animationHandler = new(texture, new Vector2Int(23,16));
-            animationHandler.AnimationStates.Add(State.Idling, new AnimationState(0, 4, 16));
-            animationHandler.AnimationStates.Add(State.Walking, new AnimationState(0, 4, 4));
-            animationHandler.AnimationStates.Add(State.Jumping, new AnimationState(1, 1, 1)); //TODO add jumping anim to erik sprite sheet
-            animationHandler.AnimationStates.Add(State.Attacking, new AnimationState(2, 1, 16)); //8 so spikes are there for atleast 8 frames
+            animationHandler.AddAnimation(State.Idling, 0, 4, 16);
+            animationHandler.AddAnimation(State.Walking,0, 4, 4);
+            animationHandler.AddAnimation(State.Jumping,1, 1, 1); //TODO add jumping anim to erik sprite sheet
+            animationHandler.AddAnimation(State.Attacking, 2, 1, 16); //8 so spikes are there for atleast 8 frames
             animationHandler.ChangeState(State.Idling);
             
             CollisionHandler collisionHandler = new(new RectangleF(5f * Zoom, 8f * Zoom, 12f * Zoom, 8f * Zoom), tileMapCollisions, collidableEntities);
 
             Enemy erik = new(new Vector2(x, y), .5f, 6f, 16f, 2f, 1f, animationHandler, collisionHandler, target);//, behaviour, onTouch);
 
-            erik.doBehaviour = new(() =>
+            erik.DoBehaviour = new(() =>
             {
                 if (erik.targetDirection.Length() <= 24 * TileSize)
                 {
@@ -148,29 +148,29 @@ namespace MyGame.GameObjects
                     //movement    
                     if (erik.input.X == 0)
                     {
-                        erik.acc.X = Math.Sign(erik.vel.X) * -1; //friction
+                        erik.Acc.X = Math.Sign(erik.Vel.X) * -1; //friction
                     }
                     else
                     {
-                        erik.acc.X = erik.input.X * erik.runAcc;
+                        erik.Acc.X = erik.input.X * erik.RunAcc;
                     }
 
                     //jump
-                    if (erik.isGrounded)
+                    if (erik.IsGrounded)
                     {
-                        List<Vector2Int> horizontalCollisions = erik.collisionHandler.GetTileMapCollisions(erik.CurrentCollisionBox.At(new(erik.input.X * 8, 0)));// erik.pos + new Vector2(erik.input.X * 8, 0));
+                        List<Vector2Int> horizontalCollisions = erik.CollisionHandler.GetTileMapCollisions(erik.CurrentCollisionBox.At(new(erik.input.X * 8, 0)));// erik.pos + new Vector2(erik.input.X * 8, 0));
                         foreach (Vector2Int collision in horizontalCollisions) //TODO: colissions -> tiles
                         {
-                            if (erik.collisionHandler.TileMapCollisions.tryGetValue(collision, out TileType tileType) && (tileType == TileType.Solid)) //0 = air //|| tileType == TileType.SemiRight
+                            if (erik.CollisionHandler.TileMapCollisions.tryGetValue(collision, out TileType tileType) && (tileType == TileType.Solid)) //0 = air //|| tileType == TileType.SemiRight
                             {
-                                erik.vel.Y = -erik.jumpPower;
+                                erik.Vel.Y = -erik.JumpPower;
                                 break;
                             }
                         }
                     }
 
                     //animation
-                    if (erik.isGrounded)
+                    if (erik.IsGrounded)
                     {
                         erik.AnimationHandler.ChangeState(State.Walking);
                     }
@@ -198,23 +198,23 @@ namespace MyGame.GameObjects
         
         private Enemy getJellyFish(int x, int y)
         {
-            return getJellyFish(x, y, player);
+            return getJellyFish(x, y, Player);
         }
         private Enemy getJellyFish(int x, int y, Entity target)
         {
             Texture2D texture = getTexture("JellyFishSpriteSheet");
 
             AnimationHandler animationHandler = new(texture, new Vector2Int(17, 24));
-            animationHandler.AnimationStates.Add(State.Idling, new AnimationState(0, 5, 4));
-            animationHandler.AnimationStates.Add(State.Walking, new AnimationState(1, 5, 4));
-            animationHandler.AnimationStates.Add(State.Dying, new AnimationState(2, 6, 4));
+            animationHandler.AddAnimation(State.Idling, 0, 5, 4);
+            animationHandler.AddAnimation(State.Walking, 1, 5, 4);
+            animationHandler.AddAnimation(State.Dying, 2, 6, 4);
             animationHandler.ChangeState(State.Idling);
 
             CollisionHandler collisionHandler = new(new RectangleF(5f * Zoom, 9f * Zoom, 7f * Zoom, 7f * Zoom), null, null);
 
             Enemy jellyFish = new(new Vector2(x, y), .5f, 2f, 0f, 0f, 0f, 2f, animationHandler, collisionHandler, target);
 
-            jellyFish.doBehaviour = new(() =>
+            jellyFish.DoBehaviour = new(() =>
             {
                 if (jellyFish.targetDirection.Length() <= 12 * TileSize && jellyFish.State != State.Dying)
                 {
@@ -223,7 +223,7 @@ namespace MyGame.GameObjects
 
                 if(jellyFish.State == State.Walking && jellyFish.targetDirection != new Vector2(0f,0f))
                 {
-                    jellyFish.acc = jellyFish.targetDirection.Normalized() * jellyFish.runAcc;
+                    jellyFish.Acc = jellyFish.targetDirection.Normalized() * jellyFish.RunAcc;
                 }
             });
 
@@ -263,7 +263,7 @@ namespace MyGame.GameObjects
 
         private Enemy getJones(int x, int y)
         {
-            return getJones(x, y, player);
+            return getJones(x, y, Player);
         }
         private Enemy getJones(int x, int y, Entity target)
         {
@@ -282,7 +282,7 @@ namespace MyGame.GameObjects
 
             Enemy jones = new(new Vector2(x, y), .5f, 5f, 20f, 2f, 1f, animationHandler, collisionHandler, target);//, behaviour, onTouch);
 
-            jones.doBehaviour = new(() =>
+            jones.DoBehaviour = new(() =>
             {
                 jones.FaceInputDirection();
 
@@ -294,54 +294,54 @@ namespace MyGame.GameObjects
                 else if (jones.targetDirection.Length() <= 8 * TileSize)
                 {
                     jones.ChangeState(State.Attacking);
-                    jones.vel.X = 0;
-                    jones.acc.X = 0;
+                    jones.Vel.X = 0;
+                    jones.Acc.X = 0;
                 }
                 else
                 {
                     jones.ChangeState(State.Idling);
-                    jones.vel.X = 0;
-                    jones.acc.X = 0;
+                    jones.Vel.X = 0;
+                    jones.Acc.X = 0;
                 }
 
                 if (jones.State != State.Idling && jones.State != State.Attacking && jones.targetDirection != new Vector2(0f, 0f))
                 {
                     if (jones.input.X == 0)
                     {
-                        jones.acc.X = Math.Sign(jones.vel.X) * -1;
+                        jones.Acc.X = Math.Sign(jones.Vel.X) * -1;
                     }
                     else
                     {
-                        jones.acc.X = jones.input.X * jones.runAcc;
+                        jones.Acc.X = jones.input.X * jones.RunAcc;
                     }
 
                     //jump
-                    if (jones.isGrounded)
+                    if (jones.IsGrounded)
                     {
-                        List<Vector2Int> horizontalCollisions = jones.collisionHandler.GetTileMapCollisions(jones.CurrentCollisionBox.At(new(jones.input.X * 8, 0)));
+                        List<Vector2Int> horizontalCollisions = jones.CollisionHandler.GetTileMapCollisions(jones.CurrentCollisionBox.At(new(jones.input.X * 8, 0)));
                         foreach (Vector2Int collision in horizontalCollisions) //TODO: colissions -> tiles
                         {
-                            if (jones.collisionHandler.TileMapCollisions.tryGetValue(collision, out TileType tileType) && (tileType == TileType.Solid))
+                            if (jones.CollisionHandler.TileMapCollisions.tryGetValue(collision, out TileType tileType) && (tileType == TileType.Solid))
                             {
-                                jones.vel.Y = -jones.jumpPower;
+                                jones.Vel.Y = -jones.JumpPower;
                                 break;
                             }
                         }
                     }
                     
-                    if (!jones.isGrounded)
+                    if (!jones.IsGrounded)
                     {
                         jones.AnimationHandler.ChangeState(State.Jumping);
                     }
                 }
                 else
                 {
-                    jones.acc.X = Math.Sign(jones.vel.X) * -1;
+                    jones.Acc.X = Math.Sign(jones.Vel.X) * -1;
                 }
 
                 if(jones.State == State.Attacking && jones.AnimationHandler.GetCurrentAnimationFrame() == 1 && jones.AnimationHandler.AnimationTimer % 4 == 0)
                 {
-                    add(getBullet((int)(jones.Pos.X + (29.5f + jones.facingDirection * 12.5f) * Zoom), (int)jones.Pos.Y + 19 * Zoom, jones.facingDirection));
+                    add(getBullet((int)(jones.Pos.X + (29.5f + jones.FacingDirection * 12.5f) * Zoom), (int)jones.Pos.Y + 19 * Zoom, jones.FacingDirection));
                 }
             });
 

@@ -11,8 +11,8 @@ namespace MyGame.Scenes
 {
     internal class ParalaxBackground
     {
-        Texture2D backgroundTexture;
-        float paralaxStrength;
+        private Texture2D backgroundTexture;
+        private float paralaxStrength;
         public ParalaxBackground(Texture2D texture, float paralaxStrength)
         {
             backgroundTexture = texture;

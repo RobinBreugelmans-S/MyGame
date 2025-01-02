@@ -12,19 +12,19 @@ namespace MyGame.GameObjects.LevelObjects
 {
     internal class MoveableEntity : Entity, IGameObject
     {
-        public Vector2 vel;
-        public Vector2 acc;
+        public Vector2 Vel;
+        public Vector2 Acc;
 
         protected float maxHorizontalSpeed;
         protected float maxVerticalSpeed;
 
-        public float gravityWhenFalling;
+        protected float gravityWhenFalling;
 
         //public CollisionHandler collisionHandler;
         //public new RectangleF CollisionBox { get { return collisionHandler.CollisionBox; } protected set { collisionHandler.CollisionBox = value; } }
         //public new RectangleF CurrentCollisionBox { get { return CollisionBox.At(pos); } }
-        public bool isGrounded;
-        public int facingDirection
+        public bool IsGrounded;
+        public int FacingDirection
         {
             get
             {
@@ -41,10 +41,10 @@ namespace MyGame.GameObjects.LevelObjects
 
         public MoveableEntity(Vector2 pos, Vector2 vel, Vector2 acc, float gravity, AnimationHandler animationHandler, CollisionHandler collisionHandler, Touch onTouch) : base(pos, animationHandler, onTouch)
         {
-            this.vel = vel;
-            this.acc = acc;
+            this.Vel = vel;
+            this.Acc = acc;
             gravityWhenFalling = gravity;
-            this.collisionHandler = collisionHandler;
+            this.CollisionHandler = collisionHandler;
         }
 
         public MoveableEntity(Vector2 pos, Vector2 vel, float gravity, AnimationHandler animationHandler, CollisionHandler collisionHandler, Touch onTouch)
@@ -65,17 +65,17 @@ namespace MyGame.GameObjects.LevelObjects
 
         public override void Update()
         {
-            vel.Y += gravityWhenFalling;
+            Vel.Y += gravityWhenFalling;
 
-            vel.X = vel.X + acc.X;// Math.Clamp(, -maxHorizontalSpeed, maxHorizontalSpeed);
-            vel.Y = Math.Clamp(vel.Y + acc.Y, -maxVerticalSpeed, maxVerticalSpeed);
+            Vel.X = Vel.X + Acc.X;// Math.Clamp(, -maxHorizontalSpeed, maxHorizontalSpeed);
+            Vel.Y = Math.Clamp(Vel.Y + Acc.Y, -maxVerticalSpeed, maxVerticalSpeed);
 
-            if (collisionHandler != null)
+            if (CollisionHandler != null)
             {
-                (vel, acc, isGrounded) = collisionHandler.HandleCollisions(Pos, vel, acc);
+                (Vel, Acc, IsGrounded) = CollisionHandler.HandleCollisions(Pos, Vel, Acc);
             }
 
-            Pos += vel;
+            Pos += Vel;
 
             base.Update();
         }

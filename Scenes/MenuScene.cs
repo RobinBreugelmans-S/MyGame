@@ -31,10 +31,12 @@ namespace MyGame.Scenes
             get { return buttons[selectedIndex]; }
         }
         private int selectedIndex = 0;
-        Vector2Int inputPrevious;
-        Vector2Int input;
-        bool enterInputPrevious;
-        bool enterInput;
+        private Vector2Int inputPrevious;
+        private Vector2Int input;
+        private bool enterInputPrevious;
+        private bool enterInput;
+        
+        private bool isFirstFrame = true;
         
         private KeyboardReader keyboardReader = new KeyboardReader();
 
@@ -57,7 +59,6 @@ namespace MyGame.Scenes
             background = content.Load<Texture2D>(backgroundName);
             select(0);
         }
-        bool isFirstFrame = true;
         public void Update()
         {
             enterInputPrevious = enterInput;
